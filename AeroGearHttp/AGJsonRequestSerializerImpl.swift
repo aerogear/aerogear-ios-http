@@ -19,12 +19,12 @@ import Foundation
 
 class AGJsonRequestSerializerImpl  : AGHttpRequestSerializer {
     var url: NSURL
-    var headers: Dictionary<String, String>
+    var headers: [String: String]
     var stringEncoding: NSNumber
     var cachePolicy: NSURLRequestCachePolicy
     var timeoutInterval: NSTimeInterval
     
-    init(url: NSURL, headers: Dictionary<String, String>) {
+    init(url: NSURL, headers: [String: String]) {
         self.url = url
         self.headers = headers
         self.stringEncoding = NSUTF8StringEncoding
@@ -32,7 +32,7 @@ class AGJsonRequestSerializerImpl  : AGHttpRequestSerializer {
         self.cachePolicy = .UseProtocolCachePolicy
     }
     
-    func request(method: AGHttpMethod, parameters: Dictionary<String, AnyObject>?) -> NSURLRequest? {
+    func request(method: AGHttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest? {
         var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
         
         // apply headers to new request
@@ -60,22 +60,22 @@ class AGJsonRequestSerializerImpl  : AGHttpRequestSerializer {
         return request
     }
     
-    func stringFromParameters(parameters: Dictionary<String,AnyObject>) -> String {
+    func stringFromParameters(parameters: [String: AnyObject]) -> String {
         return join("&", map(serialize((nil, parameters)), {(tuple) in
             return self.stringValue(tuple)
             }))
     }
-
-    func serialize(tuple: (String?, AnyObject)) -> Array<(String?, AnyObject)> {
+    
+    func serialize(tuple: (String?, AnyObject)) -> [(String?, AnyObject)] {
         var collect = Array<(String?, AnyObject)>()
         
-        if let array = tuple.1 as? Array<AnyObject> {
+        if let array = tuple.1 as? [AnyObject] {
             for nestedValue : AnyObject in array {
                 let label: String = tuple.0!
                 var myTuple:(String?, AnyObject) = (label + "[]", nestedValue)
                 collect.extend(self.serialize(myTuple))
             }
-        } else if let dict = tuple.1 as? Dictionary<String, AnyObject> {
+        } else if let dict = tuple.1 as? [String: AnyObject] {
             for (nestedKey, nestedObject: AnyObject) in dict {
                 var newKey = tuple.0 ? "\(tuple.0)[\(nestedKey)]" : nestedKey
                 var myTuple:(String?, AnyObject) = (newKey, nestedObject)

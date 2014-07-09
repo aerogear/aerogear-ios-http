@@ -24,5 +24,5 @@ protocol AGHttpSession {
     var session: NSURLSession {get set}
     var requestSerializer: AGHttpRequestSerializer! {get}
     
-    func GET(parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void
+    func GET(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void
 }

@@ -24,5 +24,5 @@ protocol AGHttpRequestSerializer {
     var cachePolicy: NSURLRequestCachePolicy {get}
     var timeoutInterval: NSTimeInterval {get set}
 
-    func request(method: AGHttpMethod, parameters: Dictionary<String, AnyObject>?) -> NSURLRequest?
+    func request(method: AGHttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest?
 }
