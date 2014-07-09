@@ -27,14 +27,14 @@ class AGHttpSessionImpl : AGHttpSession {
         assert(url != nil, "baseURL is required")
         self.baseURL = NSURL.URLWithString(url)
         session = NSURLSession.sharedSession()
-        requestSerializer = AGJsonRequestSerializer(url: self.baseURL, headers: Dictionary<String, String>())
+        requestSerializer = AGJsonRequestSerializerImpl(url: self.baseURL, headers: Dictionary<String, String>())
     }
     
     init(url: String, sessionConfig: NSURLSessionConfiguration) {
         assert(url != nil, "baseURL is required")
         self.baseURL = NSURL.URLWithString(url)
         session = NSURLSession(configuration: sessionConfig)
-        requestSerializer = AGJsonRequestSerializer(url: baseURL, headers: Dictionary<String, String>())
+        requestSerializer = AGJsonRequestSerializerImpl(url: baseURL, headers: Dictionary<String, String>())
     }
 
     func call(url: NSURL, method: AGHttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> () {

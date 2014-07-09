@@ -34,7 +34,7 @@ class AGJsonRequestSerializerTests: XCTestCase {
     func testGETWithParameters() {
         
         var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
-        var jsonSerialiser = AGJsonRequestSerializer(url: url, headers: Dictionary<String, String>())
+        var jsonSerialiser = AGJsonRequestSerializerImpl(url: url, headers: Dictionary<String, String>())
         var result = jsonSerialiser.stringFromParameters(["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
         XCTAssertTrue(result == "array[]=one&array[]=two&array[]=three&array[]=four&numeric=5&param1=value1")
         

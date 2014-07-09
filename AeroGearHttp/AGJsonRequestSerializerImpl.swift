@@ -17,7 +17,7 @@
 
 import Foundation
 
-class AGJsonRequestSerializer  : AGHttpRequestSerializer {
+class AGJsonRequestSerializerImpl  : AGHttpRequestSerializer {
     var url: NSURL
     var headers: Dictionary<String, String>
     var stringEncoding: NSNumber

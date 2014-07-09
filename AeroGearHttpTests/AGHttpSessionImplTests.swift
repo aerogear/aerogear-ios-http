@@ -19,7 +19,7 @@
 import XCTest
 import AeroGearHttp
 
-class AeroGearHttpTests: XCTestCase {
+class AGHttpSessionImplTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
