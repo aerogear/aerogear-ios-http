@@ -1,0 +1,110 @@
+/*
+* JBoss, Home of Professional Open Source.
+* Copyright Red Hat, Inc., and individual contributors
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+import Foundation
+
+class AGJsonRequestSerializer  : AGHttpRequestSerializer {
+    var url: NSURL
+    var headers: Dictionary<String, String>
+    var stringEncoding: NSNumber
+    var cachePolicy: NSURLRequestCachePolicy
+    var timeoutInterval: NSTimeInterval
+    
+    init(url: NSURL, headers: Dictionary<String, String>) {
+        self.url = url
+        self.headers = headers
+        self.stringEncoding = NSUTF8StringEncoding
+        self.timeoutInterval = 60
+        self.cachePolicy = .UseProtocolCachePolicy
+    }
+    
+    func request(method: AGHttpMethod, parameters: Dictionary<String, AnyObject>?) -> NSURLRequest? {
+        var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
+        
+        // apply headers to new request
+        for (key,val) in self.headers {
+            request.addValue(val, forHTTPHeaderField: key)
+        }
+        
+        // TODO POST,PUT
+        // TODO upload multiform
+        // TODO switch case instead of if
+        if method == AGHttpMethod.GET || method == AGHttpMethod.HEAD || method == AGHttpMethod.DELETE {
+            var queryString = ""
+            if parameters {
+                queryString = self.stringFromParameters(parameters!)
+            }
+            var paramSeparator = request.URL.query ? "&" : "?"
+            var newUrl = "\(request.URL.absoluteString)\(paramSeparator)\(queryString)"
+            request.URL = NSURL.URLWithString(newUrl)
+        } else {
+            //POST
+            //NSString *charset = (__bridge NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
+            //request.setValue(value:[NSString stringWithFormat:@"application/json; charset=%@", charset], forHTTPHeaderField:"Content-Type");
+            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(parameters, options:NSJSONWritingOptions(0), error:nil)
+        }
+        return request
+    }
+    
+    func stringFromParameters(parameters: Dictionary<String,AnyObject>) -> String {
+        return join("&", map(serialize((nil, parameters)), {(tuple) in
+            return self.stringValue(tuple)
+            }))
+    }
+
+    func serialize(tuple: (String?, AnyObject)) -> Array<(String?, AnyObject)> {
+        var collect = Array<(String?, AnyObject)>()
+        
+        if let array = tuple.1 as? Array<AnyObject> {
+            for nestedValue : AnyObject in array {
+                let label: String = tuple.0!
+                var myTuple:(String?, AnyObject) = (label + "[]", nestedValue)
+                collect.extend(self.serialize(myTuple))
+            }
+        } else if let dict = tuple.1 as? Dictionary<String, AnyObject> {
+            for (nestedKey, nestedObject: AnyObject) in dict {
+                var newKey = tuple.0 ? "\(tuple.0)[\(nestedKey)]" : nestedKey
+                var myTuple:(String?, AnyObject) = (newKey, nestedObject)
+                collect.extend(self.serialize(myTuple))
+            }
+        } else {
+            collect.append((tuple.0, tuple.1))
+        }
+        return collect
+    }
+    
+    func stringValue(tuple: (String?, AnyObject)) -> String {
+        func escapeString(raw: String) -> String {
+            var nsString: NSString = raw
+            var escapedString = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, nsString, "[].",":/?&=;+!@#$()',*", CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding))
+            return escapedString
+        }
+        var val = ""
+        if let str = tuple.1 as? String {
+            val = str
+        } else if tuple.1.description {
+            val = tuple.1.description
+        }
+  
+        if !tuple.0 {
+            return escapeString(val)
+        }
+        
+        return "\(escapeString(tuple.0!))=\(escapeString(val))"
+    }
+    
+}
