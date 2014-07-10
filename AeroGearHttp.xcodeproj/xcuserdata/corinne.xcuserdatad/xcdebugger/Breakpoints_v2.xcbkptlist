@@ -164,11 +164,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AeroGearHttpTests/AGRequestSerializerTest.swift"
-            timestampString = "426600997.796576"
+            timestampString = "426674161.469224"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
             landmarkName = "testGETWithParameters()"
             landmarkType = "5">
          </BreakpointContent>
