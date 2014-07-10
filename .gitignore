@@ -17,7 +17,7 @@ xcuserdata
 profile
 *.moved-aside
 DerivedData
-
+**/*.xcuserstate
 
 # CocoaPods
 Podfile.lock
