@@ -67,8 +67,7 @@ class AGJsonRequestSerializerImpl  : AGHttpRequestSerializer {
     }
     
     func serialize(tuple: (String?, AnyObject)) -> [(String?, AnyObject)] {
-        var collect = Array<(String?, AnyObject)>()
-        
+        var collect:[(String?, AnyObject)] = []
         if let array = tuple.1 as? [AnyObject] {
             for nestedValue : AnyObject in array {
                 let label: String = tuple.0!
