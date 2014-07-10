@@ -32,12 +32,10 @@ class AGRequestSerializerTests: XCTestCase {
     }
     
     func testGETWithParameters() {
-        
         var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
         var serialiser = AGRequestSerializerImpl(url: url, headers: [String: String]())
         var result = serialiser.stringFromParameters(["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
         XCTAssertTrue(result == "array[]=one&array[]=two&array[]=three&array[]=four&numeric=5&param1=value1")
-        
     }
-        
+    
 }

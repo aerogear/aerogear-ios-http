@@ -15,7 +15,7 @@
 		488B6B90196B25D3000297C9 /* AGHttpMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488B6B8F196B25D3000297C9 /* AGHttpMethod.swift */; };
 		488B6B92196C0993000297C9 /* AGRequestSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488B6B91196C0993000297C9 /* AGRequestSerializer.swift */; };
 		488B6B94196C09C9000297C9 /* AGRequestSerializerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488B6B93196C09C9000297C9 /* AGRequestSerializerImpl.swift */; };
-		488B6B96196C315B000297C9 /* AGHttpSessionImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488B6B95196C315B000297C9 /* AGHttpSessionImpl.swift */; };
+		488B6B96196C315B000297C9 /* AGSessionImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488B6B95196C315B000297C9 /* AGSessionImpl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,7 +54,7 @@
 		488B6B8F196B25D3000297C9 /* AGHttpMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGHttpMethod.swift; sourceTree = "<group>"; };
 		488B6B91196C0993000297C9 /* AGRequestSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGRequestSerializer.swift; sourceTree = "<group>"; };
 		488B6B93196C09C9000297C9 /* AGRequestSerializerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGRequestSerializerImpl.swift; sourceTree = "<group>"; };
-		488B6B95196C315B000297C9 /* AGHttpSessionImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGHttpSessionImpl.swift; sourceTree = "<group>"; };
+		488B6B95196C315B000297C9 /* AGSessionImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGSessionImpl.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,7 +79,7 @@
 		4809D8B7196D75AD00724AFC /* internal */ = {
 			isa = PBXGroup;
 			children = (
-				488B6B95196C315B000297C9 /* AGHttpSessionImpl.swift */,
+				488B6B95196C315B000297C9 /* AGSessionImpl.swift */,
 				488B6B93196C09C9000297C9 /* AGRequestSerializerImpl.swift */,
 			);
 			name = internal;
@@ -255,7 +255,7 @@
 				488B6B90196B25D3000297C9 /* AGHttpMethod.swift in Sources */,
 				488B6B94196C09C9000297C9 /* AGRequestSerializerImpl.swift in Sources */,
 				488B6B7E196B1A0F000297C9 /* AGSession.swift in Sources */,
-				488B6B96196C315B000297C9 /* AGHttpSessionImpl.swift in Sources */,
+				488B6B96196C315B000297C9 /* AGSessionImpl.swift in Sources */,
 				488B6B92196C0993000297C9 /* AGRequestSerializer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

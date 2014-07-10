@@ -58,10 +58,23 @@ class AGSessionImpl : AGSession {
         task.resume()
     }
     
-    /**
-    * Method that produces an HTTP GET
-    */
     func GET(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
         self.call(self.baseURL, method: .GET, parameters: parameters, success, failure)
+    }
+    
+    func POST(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+        self.call(self.baseURL, method: .POST, parameters: parameters, success, failure)
+    }
+    
+    func PUT(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+        self.call(self.baseURL, method: .PUT, parameters: parameters, success, failure)
+    }
+    
+    func DELETE(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+        self.call(self.baseURL, method: .DELETE, parameters: parameters, success, failure)
+    }
+    
+    func HEAD(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+        self.call(self.baseURL, method: .HEAD, parameters: parameters, success, failure)
     }
 }

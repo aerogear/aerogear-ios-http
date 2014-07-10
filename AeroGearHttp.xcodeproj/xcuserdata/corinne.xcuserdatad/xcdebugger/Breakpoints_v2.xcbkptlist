@@ -179,13 +179,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "AeroGearHttp/AGHttpSessionImpl.swift"
+            filePath = "AeroGearHttp/AGSessionImpl.swift"
             timestampString = "426602500.478902"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "20"
             endingLineNumber = "20"
-            landmarkName = "AGHttpSessionImpl"
+            landmarkName = "AGSessionImpl"
             landmarkType = "3">
             <Locations>
                <Location
