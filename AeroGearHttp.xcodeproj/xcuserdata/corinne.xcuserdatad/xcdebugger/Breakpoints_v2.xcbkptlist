@@ -9,7 +9,7 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "AeroGearHttpTests/AGHttpSessionImplTests.swift"
+            filePath = "AeroGearHttpTests/AGSessionImplTests.swift"
             timestampString = "426521559.030043"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
@@ -69,7 +69,7 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "AeroGearHttpTests/AGHttpSessionImplTests.swift"
+            filePath = "AeroGearHttpTests/AGSessionImplTests.swift"
             timestampString = "426521559.030043"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
@@ -85,7 +85,7 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "AeroGearHttpTests/AGHttpSessionImplTests.swift"
+            filePath = "AeroGearHttpTests/AGSessionImplTests.swift"
             timestampString = "426521559.030043"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
@@ -101,7 +101,7 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "AeroGearHttpTests/AGHttpSessionImplTests.swift"
+            filePath = "AeroGearHttpTests/AGSessionImplTests.swift"
             timestampString = "426521559.030043"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
@@ -147,13 +147,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "AeroGearHttp/AGJsonRequestSerializerImpl.swift"
+            filePath = "AeroGearHttp/AGRequestSerializerImpl.swift"
             timestampString = "426602174.869606"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "20"
             endingLineNumber = "20"
-            landmarkName = "AGJsonRequestSerializerImpl"
+            landmarkName = "AGRequestSerializerImpl"
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
@@ -163,7 +163,7 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "AeroGearHttpTests/AGJsonRequestSerializerTest.swift"
+            filePath = "AeroGearHttpTests/AGRequestSerializerTest.swift"
             timestampString = "426600997.796576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
@@ -217,6 +217,22 @@
                   offsetFromSymbolStart = "4">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "AeroGearHttp/AGRequestSerializerImpl.swift"
+            timestampString = "426672561.708533"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "serialize(_:)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

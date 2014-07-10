@@ -19,7 +19,7 @@
 import XCTest
 import AeroGearHttp
 
-class AGJsonRequestSerializerTests: XCTestCase {
+class AGRequestSerializerTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
@@ -34,8 +34,8 @@ class AGJsonRequestSerializerTests: XCTestCase {
     func testGETWithParameters() {
         
         var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
-        var jsonSerialiser = AGJsonRequestSerializerImpl(url: url, headers: [String: String]())
-        var result = jsonSerialiser.stringFromParameters(["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
+        var serialiser = AGRequestSerializerImpl(url: url, headers: [String: String]())
+        var result = serialiser.stringFromParameters(["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
         XCTAssertTrue(result == "array[]=one&array[]=two&array[]=three&array[]=four&numeric=5&param1=value1")
         
     }

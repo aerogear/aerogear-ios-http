@@ -19,7 +19,7 @@
 import XCTest
 import AeroGearHttp
 
-class AGHttpSessionImplTests: XCTestCase {
+class AGSessionImplTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
@@ -40,7 +40,7 @@ class AGHttpSessionImplTests: XCTestCase {
         let getExpectation = expectationWithDescription("Retrieve list of jokes");
         
         var url = "http://api.icndb.com/jokes"
-        var http = AGHttpSessionImpl(url: url)
+        var http = AGSessionImpl(url: url)
         http.GET(nil, success: {(response: AnyObject?) -> Void in
                 if response {
                     let data = response as NSData
@@ -60,7 +60,7 @@ class AGHttpSessionImplTests: XCTestCase {
         let getExpectation = expectationWithDescription("Retrieve list of jokes");
         
         var url = "http://api.icndb.com/jokes/12"
-        var http = AGHttpSessionImpl(url: url)
+        var http = AGSessionImpl(url: url)
         http.GET(nil, success: {(response: AnyObject?) -> Void in
             if response {
                 let data = response as NSData

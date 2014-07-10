@@ -17,7 +17,7 @@
 
 import Foundation
 
-class AGJsonRequestSerializerImpl  : AGHttpRequestSerializer {
+class AGRequestSerializerImpl  : AGRequestSerializer {
     var url: NSURL
     var headers: [String: String]
     var stringEncoding: NSNumber
@@ -39,23 +39,24 @@ class AGJsonRequestSerializerImpl  : AGHttpRequestSerializer {
         for (key,val) in self.headers {
             request.addValue(val, forHTTPHeaderField: key)
         }
-        
-        // TODO POST,PUT
+        var queryString = ""
+        if parameters {
+            queryString = self.stringFromParameters(parameters!)
+        }
+
         // TODO upload multiform
         // TODO switch case instead of if
         if method == AGHttpMethod.GET || method == AGHttpMethod.HEAD || method == AGHttpMethod.DELETE {
-            var queryString = ""
-            if parameters {
-                queryString = self.stringFromParameters(parameters!)
-            }
             var paramSeparator = request.URL.query ? "&" : "?"
             var newUrl = "\(request.URL.absoluteString)\(paramSeparator)\(queryString)"
             request.URL = NSURL.URLWithString(newUrl)
         } else {
-            //POST
-            //NSString *charset = (__bridge NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
-            //request.setValue(value:[NSString stringWithFormat:@"application/json; charset=%@", charset], forHTTPHeaderField:"Content-Type");
-            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(parameters, options:NSJSONWritingOptions(0), error:nil)
+            // POST, PUT
+            var charset = CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding))
+            if !request.valueForHTTPHeaderField("Content-Type") {
+                request.setValue("application/x-www-form-urlencoded; charset=\(charset)", forHTTPHeaderField:"Content-Type")
+            }
+            request.HTTPBody = queryString.dataUsingEncoding(NSUTF8StringEncoding)
         }
         return request
     }

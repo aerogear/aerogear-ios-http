@@ -17,12 +17,12 @@
 
 import Foundation
 
+protocol AGRequestSerializer {
+    var url: NSURL {get set}
+    var headers: Dictionary<String, String> {get set}
+    var stringEncoding: NSNumber {get}
+    var cachePolicy: NSURLRequestCachePolicy {get}
+    var timeoutInterval: NSTimeInterval {get set}
 
-protocol AGHttpSession {
-    
-    var baseURL: NSURL {get set}
-    var session: NSURLSession {get set}
-    var requestSerializer: AGHttpRequestSerializer! {get}
-    
-    func GET(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void
+    func request(method: AGHttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest?
 }

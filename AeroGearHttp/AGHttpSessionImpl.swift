@@ -17,24 +17,24 @@
 
 import Foundation
 
-class AGHttpSessionImpl : AGHttpSession {
+class AGSessionImpl : AGSession {
     var baseURL: NSURL
     var session: NSURLSession
-    var requestSerializer: AGHttpRequestSerializer!
+    var requestSerializer: AGRequestSerializer!
     
     init(url: String) {
         // TODO check valid url
         assert(url != nil, "baseURL is required")
         self.baseURL = NSURL.URLWithString(url)
         session = NSURLSession.sharedSession()
-        requestSerializer = AGJsonRequestSerializerImpl(url: self.baseURL, headers: [String: String]())
+        requestSerializer = AGRequestSerializerImpl(url: self.baseURL, headers: [String: String]())
     }
     
     init(url: String, sessionConfig: NSURLSessionConfiguration) {
         assert(url != nil, "baseURL is required")
         self.baseURL = NSURL.URLWithString(url)
         session = NSURLSession(configuration: sessionConfig)
-        requestSerializer = AGJsonRequestSerializerImpl(url: baseURL, headers: [String: String]())
+        requestSerializer = AGRequestSerializerImpl(url: baseURL, headers: [String: String]())
     }
 
     func call(url: NSURL, method: AGHttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> () {
