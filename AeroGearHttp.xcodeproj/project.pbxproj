@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4840C2AD196D5CBE00065270 /* AGRequestSerializerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4840C2AC196D5CBE00065270 /* AGRequestSerializerTest.swift */; };
+		48866966197054BF00579654 /* AGResponseSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48866965197054BF00579654 /* AGResponseSerializer.swift */; };
+		48866968197054CD00579654 /* AGResponseSerializerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48866967197054CD00579654 /* AGResponseSerializerImpl.swift */; };
 		488B6B62196B19BC000297C9 /* AeroGearHttp.h in Headers */ = {isa = PBXBuildFile; fileRef = 488B6B61196B19BC000297C9 /* AeroGearHttp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		488B6B6F196B19BC000297C9 /* AGSessionImplTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488B6B6E196B19BC000297C9 /* AGSessionImplTests.swift */; };
 		488B6B7E196B1A0F000297C9 /* AGSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488B6B7A196B1A0F000297C9 /* AGSession.swift */; };
@@ -44,6 +46,8 @@
 
 /* Begin PBXFileReference section */
 		4840C2AC196D5CBE00065270 /* AGRequestSerializerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGRequestSerializerTest.swift; sourceTree = "<group>"; };
+		48866965197054BF00579654 /* AGResponseSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGResponseSerializer.swift; sourceTree = "<group>"; };
+		48866967197054CD00579654 /* AGResponseSerializerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGResponseSerializerImpl.swift; sourceTree = "<group>"; };
 		488B6B5C196B19BC000297C9 /* AeroGearHttp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AeroGearHttp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		488B6B60196B19BC000297C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		488B6B61196B19BC000297C9 /* AeroGearHttp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AeroGearHttp.h; sourceTree = "<group>"; };
@@ -81,6 +85,7 @@
 			children = (
 				488B6B95196C315B000297C9 /* AGSessionImpl.swift */,
 				488B6B93196C09C9000297C9 /* AGRequestSerializerImpl.swift */,
+				48866967197054CD00579654 /* AGResponseSerializerImpl.swift */,
 			);
 			name = internal;
 			sourceTree = "<group>";
@@ -110,6 +115,7 @@
 				488B6B8F196B25D3000297C9 /* AGHttpMethod.swift */,
 				488B6B7A196B1A0F000297C9 /* AGSession.swift */,
 				488B6B91196C0993000297C9 /* AGRequestSerializer.swift */,
+				48866965197054BF00579654 /* AGResponseSerializer.swift */,
 				488B6B61196B19BC000297C9 /* AeroGearHttp.h */,
 				488B6B5F196B19BC000297C9 /* Supporting Files */,
 			);
@@ -254,9 +260,11 @@
 			files = (
 				488B6B90196B25D3000297C9 /* AGHttpMethod.swift in Sources */,
 				488B6B94196C09C9000297C9 /* AGRequestSerializerImpl.swift in Sources */,
+				48866966197054BF00579654 /* AGResponseSerializer.swift in Sources */,
 				488B6B7E196B1A0F000297C9 /* AGSession.swift in Sources */,
 				488B6B96196C315B000297C9 /* AGSessionImpl.swift in Sources */,
 				488B6B92196C0993000297C9 /* AGRequestSerializer.swift in Sources */,
+				48866968197054CD00579654 /* AGResponseSerializerImpl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

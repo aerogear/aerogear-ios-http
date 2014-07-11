@@ -21,6 +21,7 @@ class AGSessionImpl : AGSession {
     var baseURL: NSURL
     var session: NSURLSession
     var requestSerializer: AGRequestSerializer!
+    var responseSerializer: AGResponseSerializer!
     
     init(url: String) {
         // TODO check valid url
@@ -28,14 +29,16 @@ class AGSessionImpl : AGSession {
         self.baseURL = NSURL.URLWithString(url)
         session = NSURLSession.sharedSession()
         requestSerializer = AGRequestSerializerImpl(url: self.baseURL, headers: [String: String]())
+        responseSerializer = AGResponseSerializerImpl()
     }
     
-    init(url: String, sessionConfig: NSURLSessionConfiguration) {
-        assert(url != nil, "baseURL is required")
-        self.baseURL = NSURL.URLWithString(url)
-        session = NSURLSession(configuration: sessionConfig)
-        requestSerializer = AGRequestSerializerImpl(url: baseURL, headers: [String: String]())
-    }
+//    init(url: String, sessionConfig: NSURLSessionConfiguration) {
+//        assert(url != nil, "baseURL is required")
+//        self.baseURL = NSURL.URLWithString(url)
+//        session = NSURLSession(configuration: sessionConfig)
+//        requestSerializer = AGRequestSerializerImpl(url: baseURL, headers: [String: String]())
+//        responseSerializer = AGResponseSerializerImpl()
+//    }
 
     func call(url: NSURL, method: AGHttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> () {
         
@@ -48,8 +51,7 @@ class AGSessionImpl : AGSession {
                     return
                 }
                 if data {
-                    var responseObject: AnyObject = data
-                    // TODO response serializer
+                    var responseObject: AnyObject? = self.responseSerializer?.response(data)
                     success(responseObject)
                 } else {
                     failure(error)

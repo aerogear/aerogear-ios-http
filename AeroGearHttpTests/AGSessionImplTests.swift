@@ -43,8 +43,6 @@ class AGSessionImplTests: XCTestCase {
         var http = AGSessionImpl(url: url)
         http.GET(nil, success: {(response: AnyObject?) -> Void in
                 if response {
-                    let data = response as NSData
-                    let str = NSString(data: data, encoding: NSUTF8StringEncoding)
                     getExpectation.fulfill()
                 }
             }, failure: {(error: NSError) -> Void in
@@ -63,8 +61,6 @@ class AGSessionImplTests: XCTestCase {
         var http = AGSessionImpl(url: url)
         http.GET(nil, success: {(response: AnyObject?) -> Void in
             if response {
-                let data = response as NSData
-                let str = NSString(data: data, encoding: NSUTF8StringEncoding)
                 // to do with json response
                 getExpectation.fulfill()
             }
