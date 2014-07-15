@@ -17,9 +17,31 @@
 
 import Foundation
 
+let AGHtttpResponseSerializationErrorDomain = "org.aerogear.http.response";
+
+
 class AGResponseSerializerImpl : AGResponseSerializer {
     
     func response(data: NSData) -> (AnyObject?) {
         return NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)
+    }
+
+    func validateResponse(response: NSURLResponse!, data: NSData!, inout error: NSError) -> Bool {
+        let httpResponse = response as NSHTTPURLResponse
+        var isValid = true
+
+        if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+            isValid = false
+            var userInfo = [
+                NSLocalizedDescriptionKey: "Request failed: \(httpResponse.statusCode)",
+                NSURLErrorFailingURLErrorKey: httpResponse.URL
+            ]
+            if error != nil {
+                error = NSError(domain: AGHtttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
+            }
+
+        }
+        
+        return isValid
     }
 }

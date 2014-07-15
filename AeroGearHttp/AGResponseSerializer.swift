@@ -19,4 +19,5 @@ import Foundation
 
 protocol AGResponseSerializer {    
     func response(data: NSData) -> (AnyObject?)
+    func validateResponse(response: NSURLResponse!, data: NSData!, inout error: NSError) -> Bool
 }

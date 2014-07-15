@@ -46,15 +46,20 @@ class AGSessionImpl : AGSession {
         
         let task = session.dataTaskWithRequest(serializedRequest,
             completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
+                println("response\(response)")
                 if error {
                     failure(error)
+                    return
+                }
+                var myError = NSError()
+                var isValid = self.responseSerializer?.validateResponse(response, data: data, error: &myError)
+                if (isValid == false) {
+                    failure(myError)
                     return
                 }
                 if data {
                     var responseObject: AnyObject? = self.responseSerializer?.response(data)
                     success(responseObject)
-                } else {
-                    failure(error)
                 }
             })
         task.resume()
