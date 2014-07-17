@@ -84,4 +84,53 @@ class AGSessionImpl : AGSession {
     func HEAD(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
         self.call(self.baseURL, method: .HEAD, parameters: parameters, success, failure)
     }
+    
+    func multiPartUpload(parameters: [String: AnyObject], success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+
+        let serializedRequest = requestSerializer.multiPartRequest(.POST)
+        
+        var body = buildBody(parameters)
+
+        let task = session.uploadTaskWithRequest(serializedRequest,
+            fromData: body,
+            completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
+                println("response\(response)")
+                if error {
+                    failure(error)
+                    return
+                }
+                var myError = NSError()
+                var isValid = self.responseSerializer?.validateResponse(response, data: data, error: &myError)
+                if (isValid == false) {
+                    failure(myError)
+                    return
+                }
+                if data {
+                    var responseObject: AnyObject? = self.responseSerializer?.response(data)
+                    success(responseObject)
+                }
+            })
+        task.resume()
+    }
+    
+    func buildBody(parameters: [String: AnyObject]) -> NSData {
+        var body: NSMutableData = NSMutableData()
+        
+        for (key, value) in parameters {
+            if (value is NSData) {
+                body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding))
+                // TODO fileName associated with image similar to AGFilePart
+                body.appendData("Content-Disposition: form-data; name=\"photo\"; filename=\"filename.jpg\"\r\n".dataUsingEncoding(NSUTF8StringEncoding))
+                //body
+            } else {
+                body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding))
+                body.appendData("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n\(value)".dataUsingEncoding(NSUTF8StringEncoding))
+                
+            }
+        }
+        body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding))
+        body.appendData("".dataUsingEncoding(NSUTF8StringEncoding))
+        return body
+    }
+    
 }

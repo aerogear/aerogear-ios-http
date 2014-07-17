@@ -23,6 +23,8 @@ protocol AGRequestSerializer {
     var stringEncoding: NSNumber {get}
     var cachePolicy: NSURLRequestCachePolicy {get}
     var timeoutInterval: NSTimeInterval {get set}
-
+    var boundary: String {get}
+    
     func request(method: AGHttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest?
+    func multiPartRequest(method: AGHttpMethod) -> NSURLRequest?
 }

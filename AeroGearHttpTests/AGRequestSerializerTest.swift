@@ -38,4 +38,12 @@ class AGRequestSerializerTests: XCTestCase {
         XCTAssertTrue(result == "array[]=one&array[]=two&array[]=three&array[]=four&numeric=5&param1=value1")
     }
     
+    func testMultiPartRequestWithPost() {
+        var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
+        var serialiser = AGRequestSerializerImpl(url: url, headers: [String: String]())
+        var result = serialiser.multiPartRequest(.POST)
+
+        XCTAssertTrue(result.description.rangeOfString("multipart/form-data; boundary=BOUNDARY_STRING\";"))
+    }
+    
 }

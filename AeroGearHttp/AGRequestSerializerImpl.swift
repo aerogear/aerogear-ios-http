@@ -23,6 +23,7 @@ class AGRequestSerializerImpl  : AGRequestSerializer {
     var stringEncoding: NSNumber
     var cachePolicy: NSURLRequestCachePolicy
     var timeoutInterval: NSTimeInterval
+    var boundary = "BOUNDARY_STRING"
     
     init(url: NSURL, headers: [String: String]) {
         self.url = url
@@ -34,6 +35,7 @@ class AGRequestSerializerImpl  : AGRequestSerializer {
     
     func request(method: AGHttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest? {
         var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
+        request.HTTPMethod = method.toRaw()
         
         // apply headers to new request
         for (key,val) in self.headers {
@@ -58,6 +60,18 @@ class AGRequestSerializerImpl  : AGRequestSerializer {
             }
             request.HTTPBody = queryString.dataUsingEncoding(NSUTF8StringEncoding)
         }
+        return request
+    }
+    
+    func multiPartRequest(method: AGHttpMethod) -> NSURLRequest? {
+        assert(method == .POST || method == .PUT, "PUT or POST only")
+        var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
+        request.HTTPMethod = method.toRaw()
+        for (key,val) in self.headers {
+            request.addValue(val, forHTTPHeaderField: key)
+        }
+        var contentType = "multipart/form-data; boundary=\(boundary)"
+        request.addValue(contentType, forHTTPHeaderField:"Content-Type")
         return request
     }
     
