@@ -23,22 +23,23 @@ class AGSessionImpl : AGSession {
     var requestSerializer: AGRequestSerializer!
     var responseSerializer: AGResponseSerializer!
     
-    init(url: String) {
-        // TODO check valid url
-        assert(url != nil, "baseURL is required")
-        self.baseURL = NSURL.URLWithString(url)
-        session = NSURLSession.sharedSession()
-        requestSerializer = AGRequestSerializerImpl(url: self.baseURL, headers: [String: String]())
-        responseSerializer = AGResponseSerializerImpl()
+    convenience init(url: String) {
+        let baseURL = NSURL.URLWithString(url)
+        self.init(url: url, sessionConfig: nil)
     }
     
-//    init(url: String, sessionConfig: NSURLSessionConfiguration) {
-//        assert(url != nil, "baseURL is required")
-//        self.baseURL = NSURL.URLWithString(url)
-//        session = NSURLSession(configuration: sessionConfig)
-//        requestSerializer = AGRequestSerializerImpl(url: baseURL, headers: [String: String]())
-//        responseSerializer = AGResponseSerializerImpl()
-//    }
+    convenience init(url: String, sessionConfig: NSURLSessionConfiguration?) {
+        let baseURL = NSURL.URLWithString(url)
+        self.init(url: url, sessionConfig: sessionConfig, requestSerializer: AGRequestSerializerImpl(url: baseURL, headers: [String: String]()), responseSerializer: AGResponseSerializerImpl())
+    }
+    
+    init(url: String, sessionConfig: NSURLSessionConfiguration?, requestSerializer: AGRequestSerializer, responseSerializer: AGResponseSerializer) {
+        assert(url != nil, "baseURL is required")
+        self.baseURL = NSURL.URLWithString(url)
+        self.session = (sessionConfig == nil) ? NSURLSession.sharedSession() : NSURLSession(configuration: sessionConfig)
+        self.requestSerializer = requestSerializer
+        self.responseSerializer = responseSerializer
+    }
 
     func call(url: NSURL, method: AGHttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> () {
         

@@ -22,7 +22,8 @@ protocol AGSession {
     
     var baseURL: NSURL {get set}
     var session: NSURLSession {get set}
-    var requestSerializer: AGRequestSerializer! {get}
+    var requestSerializer: AGRequestSerializer! {get set}
+    var responseSerializer: AGResponseSerializer! {get set}
     
     func GET(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void
     func POST(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void
