@@ -42,6 +42,27 @@
 			remoteGlobalIDString = 488B6B5B196B19BC000297C9;
 			remoteInfo = AeroGearHttp;
 		};
+		48AD2D921982A1AA00E12EB2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48AD2D8D1982A1AA00E12EB2 /* AGURLSessionStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6F3C40A1197BCCD80072D66A;
+			remoteInfo = AGURLSessionStubs;
+		};
+		48AD2D941982A1AA00E12EB2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48AD2D8D1982A1AA00E12EB2 /* AGURLSessionStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6F3C40AC197BCCD80072D66A;
+			remoteInfo = AGURLSessionStubsTests;
+		};
+		48AD2D961982A1C800E12EB2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 488B6B53196B19BC000297C9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 488B6B5B196B19BC000297C9;
+			remoteInfo = AeroGearHttp;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +80,7 @@
 		488B6B91196C0993000297C9 /* AGRequestSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGRequestSerializer.swift; sourceTree = "<group>"; };
 		488B6B93196C09C9000297C9 /* AGRequestSerializerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGRequestSerializerImpl.swift; sourceTree = "<group>"; };
 		488B6B95196C315B000297C9 /* AGSessionImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGSessionImpl.swift; sourceTree = "<group>"; };
+		48AD2D8D1982A1AA00E12EB2 /* AGURLSessionStubs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AGURLSessionStubs.xcodeproj; path = AGURLSessionStubs/AGURLSessionStubs.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +155,7 @@
 		488B6B6B196B19BC000297C9 /* AeroGearHttpTests */ = {
 			isa = PBXGroup;
 			children = (
+				48AD2D8D1982A1AA00E12EB2 /* AGURLSessionStubs.xcodeproj */,
 				488B6B6E196B19BC000297C9 /* AGSessionImplTests.swift */,
 				4840C2AC196D5CBE00065270 /* AGRequestSerializerTest.swift */,
 				488B6B6C196B19BC000297C9 /* Supporting Files */,
@@ -146,6 +169,15 @@
 				488B6B6D196B19BC000297C9 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		48AD2D8E1982A1AA00E12EB2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				48AD2D931982A1AA00E12EB2 /* AGURLSessionStubs.framework */,
+				48AD2D951982A1AA00E12EB2 /* AGURLSessionStubsTests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -194,6 +226,7 @@
 				488B6B6A196B19BC000297C9 /* PBXTargetDependency */,
 				488B6B81196B1CBF000297C9 /* PBXTargetDependency */,
 				488B6B83196B1CC0000297C9 /* PBXTargetDependency */,
+				48AD2D971982A1C800E12EB2 /* PBXTargetDependency */,
 			);
 			name = AeroGearHttpTests;
 			productName = AeroGearHttpTests;
@@ -228,6 +261,12 @@
 			mainGroup = 488B6B52196B19BC000297C9;
 			productRefGroup = 488B6B5D196B19BC000297C9 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 48AD2D8E1982A1AA00E12EB2 /* Products */;
+					ProjectRef = 48AD2D8D1982A1AA00E12EB2 /* AGURLSessionStubs.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				488B6B5B196B19BC000297C9 /* AeroGearHttp */,
@@ -235,6 +274,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		48AD2D931982A1AA00E12EB2 /* AGURLSessionStubs.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AGURLSessionStubs.framework;
+			remoteRef = 48AD2D921982A1AA00E12EB2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		48AD2D951982A1AA00E12EB2 /* AGURLSessionStubsTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = AGURLSessionStubsTests.xctest;
+			remoteRef = 48AD2D941982A1AA00E12EB2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		488B6B5A196B19BC000297C9 /* Resources */ = {
@@ -294,6 +350,11 @@
 			isa = PBXTargetDependency;
 			target = 488B6B5B196B19BC000297C9 /* AeroGearHttp */;
 			targetProxy = 488B6B82196B1CC0000297C9 /* PBXContainerItemProxy */;
+		};
+		48AD2D971982A1C800E12EB2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 488B6B5B196B19BC000297C9 /* AeroGearHttp */;
+			targetProxy = 48AD2D961982A1C800E12EB2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

@@ -1,0 +1,3 @@
+[submodule "AeroGearHttpTests/AGURLSessionStubs"]
+	path = AeroGearHttpTests/AGURLSessionStubs
+	url = https://github.com/cvasilak/AGURLSessionStubs.git
