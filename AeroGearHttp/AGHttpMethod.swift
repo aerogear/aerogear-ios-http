@@ -18,7 +18,7 @@
 import Foundation
 
 
-enum AGHttpMethod: String {
+public enum AGHttpMethod: String {
     case GET = "GET"
     case HEAD = "HEAD"
     case DELETE = "DELETE"

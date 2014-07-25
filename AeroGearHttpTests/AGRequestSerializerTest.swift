@@ -34,14 +34,16 @@ class AGRequestSerializerTests: XCTestCase {
     func testGETWithParameters() {
         var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
         var serialiser = AGRequestSerializerImpl(url: url, headers: [String: String]())
-        var result = serialiser.stringFromParameters(["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
-        XCTAssertTrue(result == "array[]=one&array[]=two&array[]=three&array[]=four&numeric=5&param1=value1")
+        var result = serialiser.request(.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
+        let unwrappedResult = result!
+        let expectedString = "http://api.icndb.com/jokes/12?array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four&numeric=5&param1=value1"
+        XCTAssertTrue(unwrappedResult.URL.absoluteString == expectedString)
     }
     
     func testMultiPartRequestWithPost() {
         var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
         var serialiser = AGRequestSerializerImpl(url: url, headers: [String: String]())
-        var result = serialiser.multiPartRequest(.POST)
+        var result: NSURLRequest = serialiser.multiPartRequest(.POST)!
 
         XCTAssertTrue(result.description.rangeOfString("multipart/form-data; boundary=BOUNDARY_STRING\";"))
     }

@@ -17,7 +17,7 @@
 
 import Foundation
 
-class AGRequestSerializerImpl  : AGRequestSerializer {
+public class AGRequestSerializerImpl  : AGRequestSerializer {
     var url: NSURL
     var headers: [String: String]
     var stringEncoding: NSNumber
@@ -25,7 +25,7 @@ class AGRequestSerializerImpl  : AGRequestSerializer {
     var timeoutInterval: NSTimeInterval
     var boundary = "BOUNDARY_STRING"
     
-    init(url: NSURL, headers: [String: String]) {
+    public init(url: NSURL, headers: [String: String]) {
         self.url = url
         self.headers = headers
         self.stringEncoding = NSUTF8StringEncoding
@@ -33,7 +33,7 @@ class AGRequestSerializerImpl  : AGRequestSerializer {
         self.cachePolicy = .UseProtocolCachePolicy
     }
     
-    func request(method: AGHttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest? {
+    public func request(method: AGHttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest? {
         var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
         request.HTTPMethod = method.toRaw()
         
@@ -63,7 +63,7 @@ class AGRequestSerializerImpl  : AGRequestSerializer {
         return request
     }
     
-    func multiPartRequest(method: AGHttpMethod) -> NSURLRequest? {
+    public func multiPartRequest(method: AGHttpMethod) -> NSURLRequest? {
         assert(method == .POST || method == .PUT, "PUT or POST only")
         var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
         request.HTTPMethod = method.toRaw()
@@ -105,7 +105,7 @@ class AGRequestSerializerImpl  : AGRequestSerializer {
         func escapeString(raw: String) -> String {
             var nsString: NSString = raw
             var escapedString = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, nsString, "[].",":/?&=;+!@#$()',*", CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding))
-            return escapedString
+            return String(escapedString)
         }
         var val = ""
         if let str = tuple.1 as? String {

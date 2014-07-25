@@ -17,18 +17,18 @@
 
 import Foundation
 
-class AGSessionImpl : AGSession {
+public class AGSessionImpl : AGSession {
     var baseURL: NSURL
     var session: NSURLSession
     var requestSerializer: AGRequestSerializer!
     var responseSerializer: AGResponseSerializer!
     
-    convenience init(url: String) {
+    public convenience init(url: String) {
         let baseURL = NSURL.URLWithString(url)
         self.init(url: url, sessionConfig: nil)
     }
     
-    convenience init(url: String, sessionConfig: NSURLSessionConfiguration?) {
+    public convenience init(url: String, sessionConfig: NSURLSessionConfiguration?) {
         let baseURL = NSURL.URLWithString(url)
         self.init(url: url, sessionConfig: sessionConfig, requestSerializer: AGRequestSerializerImpl(url: baseURL, headers: [String: String]()), responseSerializer: AGResponseSerializerImpl())
     }
@@ -66,27 +66,27 @@ class AGSessionImpl : AGSession {
         task.resume()
     }
     
-    func GET(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    public func GET(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
         self.call(self.baseURL, method: .GET, parameters: parameters, success, failure)
     }
     
-    func POST(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    public func POST(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
         self.call(self.baseURL, method: .POST, parameters: parameters, success, failure)
     }
     
-    func PUT(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    public func PUT(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
         self.call(self.baseURL, method: .PUT, parameters: parameters, success, failure)
     }
     
-    func DELETE(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    public func DELETE(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
         self.call(self.baseURL, method: .DELETE, parameters: parameters, success, failure)
     }
     
-    func HEAD(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    public func HEAD(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
         self.call(self.baseURL, method: .HEAD, parameters: parameters, success, failure)
     }
     
-    func multiPartUpload(parameters: [String: AnyObject], success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    public func multiPartUpload(parameters: [String: AnyObject], success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
 
         let serializedRequest = requestSerializer.multiPartRequest(.POST)
         
