@@ -21,6 +21,10 @@ import AeroGearHttp
 import AGURLSessionStubs
 
 class AGSessionImplTests: XCTestCase {
+
+    func ok_http_200(request: NSURLRequest!) -> StubResponse {
+        return StubResponse(data:"{\"key1\":\"value1\"}".dataUsingEncoding(NSUTF8StringEncoding), statusCode: 200, headers: ["Content-Type" : "text/json"])
+    }
     
     override func setUp() {
         super.setUp()
@@ -33,6 +37,30 @@ class AGSessionImplTests: XCTestCase {
     // TODO
     func testGETWithWrongUrlFormat() {
 
+    }
+
+    func testGETWithoutParametersStub() {
+        // set up http stub
+        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+            return true
+            }, withStubResponse:( ok_http_200 ))
+        
+        // async test expectation
+        let getExpectation = expectationWithDescription("Retrieve data with GET without parameters");
+        
+        var url = "http://whatever.com"
+        var http = AGSessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
+        http.GET(nil, success: {(response: AnyObject?) -> Void in
+            if response {
+                XCTAssertTrue(response!["key1"] as NSString == "value1")
+                getExpectation.fulfill()
+            }
+            }, failure: {(error: NSError) -> Void in
+                XCTAssertTrue(false, "should have retrieved jokes")
+                getExpectation.fulfill()
+            })
+        
+        waitForExpectationsWithTimeout(10, handler: nil)
     }
     
     func testGETWithoutParameters() {
