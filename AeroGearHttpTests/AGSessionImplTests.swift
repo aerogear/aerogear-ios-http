@@ -22,8 +22,18 @@ import AGURLSessionStubs
 
 class AGSessionImplTests: XCTestCase {
 
-    func ok_http_200(request: NSURLRequest!) -> StubResponse {
-        return StubResponse(data:"{\"key1\":\"value1\"}".dataUsingEncoding(NSUTF8StringEncoding), statusCode: 200, headers: ["Content-Type" : "text/json"])
+    func http_200(request: NSURLRequest!, params:[String: String]?) -> StubResponse {
+        var data: NSData
+        if (params) {
+            data = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: nil)
+        } else {
+            data = NSData.data()
+        }
+        return StubResponse(data:data, statusCode: 200, headers: ["Content-Type" : "text/json"])
+    }
+    
+    func http_200_response(request: NSURLRequest!) -> StubResponse {
+        return http_200(request, params: ["key1":"value1"])
     }
     
     override func setUp() {
@@ -34,16 +44,12 @@ class AGSessionImplTests: XCTestCase {
         super.tearDown()
         StubsManager.removeAllStubs()
     }
-    // TODO
-    func testGETWithWrongUrlFormat() {
-
-    }
-
+    
     func testGETWithoutParametersStub() {
         // set up http stub
         StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
-            }, withStubResponse:( ok_http_200 ))
+            }, withStubResponse:( http_200_response ))
         
         // async test expectation
         let getExpectation = expectationWithDescription("Retrieve data with GET without parameters");
