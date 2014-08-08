@@ -42,7 +42,7 @@ public class AGRequestSerializerImpl  : AGRequestSerializer {
             request.addValue(val, forHTTPHeaderField: key)
         }
         var queryString = ""
-        if parameters {
+        if parameters != nil {
             queryString = self.stringFromParameters(parameters!)
         }
 
@@ -91,7 +91,7 @@ public class AGRequestSerializerImpl  : AGRequestSerializer {
             }
         } else if let dict = tuple.1 as? [String: AnyObject] {
             for (nestedKey, nestedObject: AnyObject) in dict {
-                var newKey = tuple.0 ? "\(tuple.0)[\(nestedKey)]" : nestedKey
+                var newKey = tuple.0 != nil ? "\(tuple.0)[\(nestedKey)]" : nestedKey
                 var myTuple:(String?, AnyObject) = (newKey, nestedObject)
                 collect.extend(self.serialize(myTuple))
             }
@@ -104,8 +104,8 @@ public class AGRequestSerializerImpl  : AGRequestSerializer {
     func stringValue(tuple: (String?, AnyObject)) -> String {
         func escapeString(raw: String) -> String {
             var nsString: NSString = raw
-            var escapedString = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, nsString, "[].",":/?&=;+!@#$()',*", CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding))
-            return String(escapedString)
+            var escapedString:NSString = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, nsString, "[].",":/?&=;+!@#$()',*", CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding))
+            return escapedString as String
         }
         var val = ""
         if let str = tuple.1 as? String {
@@ -114,7 +114,7 @@ public class AGRequestSerializerImpl  : AGRequestSerializer {
             val = tuple.1.description
         }
   
-        if !tuple.0 {
+        if tuple.0 == nil {
             return escapeString(val)
         }
         

@@ -96,6 +96,8 @@ class AGSessionImplTests: XCTestCase {
         http.GET(nil, success: {(response: AnyObject?) -> Void in
             if response {
                 // to do with json response
+                if response is NSDictionary {println("::::isDict")}
+                println(":::::>>\(response)")
                 getExpectation.fulfill()
             }
             }, failure: {(error: NSError) -> Void in
