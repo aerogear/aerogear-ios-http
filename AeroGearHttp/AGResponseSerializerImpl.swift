@@ -36,10 +36,8 @@ class AGResponseSerializerImpl : AGResponseSerializer {
                 NSLocalizedDescriptionKey: "Request failed: \(httpResponse.statusCode)",
                 NSURLErrorFailingURLErrorKey: httpResponse.URL
             ]
-            if error != nil {
-                error = NSError(domain: AGHtttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
-            }
-
+            
+            error = NSError(domain: AGHtttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
         }
         
         return isValid

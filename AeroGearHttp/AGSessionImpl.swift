@@ -34,7 +34,6 @@ public class AGSessionImpl : AGSession {
     }
     
     init(url: String, sessionConfig: NSURLSessionConfiguration?, requestSerializer: AGRequestSerializer, responseSerializer: AGResponseSerializer) {
-        assert(url != nil, "baseURL is required")
         self.baseURL = NSURL.URLWithString(url)
         self.session = (sessionConfig == nil) ? NSURLSession.sharedSession() : NSURLSession(configuration: sessionConfig)
         self.requestSerializer = requestSerializer
@@ -48,7 +47,7 @@ public class AGSessionImpl : AGSession {
         let task = session.dataTaskWithRequest(serializedRequest,
             completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
                 println("response\(response)")
-                if error {
+                if error != nil {
                     failure(error)
                     return
                 }
@@ -58,7 +57,7 @@ public class AGSessionImpl : AGSession {
                     failure(myError)
                     return
                 }
-                if data {
+                if data != nil {
                     var responseObject: AnyObject? = self.responseSerializer?.response(data)
                     success(responseObject)
                 }
@@ -96,7 +95,7 @@ public class AGSessionImpl : AGSession {
             fromData: body,
             completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
                 println("response\(response)")
-                if error {
+                if error != nil {
                     failure(error)
                     return
                 }
@@ -106,7 +105,7 @@ public class AGSessionImpl : AGSession {
                     failure(myError)
                     return
                 }
-                if data {
+                if data != nil {
                     var responseObject: AnyObject? = self.responseSerializer?.response(data)
                     success(responseObject)
                 }
@@ -119,18 +118,18 @@ public class AGSessionImpl : AGSession {
         
         for (key, value) in parameters {
             if (value is NSData) {
-                body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding))
+                body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
                 // TODO fileName associated with image similar to AGFilePart
-                body.appendData("Content-Disposition: form-data; name=\"photo\"; filename=\"filename.jpg\"\r\n".dataUsingEncoding(NSUTF8StringEncoding))
+                body.appendData("Content-Disposition: form-data; name=\"photo\"; filename=\"filename.jpg\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
                 //body
             } else {
-                body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding))
-                body.appendData("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n\(value)".dataUsingEncoding(NSUTF8StringEncoding))
+                body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+                body.appendData("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n\(value)".dataUsingEncoding(NSUTF8StringEncoding)!)
                 
             }
         }
-        body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding))
-        body.appendData("".dataUsingEncoding(NSUTF8StringEncoding))
+        body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        body.appendData("".dataUsingEncoding(NSUTF8StringEncoding)!)
         return body
     }
     

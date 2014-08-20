@@ -49,13 +49,13 @@ public class AGRequestSerializerImpl  : AGRequestSerializer {
         // TODO upload multiform
         // TODO switch case instead of if
         if method == AGHttpMethod.GET || method == AGHttpMethod.HEAD || method == AGHttpMethod.DELETE {
-            var paramSeparator = request.URL.query ? "&" : "?"
+            var paramSeparator = request.URL.query != nil ? "&" : "?"
             var newUrl = "\(request.URL.absoluteString)\(paramSeparator)\(queryString)"
             request.URL = NSURL.URLWithString(newUrl)
         } else {
             // POST, PUT
             var charset = CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding))
-            if !request.valueForHTTPHeaderField("Content-Type") {
+            if request.valueForHTTPHeaderField("Content-Type") == nil {
                 request.setValue("application/x-www-form-urlencoded; charset=\(charset)", forHTTPHeaderField:"Content-Type")
             }
             request.HTTPBody = queryString.dataUsingEncoding(NSUTF8StringEncoding)
@@ -110,7 +110,7 @@ public class AGRequestSerializerImpl  : AGRequestSerializer {
         var val = ""
         if let str = tuple.1 as? String {
             val = str
-        } else if tuple.1.description {
+        } else if tuple.1.description != nil {
             val = tuple.1.description
         }
   
