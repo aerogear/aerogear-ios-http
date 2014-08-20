@@ -46,12 +46,13 @@ public class AGRequestSerializerImpl  : AGRequestSerializer {
             queryString = self.stringFromParameters(parameters!)
         }
 
-        // TODO upload multiform
-        // TODO switch case instead of if
         if method == AGHttpMethod.GET || method == AGHttpMethod.HEAD || method == AGHttpMethod.DELETE {
             var paramSeparator = request.URL.query != nil ? "&" : "?"
-            var newUrl = "\(request.URL.absoluteString)\(paramSeparator)\(queryString)"
-            request.URL = NSURL.URLWithString(newUrl)
+            var newUrl:String
+            if (request.URL?.absoluteString != nil) {
+                newUrl = "\(request.URL.absoluteString!)\(paramSeparator)\(queryString)"
+                request.URL = NSURL.URLWithString(newUrl)
+            }
         } else {
             // POST, PUT
             var charset = CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding))

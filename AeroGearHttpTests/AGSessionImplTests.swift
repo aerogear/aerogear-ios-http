@@ -24,8 +24,8 @@ class AGSessionImplTests: XCTestCase {
 
     func http_200(request: NSURLRequest!, params:[String: String]?) -> StubResponse {
         var data: NSData
-        if (params) {
-            data = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: nil)
+        if ((params) != nil) {
+            data = NSJSONSerialization.dataWithJSONObject(params!, options: nil, error: nil)!
         } else {
             data = NSData.data()
         }
@@ -57,7 +57,7 @@ class AGSessionImplTests: XCTestCase {
         var url = "http://whatever.com"
         var http = AGSessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
         http.GET(nil, success: {(response: AnyObject?) -> Void in
-            if response {
+            if (response != nil) {
                 XCTAssertTrue(response!["key1"] as NSString == "value1")
                 getExpectation.fulfill()
             }
@@ -76,14 +76,14 @@ class AGSessionImplTests: XCTestCase {
         var url = "http://api.icndb.com/jokes"
         var http = AGSessionImpl(url: url)
         http.GET(nil, success: {(response: AnyObject?) -> Void in
-                if response {
+                if (response != nil) {
                     getExpectation.fulfill()
                 }
             }, failure: {(error: NSError) -> Void in
                 XCTAssertTrue(false, "should have retrieved jokes")
                 getExpectation.fulfill()
             })
-        waitForExpectationsWithTimeout(10, handler: {(error: NSError!) -> () in })
+        waitForExpectationsWithTimeout(20, handler: {(error: NSError!) -> () in })
 
     }
     
@@ -94,7 +94,7 @@ class AGSessionImplTests: XCTestCase {
         var url = "http://api.icndb.com/jokes/12"
         var http = AGSessionImpl(url: url)
         http.GET(nil, success: {(response: AnyObject?) -> Void in
-            if response {
+            if (response != nil) {
                 // to do with json response
                 if response is NSDictionary {println("::::isDict")}
                 println(":::::>>\(response)")
@@ -104,7 +104,7 @@ class AGSessionImplTests: XCTestCase {
                 XCTAssertTrue(false, "should have retrieved jokes")
                 getExpectation.fulfill()
             })
-        waitForExpectationsWithTimeout(10, handler: {(error: NSError!) -> () in })
+        waitForExpectationsWithTimeout(20, handler: {(error: NSError!) -> () in })
         
     }
     

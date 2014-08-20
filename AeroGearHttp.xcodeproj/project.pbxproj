@@ -42,26 +42,26 @@
 			remoteGlobalIDString = 488B6B5B196B19BC000297C9;
 			remoteInfo = AeroGearHttp;
 		};
-		48AD2D921982A1AA00E12EB2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 48AD2D8D1982A1AA00E12EB2 /* AGURLSessionStubs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6F3C40A1197BCCD80072D66A;
-			remoteInfo = AGURLSessionStubs;
-		};
-		48AD2D941982A1AA00E12EB2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 48AD2D8D1982A1AA00E12EB2 /* AGURLSessionStubs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6F3C40AC197BCCD80072D66A;
-			remoteInfo = AGURLSessionStubsTests;
-		};
 		48AD2D961982A1C800E12EB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 488B6B53196B19BC000297C9 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 488B6B5B196B19BC000297C9;
 			remoteInfo = AeroGearHttp;
+		};
+		48F463EA19A4C32E002858E0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48F463E519A4C32E002858E0 /* AGURLSessionStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6F3C40A1197BCCD80072D66A;
+			remoteInfo = AGURLSessionStubs;
+		};
+		48F463EC19A4C32E002858E0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 48F463E519A4C32E002858E0 /* AGURLSessionStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6F3C40AC197BCCD80072D66A;
+			remoteInfo = AGURLSessionStubsTests;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -80,7 +80,7 @@
 		488B6B91196C0993000297C9 /* AGRequestSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGRequestSerializer.swift; sourceTree = "<group>"; };
 		488B6B93196C09C9000297C9 /* AGRequestSerializerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGRequestSerializerImpl.swift; sourceTree = "<group>"; };
 		488B6B95196C315B000297C9 /* AGSessionImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AGSessionImpl.swift; sourceTree = "<group>"; };
-		48AD2D8D1982A1AA00E12EB2 /* AGURLSessionStubs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AGURLSessionStubs.xcodeproj; path = AGURLSessionStubs/AGURLSessionStubs.xcodeproj; sourceTree = "<group>"; };
+		48F463E519A4C32E002858E0 /* AGURLSessionStubs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AGURLSessionStubs.xcodeproj; path = "aerogear-ios-httpstub/AGURLSessionStubs.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,7 +155,7 @@
 		488B6B6B196B19BC000297C9 /* AeroGearHttpTests */ = {
 			isa = PBXGroup;
 			children = (
-				48AD2D8D1982A1AA00E12EB2 /* AGURLSessionStubs.xcodeproj */,
+				48F463E519A4C32E002858E0 /* AGURLSessionStubs.xcodeproj */,
 				488B6B6E196B19BC000297C9 /* AGSessionImplTests.swift */,
 				4840C2AC196D5CBE00065270 /* AGRequestSerializerTest.swift */,
 				488B6B6C196B19BC000297C9 /* Supporting Files */,
@@ -171,11 +171,11 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		48AD2D8E1982A1AA00E12EB2 /* Products */ = {
+		48F463E619A4C32E002858E0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				48AD2D931982A1AA00E12EB2 /* AGURLSessionStubs.framework */,
-				48AD2D951982A1AA00E12EB2 /* AGURLSessionStubsTests.xctest */,
+				48F463EB19A4C32E002858E0 /* AGURLSessionStubs.framework */,
+				48F463ED19A4C32E002858E0 /* AGURLSessionStubsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -263,8 +263,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 48AD2D8E1982A1AA00E12EB2 /* Products */;
-					ProjectRef = 48AD2D8D1982A1AA00E12EB2 /* AGURLSessionStubs.xcodeproj */;
+					ProductGroup = 48F463E619A4C32E002858E0 /* Products */;
+					ProjectRef = 48F463E519A4C32E002858E0 /* AGURLSessionStubs.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -276,18 +276,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		48AD2D931982A1AA00E12EB2 /* AGURLSessionStubs.framework */ = {
+		48F463EB19A4C32E002858E0 /* AGURLSessionStubs.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AGURLSessionStubs.framework;
-			remoteRef = 48AD2D921982A1AA00E12EB2 /* PBXContainerItemProxy */;
+			remoteRef = 48F463EA19A4C32E002858E0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		48AD2D951982A1AA00E12EB2 /* AGURLSessionStubsTests.xctest */ = {
+		48F463ED19A4C32E002858E0 /* AGURLSessionStubsTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = AGURLSessionStubsTests.xctest;
-			remoteRef = 48AD2D941982A1AA00E12EB2 /* PBXContainerItemProxy */;
+			remoteRef = 48F463EC19A4C32E002858E0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
