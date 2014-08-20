@@ -70,11 +70,15 @@ class AGSessionImplTests: XCTestCase {
     }
     
     func testGETWithoutParameters() {
+        // set up http stub
+        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+            return true
+            }, withStubResponse:( http_200_response ))
         // async test expectation
         let getExpectation = expectationWithDescription("Retrieve list of jokes");
         
         var url = "http://api.icndb.com/jokes"
-        var http = AGSessionImpl(url: url)
+        var http = AGSessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
         http.GET(nil, success: {(response: AnyObject?) -> Void in
                 if (response != nil) {
                     getExpectation.fulfill()
@@ -83,28 +87,29 @@ class AGSessionImplTests: XCTestCase {
                 XCTAssertTrue(false, "should have retrieved jokes")
                 getExpectation.fulfill()
             })
-        waitForExpectationsWithTimeout(20, handler: {(error: NSError!) -> () in })
+        waitForExpectationsWithTimeout(10, handler:nil)
 
     }
     
     func testGETWithoutParametersWithspecificId() {
+        // set up http stub
+        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+            return true
+            }, withStubResponse:( http_200_response ))
         // async test expectation
         let getExpectation = expectationWithDescription("Retrieve list of jokes");
         
         var url = "http://api.icndb.com/jokes/12"
-        var http = AGSessionImpl(url: url)
+        var http = AGSessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
         http.GET(nil, success: {(response: AnyObject?) -> Void in
             if (response != nil) {
-                // to do with json response
-                if response is NSDictionary {println("::::isDict")}
-                println(":::::>>\(response)")
                 getExpectation.fulfill()
             }
             }, failure: {(error: NSError) -> Void in
                 XCTAssertTrue(false, "should have retrieved jokes")
                 getExpectation.fulfill()
             })
-        waitForExpectationsWithTimeout(20, handler: {(error: NSError!) -> () in })
+        waitForExpectationsWithTimeout(10, handler: {(error: NSError!) -> () in })
         
     }
     
