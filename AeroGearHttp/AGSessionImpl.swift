@@ -40,7 +40,7 @@ public class AGSessionImpl : AGSession {
         self.responseSerializer = responseSerializer
     }
 
-    func call(url: NSURL, method: AGHttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> () {
+    func call(url: NSURL, method: AGHttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
         
         let serializedRequest = requestSerializer.request(method, parameters: parameters)
         

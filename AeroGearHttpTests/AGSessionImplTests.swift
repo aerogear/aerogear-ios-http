@@ -56,12 +56,12 @@ class AGSessionImplTests: XCTestCase {
         
         var url = "http://whatever.com"
         var http = AGSessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-        http.GET(nil, success: {(response: AnyObject?) -> Void in
+        http.GET(nil, success: {(response: AnyObject?) in
             if (response != nil) {
                 XCTAssertTrue(response!["key1"] as NSString == "value1")
                 getExpectation.fulfill()
             }
-            }, failure: {(error: NSError) -> Void in
+            }, failure: {(error: NSError) in
                 XCTAssertTrue(false, "should have retrieved jokes")
                 getExpectation.fulfill()
             })
@@ -79,11 +79,11 @@ class AGSessionImplTests: XCTestCase {
         
         var url = "http://api.icndb.com/jokes"
         var http = AGSessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-        http.GET(nil, success: {(response: AnyObject?) -> Void in
+        http.GET(nil, success: {(response: AnyObject?) in
                 if (response != nil) {
                     getExpectation.fulfill()
                 }
-            }, failure: {(error: NSError) -> Void in
+            }, failure: {(error: NSError) in
                 XCTAssertTrue(false, "should have retrieved jokes")
                 getExpectation.fulfill()
             })
@@ -101,11 +101,11 @@ class AGSessionImplTests: XCTestCase {
         
         var url = "http://api.icndb.com/jokes/12"
         var http = AGSessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-        http.GET(nil, success: {(response: AnyObject?) -> Void in
+        http.GET(nil, success: {(response: AnyObject?) in
             if (response != nil) {
                 getExpectation.fulfill()
             }
-            }, failure: {(error: NSError) -> Void in
+            }, failure: {(error: NSError) in
                 XCTAssertTrue(false, "should have retrieved jokes")
                 getExpectation.fulfill()
             })
