@@ -17,7 +17,7 @@
 
 import Foundation
 
-public class AGRequestSerializerImpl  : AGRequestSerializer {
+public class RequestSerializerImpl  : RequestSerializer {
     var url: NSURL
     var headers: [String: String]
     var stringEncoding: NSNumber
@@ -33,7 +33,7 @@ public class AGRequestSerializerImpl  : AGRequestSerializer {
         self.cachePolicy = .UseProtocolCachePolicy
     }
     
-    public func request(method: AGHttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest? {
+    public func request(method: HttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest? {
         var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
         request.HTTPMethod = method.toRaw()
         
@@ -46,7 +46,7 @@ public class AGRequestSerializerImpl  : AGRequestSerializer {
             queryString = self.stringFromParameters(parameters!)
         }
 
-        if method == AGHttpMethod.GET || method == AGHttpMethod.HEAD || method == AGHttpMethod.DELETE {
+        if method == HttpMethod.GET || method == HttpMethod.HEAD || method == HttpMethod.DELETE {
             var paramSeparator = request.URL.query != nil ? "&" : "?"
             var newUrl:String
             if (request.URL?.absoluteString != nil) {
@@ -64,7 +64,7 @@ public class AGRequestSerializerImpl  : AGRequestSerializer {
         return request
     }
     
-    public func multiPartRequest(method: AGHttpMethod) -> NSURLRequest? {
+    public func multiPartRequest(method: HttpMethod) -> NSURLRequest? {
         assert(method == .POST || method == .PUT, "PUT or POST only")
         var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
         request.HTTPMethod = method.toRaw()

@@ -17,10 +17,10 @@
 
 import Foundation
 
-let AGHtttpResponseSerializationErrorDomain = "org.aerogear.http.response";
+let HtttpResponseSerializationErrorDomain = "org.aerogear.http.response";
 
 
-class AGResponseSerializerImpl : AGResponseSerializer {
+class ResponseSerializerImpl : ResponseSerializer {
     
     func response(data: NSData) -> (AnyObject?) {
         return NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)
@@ -37,7 +37,7 @@ class AGResponseSerializerImpl : AGResponseSerializer {
                 NSURLErrorFailingURLErrorKey: httpResponse.URL
             ]
             
-            error = NSError(domain: AGHtttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
+            error = NSError(domain: HtttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
         }
         
         return isValid
