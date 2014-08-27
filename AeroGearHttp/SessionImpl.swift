@@ -17,11 +17,11 @@
 
 import Foundation
 
-public class AGSessionImpl : AGSession {
+public class SessionImpl : Session {
     var baseURL: NSURL
     var session: NSURLSession
-    var requestSerializer: AGRequestSerializer!
-    var responseSerializer: AGResponseSerializer!
+    var requestSerializer: RequestSerializer!
+    var responseSerializer: ResponseSerializer!
     
     public convenience init(url: String) {
         let baseURL = NSURL.URLWithString(url)
@@ -30,17 +30,17 @@ public class AGSessionImpl : AGSession {
     
     public convenience init(url: String, sessionConfig: NSURLSessionConfiguration?) {
         let baseURL = NSURL.URLWithString(url)
-        self.init(url: url, sessionConfig: sessionConfig, requestSerializer: AGRequestSerializerImpl(url: baseURL, headers: [String: String]()), responseSerializer: AGResponseSerializerImpl())
+        self.init(url: url, sessionConfig: sessionConfig, requestSerializer: RequestSerializerImpl(url: baseURL, headers: [String: String]()), responseSerializer: ResponseSerializerImpl())
     }
     
-    init(url: String, sessionConfig: NSURLSessionConfiguration?, requestSerializer: AGRequestSerializer, responseSerializer: AGResponseSerializer) {
+    init(url: String, sessionConfig: NSURLSessionConfiguration?, requestSerializer: RequestSerializer, responseSerializer: ResponseSerializer) {
         self.baseURL = NSURL.URLWithString(url)
         self.session = (sessionConfig == nil) ? NSURLSession.sharedSession() : NSURLSession(configuration: sessionConfig)
         self.requestSerializer = requestSerializer
         self.responseSerializer = responseSerializer
     }
 
-    func call(url: NSURL, method: AGHttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    func call(url: NSURL, method: HttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
         
         let serializedRequest = requestSerializer.request(method, parameters: parameters)
         
@@ -119,7 +119,7 @@ public class AGSessionImpl : AGSession {
         for (key, value) in parameters {
             if (value is NSData) {
                 body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-                // TODO fileName associated with image similar to AGFilePart
+                // TODO fileName associated with image similar to FilePart
                 body.appendData("Content-Disposition: form-data; name=\"photo\"; filename=\"filename.jpg\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
                 //body
             } else {

@@ -17,7 +17,7 @@
 
 import Foundation
 
-protocol AGRequestSerializer {
+protocol RequestSerializer {
     var url: NSURL {get set}
     var headers: Dictionary<String, String> {get set}
     var stringEncoding: NSNumber {get}
@@ -25,6 +25,6 @@ protocol AGRequestSerializer {
     var timeoutInterval: NSTimeInterval {get set}
     var boundary: String {get}
     
-    func request(method: AGHttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest?
-    func multiPartRequest(method: AGHttpMethod) -> NSURLRequest?
+    func request(method: HttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest?
+    func multiPartRequest(method: HttpMethod) -> NSURLRequest?
 }

@@ -17,7 +17,11 @@
 
 import Foundation
 
-protocol AGResponseSerializer {    
-    func response(data: NSData) -> (AnyObject?)
-    func validateResponse(response: NSURLResponse!, data: NSData!, inout error: NSError) -> Bool
+
+public enum HttpMethod: String {
+    case GET = "GET"
+    case HEAD = "HEAD"
+    case DELETE = "DELETE"
+    case POST = "POST"
+    case PUT = "PUT"
 }
