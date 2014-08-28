@@ -10,18 +10,26 @@ Taking care of:
 
 ## Example Usage
 
+This example is extracted from AeroGearSample.playground
 ```swift
-var http = AGSessionImpl(url: "http://server.com", sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-
+var url = "http://api.icndb.com/jokes"
+var http = Session(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
 http.GET(success: {(response: AnyObject?) in
-	if (response != nil) {
-		// do something 
-	}
-}, failure: {(error: NSError) in
-	// log error
+    if let unwrappedResponse = response as? Dictionary<String, AnyObject> {
+        println("Success: \(unwrappedResponse)")
+    }
+    }, failure: {(error: NSError) in
+        println("Error")
+})// log error
 })
 ```
-## Running tests
+Do you want to try it on your end? Follow next section steps.
+
+## Build, test and play with aerogear-ios-http
+
+1. Clone this project
+
+2. Get the dependencies
 
 The project uses [aerogear-ios-httpstub](https://github.com/aerogear/aerogear-ios-httpstub) framework for stubbing its http network requests. Before running the tests, ensure that a copy is added in your project using `git submodule`. On the root directory of the project run:
 
@@ -29,7 +37,13 @@ The project uses [aerogear-ios-httpstub](https://github.com/aerogear/aerogear-io
 git submodule init && git submodule update
 ```
 
-You are now ready to run the tests.
+3. open AeroGearHttp.xcworkspace
+
+4. Build and run test AGURLSessionStubs target on iPhone5s (64bits) target
+
+5. Build and run test AeroGearHttp target on iPhone5s (64bits) target
+
+6. If you want to give it a trial check AeroGearSample.playground
 
 ## Adding the library to your project 
 

@@ -11,7 +11,7 @@ build/*
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-*.xcworkspace
+project.xcworkspace
 !default.xcworkspace
 xcuserdata
 profile
@@ -25,3 +25,6 @@ Pods/
 
 #Docset/AppleDoc
 */Docset/*
+
+#playground
+AeroGearHttpSample.playground/timeline.xctimeline
