@@ -13,7 +13,7 @@ Taking care of:
 ```swift
 var http = AGSessionImpl(url: "http://server.com", sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
 
-http.GET(nil, success: {(response: AnyObject?) in
+http.GET(success: {(response: AnyObject?) in
 	if (response != nil) {
 		// do something 
 	}
