@@ -56,7 +56,7 @@ class SessionImplTests: XCTestCase {
         
         var url = "http://whatever.com"
         var http = SessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-        http.GET(nil, success: {(response: AnyObject?) in
+        http.GET(success: {(response: AnyObject?) in
             if (response != nil) {
                 XCTAssertTrue(response!["key1"] as NSString == "value1")
                 getExpectation.fulfill()
@@ -79,7 +79,7 @@ class SessionImplTests: XCTestCase {
         
         var url = "http://api.icndb.com/jokes"
         var http = SessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-        http.GET(nil, success: {(response: AnyObject?) in
+        http.GET(success: {(response: AnyObject?) in
                 if (response != nil) {
                     getExpectation.fulfill()
                 }
@@ -101,7 +101,7 @@ class SessionImplTests: XCTestCase {
         
         var url = "http://api.icndb.com/jokes/12"
         var http = SessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-        http.GET(nil, success: {(response: AnyObject?) in
+        http.GET(success: {(response: AnyObject?) in
             if (response != nil) {
                 getExpectation.fulfill()
             }

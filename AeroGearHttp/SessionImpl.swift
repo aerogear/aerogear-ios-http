@@ -65,27 +65,27 @@ public class SessionImpl : Session {
         task.resume()
     }
     
-    public func GET(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    public func GET(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
         self.call(self.baseURL, method: .GET, parameters: parameters, success, failure)
     }
     
-    public func POST(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    public func POST(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
         self.call(self.baseURL, method: .POST, parameters: parameters, success, failure)
     }
     
-    public func PUT(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    public func PUT(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
         self.call(self.baseURL, method: .PUT, parameters: parameters, success, failure)
     }
     
-    public func DELETE(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    public func DELETE(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
         self.call(self.baseURL, method: .DELETE, parameters: parameters, success, failure)
     }
     
-    public func HEAD(parameters: [String: AnyObject]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    public func HEAD(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
         self.call(self.baseURL, method: .HEAD, parameters: parameters, success, failure)
     }
     
-    public func multiPartUpload(parameters: [String: AnyObject], success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    public func multiPartUpload(parameters: [String: AnyObject], success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
 
         let serializedRequest = requestSerializer.multiPartRequest(.POST)
         
