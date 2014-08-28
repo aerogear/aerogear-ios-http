@@ -20,7 +20,7 @@ import XCTest
 import AeroGearHttp
 import AGURLSessionStubs
 
-class SessionImplTests: XCTestCase {
+class SessionTests: XCTestCase {
 
     func http_200(request: NSURLRequest!, params:[String: String]?) -> StubResponse {
         var data: NSData
@@ -55,7 +55,7 @@ class SessionImplTests: XCTestCase {
         let getExpectation = expectationWithDescription("Retrieve data with GET without parameters");
         
         var url = "http://whatever.com"
-        var http = SessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
+        var http = Session(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
         http.GET(success: {(response: AnyObject?) in
             if (response != nil) {
                 XCTAssertTrue(response!["key1"] as NSString == "value1")
@@ -78,7 +78,7 @@ class SessionImplTests: XCTestCase {
         let getExpectation = expectationWithDescription("Retrieve list of jokes");
         
         var url = "http://api.icndb.com/jokes"
-        var http = SessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
+        var http = Session(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
         http.GET(success: {(response: AnyObject?) in
                 if (response != nil) {
                     getExpectation.fulfill()
@@ -100,7 +100,7 @@ class SessionImplTests: XCTestCase {
         let getExpectation = expectationWithDescription("Retrieve list of jokes");
         
         var url = "http://api.icndb.com/jokes/12"
-        var http = SessionImpl(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
+        var http = Session(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
         http.GET(success: {(response: AnyObject?) in
             if (response != nil) {
                 getExpectation.fulfill()

@@ -20,7 +20,7 @@ import Foundation
 let HtttpResponseSerializationErrorDomain = "org.aerogear.http.response";
 
 
-class ResponseSerializerImpl : ResponseSerializer {
+class JsonResponseSerializer : ResponseSerializer {
     
     func response(data: NSData) -> (AnyObject?) {
         return NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)

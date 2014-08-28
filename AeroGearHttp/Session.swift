@@ -17,18 +17,120 @@
 
 import Foundation
 
-
-protocol Session {
+public class Session {
+    var baseURL: NSURL
+    var session: NSURLSession
+    var requestSerializer: RequestSerializer!
+    var responseSerializer: ResponseSerializer!
     
-    var baseURL: NSURL {get set}
-    var session: NSURLSession {get set}
-    var requestSerializer: RequestSerializer! {get set}
-    var responseSerializer: ResponseSerializer! {get set}
+    public convenience init(url: String) {
+        let baseURL = NSURL.URLWithString(url)
+        self.init(url: url, sessionConfig: nil)
+    }
     
-    func GET(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!)
-    func POST(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!)
-    func PUT(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!)
-    func DELETE(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!)
-    func HEAD(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!)
-    func multiPartUpload(parameters: [String: AnyObject], success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!)
+    public convenience init(url: String, sessionConfig: NSURLSessionConfiguration?) {
+        let baseURL = NSURL.URLWithString(url)
+        self.init(url: url, sessionConfig: sessionConfig, requestSerializer: JsonRequestSerializer(url: baseURL, headers: [String: String]()), responseSerializer: JsonResponseSerializer())
+    }
+    
+    init(url: String, sessionConfig: NSURLSessionConfiguration?, requestSerializer: RequestSerializer, responseSerializer: ResponseSerializer) {
+        self.baseURL = NSURL.URLWithString(url)
+        self.session = (sessionConfig == nil) ? NSURLSession.sharedSession() : NSURLSession(configuration: sessionConfig)
+        self.requestSerializer = requestSerializer
+        self.responseSerializer = responseSerializer
+    }
+    
+    func call(url: NSURL, method: HttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+        
+        let serializedRequest = requestSerializer.request(method, parameters: parameters)
+        
+        let task = session.dataTaskWithRequest(serializedRequest,
+            completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
+                println("response\(response)")
+                if error != nil {
+                    failure(error)
+                    return
+                }
+                var myError = NSError()
+                var isValid = self.responseSerializer?.validateResponse(response, data: data, error: &myError)
+                if (isValid == false) {
+                    failure(myError)
+                    return
+                }
+                if data != nil {
+                    var responseObject: AnyObject? = self.responseSerializer?.response(data)
+                    success(responseObject)
+                }
+        })
+        task.resume()
+    }
+    
+    public func GET(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
+        self.call(self.baseURL, method: .GET, parameters: parameters, success, failure)
+    }
+    
+    public func POST(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
+        self.call(self.baseURL, method: .POST, parameters: parameters, success, failure)
+    }
+    
+    public func PUT(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
+        self.call(self.baseURL, method: .PUT, parameters: parameters, success, failure)
+    }
+    
+    public func DELETE(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
+        self.call(self.baseURL, method: .DELETE, parameters: parameters, success, failure)
+    }
+    
+    public func HEAD(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
+        self.call(self.baseURL, method: .HEAD, parameters: parameters, success, failure)
+    }
+    
+    public func multiPartUpload(parameters: [String: AnyObject], success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
+        
+        let serializedRequest = requestSerializer.multiPartRequest(.POST)
+        
+        var body = buildBody(parameters)
+        
+        let task = session.uploadTaskWithRequest(serializedRequest,
+            fromData: body,
+            completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
+                println("response\(response)")
+                if error != nil {
+                    failure(error)
+                    return
+                }
+                var myError = NSError()
+                var isValid = self.responseSerializer?.validateResponse(response, data: data, error: &myError)
+                if (isValid == false) {
+                    failure(myError)
+                    return
+                }
+                if data != nil {
+                    var responseObject: AnyObject? = self.responseSerializer?.response(data)
+                    success(responseObject)
+                }
+        })
+        task.resume()
+    }
+    
+    func buildBody(parameters: [String: AnyObject]) -> NSData {
+        var body: NSMutableData = NSMutableData()
+        
+        for (key, value) in parameters {
+            if (value is NSData) {
+                body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+                // TODO fileName associated with image similar to FilePart
+                body.appendData("Content-Disposition: form-data; name=\"photo\"; filename=\"filename.jpg\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+                //body
+            } else {
+                body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+                body.appendData("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n\(value)".dataUsingEncoding(NSUTF8StringEncoding)!)
+                
+            }
+        }
+        body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        body.appendData("".dataUsingEncoding(NSUTF8StringEncoding)!)
+        return body
+    }
+    
 }

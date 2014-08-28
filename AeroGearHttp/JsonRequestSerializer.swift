@@ -17,7 +17,7 @@
 
 import Foundation
 
-public class RequestSerializerImpl  : RequestSerializer {
+public class JsonRequestSerializer  : RequestSerializer {
     var url: NSURL
     var headers: [String: String]
     var stringEncoding: NSNumber
