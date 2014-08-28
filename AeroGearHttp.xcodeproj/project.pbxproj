@@ -78,6 +78,7 @@
 		488B6B67196B19BC000297C9 /* AeroGearHttpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AeroGearHttpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		488B6B6D196B19BC000297C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		488B6B6E196B19BC000297C9 /* SessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTests.swift; sourceTree = "<group>"; };
+		48ECBB2A19AF677B00B53059 /* AeroGearHttpSample.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = AeroGearHttpSample.playground; sourceTree = "<group>"; };
 		48F463E519A4C32E002858E0 /* AGURLSessionStubs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AGURLSessionStubs.xcodeproj; path = "aerogear-ios-httpstub/AGURLSessionStubs.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -103,6 +104,7 @@
 		488B6B52196B19BC000297C9 = {
 			isa = PBXGroup;
 			children = (
+				48ECBB2A19AF677B00B53059 /* AeroGearHttpSample.playground */,
 				488B6B5E196B19BC000297C9 /* AeroGearHttp */,
 				488B6B6B196B19BC000297C9 /* AeroGearHttpTests */,
 				488B6B5D196B19BC000297C9 /* Products */,
