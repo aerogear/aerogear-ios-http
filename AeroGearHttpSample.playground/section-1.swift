@@ -4,7 +4,7 @@ import XCPlayground
 import AeroGearHttp
 
 // Simple GET
-var url = "http://api.icndb.com/jokes"
+var url = "http://api.icndb.com/jokes/1"
 var http = Session(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
 http.GET(success: {(response: AnyObject?) in
     if let unwrappedResponse = response as? Dictionary<String, AnyObject> {
