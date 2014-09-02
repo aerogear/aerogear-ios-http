@@ -18,7 +18,7 @@
 import Foundation
 
 public class Session {
-    var baseURL: NSURL
+    public var baseURL: NSURL
     var session: NSURLSession
     var requestSerializer: RequestSerializer!
     var responseSerializer: ResponseSerializer!
