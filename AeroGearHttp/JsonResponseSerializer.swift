@@ -32,9 +32,9 @@ class JsonResponseSerializer : ResponseSerializer {
 
         if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
             isValid = false
-            var userInfo = [
-                NSLocalizedDescriptionKey: "Request failed: \(httpResponse.statusCode)",
-                NSURLErrorFailingURLErrorKey: httpResponse.URL
+            var userInfo: [NSObject: AnyObject] = [
+                NSLocalizedDescriptionKey: "Request failed: \(httpResponse.statusCode)" as NSString,
+                NSURLErrorFailingURLErrorKey: httpResponse.URL?.absoluteString as NSString!
             ]
             
             error = NSError(domain: HtttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)

@@ -35,7 +35,7 @@ public class Session {
     
     init(url: String, sessionConfig: NSURLSessionConfiguration?, requestSerializer: RequestSerializer, responseSerializer: ResponseSerializer) {
         self.baseURL = NSURL.URLWithString(url)
-        self.session = (sessionConfig == nil) ? NSURLSession.sharedSession() : NSURLSession(configuration: sessionConfig)
+        self.session = (sessionConfig == nil) ? NSURLSession.sharedSession() : NSURLSession(configuration: sessionConfig!)
         self.requestSerializer = requestSerializer
         self.responseSerializer = responseSerializer
     }
@@ -44,25 +44,27 @@ public class Session {
         
         let serializedRequest = requestSerializer.request(method, parameters: parameters)
         
-        let task = session.dataTaskWithRequest(serializedRequest,
-            completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
-                println("response\(response)")
-                if error != nil {
-                    failure(error)
-                    return
-                }
-                var myError = NSError()
-                var isValid = self.responseSerializer?.validateResponse(response, data: data, error: &myError)
-                if (isValid == false) {
-                    failure(myError)
-                    return
-                }
-                if data != nil {
-                    var responseObject: AnyObject? = self.responseSerializer?.response(data)
-                    success(responseObject)
-                }
-        })
-        task.resume()
+        if (serializedRequest != nil) {
+            let task = session.dataTaskWithRequest(serializedRequest!,
+                completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
+                    println("response\(response)")
+                    if error != nil {
+                        failure(error)
+                        return
+                    }
+                    var myError = NSError()
+                    var isValid = self.responseSerializer?.validateResponse(response, data: data, error: &myError)
+                    if (isValid == false) {
+                        failure(myError)
+                        return
+                    }
+                    if data != nil {
+                        var responseObject: AnyObject? = self.responseSerializer?.response(data)
+                        success(responseObject)
+                    }
+            })
+            task.resume()
+        }
     }
     
     public func GET(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
@@ -90,27 +92,28 @@ public class Session {
         let serializedRequest = requestSerializer.multiPartRequest(.POST)
         
         var body = buildBody(parameters)
-        
-        let task = session.uploadTaskWithRequest(serializedRequest,
-            fromData: body,
-            completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
-                println("response\(response)")
-                if error != nil {
-                    failure(error)
-                    return
-                }
-                var myError = NSError()
-                var isValid = self.responseSerializer?.validateResponse(response, data: data, error: &myError)
-                if (isValid == false) {
-                    failure(myError)
-                    return
-                }
-                if data != nil {
-                    var responseObject: AnyObject? = self.responseSerializer?.response(data)
-                    success(responseObject)
-                }
-        })
-        task.resume()
+        if (serializedRequest != nil) {
+            let task = session.uploadTaskWithRequest(serializedRequest!,
+                fromData: body,
+                completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
+                    println("response\(response)")
+                    if error != nil {
+                        failure(error)
+                        return
+                    }
+                    var myError = NSError()
+                    var isValid = self.responseSerializer?.validateResponse(response, data: data, error: &myError)
+                    if (isValid == false) {
+                        failure(myError)
+                        return
+                    }
+                    if data != nil {
+                        var responseObject: AnyObject? = self.responseSerializer?.response(data)
+                        success(responseObject)
+                    }
+            })
+            task.resume()
+        }
     }
     
     func buildBody(parameters: [String: AnyObject]) -> NSData {
