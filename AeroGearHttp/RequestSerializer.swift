@@ -18,13 +18,13 @@
 import Foundation
 
 protocol RequestSerializer {
-    var url: NSURL {get set}
-    var headers: Dictionary<String, String> {get set}
+    var url: NSURL? {get set}
+    var headers: [String: String]? {get set}
     var stringEncoding: NSNumber {get}
     var cachePolicy: NSURLRequestCachePolicy {get}
     var timeoutInterval: NSTimeInterval {get set}
     var boundary: String {get}
     
-    func request(method: HttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest?
-    func multiPartRequest(method: HttpMethod) -> NSURLRequest?
+    func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest?
+    func multiPartRequest(url:NSURL, method: HttpMethod) -> NSURLRequest?
 }

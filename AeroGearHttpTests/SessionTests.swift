@@ -55,7 +55,7 @@ class SessionTests: XCTestCase {
         let getExpectation = expectationWithDescription("Retrieve data with GET without parameters");
         
         var url = "http://whatever.com"
-        var http = Session(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
+        var http = Http(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
         http.GET(success: {(response: AnyObject?) in
             if (response != nil) {
                 XCTAssertTrue(response!["key1"] as NSString == "value1")
@@ -78,7 +78,7 @@ class SessionTests: XCTestCase {
         let getExpectation = expectationWithDescription("Retrieve list of jokes");
         
         var url = "http://api.icndb.com/jokes"
-        var http = Session(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
+        var http = Http(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
         http.GET(success: {(response: AnyObject?) in
                 if (response != nil) {
                     getExpectation.fulfill()
@@ -100,7 +100,7 @@ class SessionTests: XCTestCase {
         let getExpectation = expectationWithDescription("Retrieve list of jokes");
         
         var url = "http://api.icndb.com/jokes/12"
-        var http = Session(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
+        var http = Http(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
         http.GET(success: {(response: AnyObject?) in
             if (response != nil) {
                 getExpectation.fulfill()
