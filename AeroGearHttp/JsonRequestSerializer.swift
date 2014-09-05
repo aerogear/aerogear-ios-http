@@ -47,10 +47,10 @@ public class JsonRequestSerializer  : RequestSerializer {
         }
 
         if method == HttpMethod.GET || method == HttpMethod.HEAD || method == HttpMethod.DELETE {
-            var paramSeparator = request.URL.query != nil ? "&" : "?"
+            var paramSeparator = request.URL?.query != nil ? "&" : "?"
             var newUrl:String
             if (request.URL?.absoluteString != nil) {
-                newUrl = "\(request.URL.absoluteString!)\(paramSeparator)\(queryString)"
+                newUrl = "\(request.URL!.absoluteString!)\(paramSeparator)\(queryString)"
                 request.URL = NSURL.URLWithString(newUrl)
             }
         } else {

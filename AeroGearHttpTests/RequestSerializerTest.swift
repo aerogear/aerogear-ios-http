@@ -37,7 +37,7 @@ class RequestSerializerTests: XCTestCase {
         var result = serialiser.request(.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
         let unwrappedResult = result!
         let expectedString = "http://api.icndb.com/jokes/12?array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four&param1=value1&numeric=5"
-        XCTAssertTrue(unwrappedResult.URL?.absoluteString == expectedString)
+        XCTAssertTrue(unwrappedResult.URL.absoluteString == expectedString)
     }
     
     func testMultiPartRequestWithPost() {
