@@ -17,6 +17,7 @@
 		488B6B62196B19BC000297C9 /* AeroGearHttp.h in Headers */ = {isa = PBXBuildFile; fileRef = 488B6B61196B19BC000297C9 /* AeroGearHttp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		488B6B6F196B19BC000297C9 /* SessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488B6B6E196B19BC000297C9 /* SessionTests.swift */; };
 		488B6B84196B1CD1000297C9 /* AeroGearHttp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 488B6B5C196B19BC000297C9 /* AeroGearHttp.framework */; };
+		C5CD06EB19B9B82600A80052 /* AGURLSessionStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F463EB19A4C32E002858E0 /* AGURLSessionStubs.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5CD06EB19B9B82600A80052 /* AGURLSessionStubs.framework in Frameworks */,
 				488B6B84196B1CD1000297C9 /* AeroGearHttp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
