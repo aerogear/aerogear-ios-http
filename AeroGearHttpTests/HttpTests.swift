@@ -20,7 +20,7 @@ import XCTest
 import AeroGearHttp
 import AGURLSessionStubs
 
-class SessionTests: XCTestCase {
+class HttpTests: XCTestCase {
 
     func http_200(request: NSURLRequest!, params:[String: String]?) -> StubResponse {
         var data: NSData
