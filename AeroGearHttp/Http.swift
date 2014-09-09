@@ -28,7 +28,6 @@ public class Http {
     }
     
     public convenience init(url: String?) {
-        let baseURL = url == nil ? nil : NSURL.URLWithString(url!)
         self.init(url: url, sessionConfig: nil)
     }
     
