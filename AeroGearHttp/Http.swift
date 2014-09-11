@@ -20,8 +20,8 @@ import Foundation
 public class Http {
     public var baseURL: NSURL?
     var session: NSURLSession
-    let requestSerializer: RequestSerializer
-    let responseSerializer: ResponseSerializer
+    public var requestSerializer: RequestSerializer
+    public var responseSerializer: ResponseSerializer
     
     public convenience init() {
         self.init(url: nil)
@@ -36,7 +36,7 @@ public class Http {
         self.init(url: url, sessionConfig: sessionConfig, requestSerializer: JsonRequestSerializer(url: baseURL, headers: headers), responseSerializer: JsonResponseSerializer())
     }
     
-    private init(url: String?, sessionConfig: NSURLSessionConfiguration?, requestSerializer: RequestSerializer, responseSerializer: ResponseSerializer) {
+    public init(url: String?, sessionConfig: NSURLSessionConfiguration?, requestSerializer: RequestSerializer, responseSerializer: ResponseSerializer) {
         self.baseURL = url == nil ? nil : NSURL.URLWithString(url!)
         self.session = (sessionConfig == nil) ? NSURLSession.sharedSession() : NSURLSession(configuration: sessionConfig!)
         self.requestSerializer = requestSerializer

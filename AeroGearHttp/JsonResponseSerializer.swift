@@ -20,13 +20,13 @@ import Foundation
 let HttpResponseSerializationErrorDomain = "org.aerogear.http.response";
 
 
-class JsonResponseSerializer : ResponseSerializer {
+public class JsonResponseSerializer : ResponseSerializer {
     
-    func response(data: NSData) -> (AnyObject?) {
+    public func response(data: NSData) -> (AnyObject?) {
         return NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)
     }
 
-    func validateResponse(response: NSURLResponse!, data: NSData!, inout error: NSError) -> Bool {
+    public func validateResponse(response: NSURLResponse!, data: NSData!, inout error: NSError) -> Bool {
         let httpResponse = response as NSHTTPURLResponse
         var isValid = true
 
@@ -41,5 +41,8 @@ class JsonResponseSerializer : ResponseSerializer {
         }
         
         return isValid
+    }
+    
+    public init() {
     }
 }

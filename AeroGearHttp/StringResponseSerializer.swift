@@ -18,13 +18,13 @@
 import Foundation
 
 
-class StringResponseSerializer : ResponseSerializer {
+public class StringResponseSerializer : ResponseSerializer {
     
-    func response(data: NSData) -> (AnyObject?) {
+    public func response(data: NSData) -> (AnyObject?) {
         return NSString(data: data, encoding:NSUTF8StringEncoding)
     }
     
-    func validateResponse(response: NSURLResponse!, data: NSData!, inout error: NSError) -> Bool {
+    public func validateResponse(response: NSURLResponse!, data: NSData!, inout error: NSError) -> Bool {
         let httpResponse = response as NSHTTPURLResponse
         var isValid = true
         
@@ -39,5 +39,8 @@ class StringResponseSerializer : ResponseSerializer {
         }
         
         return isValid
+    }
+    
+    public init() {
     }
 }

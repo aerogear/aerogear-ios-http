@@ -48,4 +48,11 @@ class RequestSerializerTests: XCTestCase {
         //XCTAssertTrue(result.description.rangeOfString("multipart/form-data; boundary=BOUNDARY_STRING\";"))
     }
     
+    func testStringResponseSerializer() {
+        var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
+        var serialiser = StringResponseSerializer()
+        
+        let result: String? = serialiser.response("some text received".dataUsingEncoding(NSUTF8StringEncoding)!) as? String
+        XCTAssertTrue(result == "some text received")
+    }
 }
