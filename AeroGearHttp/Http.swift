@@ -17,24 +17,27 @@
 
 import Foundation
 
-public class Session {
-    public var baseURL: NSURL
+public class Http {
+    public var baseURL: NSURL?
     var session: NSURLSession
-    var requestSerializer: RequestSerializer!
-    var responseSerializer: ResponseSerializer!
+    public var requestSerializer: RequestSerializer
+    public var responseSerializer: ResponseSerializer
     
-    public convenience init(url: String) {
-        let baseURL = NSURL.URLWithString(url)
+    public convenience init() {
+        self.init(url: nil)
+    }
+    
+    public convenience init(url: String?) {
         self.init(url: url, sessionConfig: nil)
     }
     
-    public convenience init(url: String, sessionConfig: NSURLSessionConfiguration?) {
-        let baseURL = NSURL.URLWithString(url)
-        self.init(url: url, sessionConfig: sessionConfig, requestSerializer: JsonRequestSerializer(url: baseURL, headers: [String: String]()), responseSerializer: JsonResponseSerializer())
+    public convenience init(url: String?, sessionConfig: NSURLSessionConfiguration?, headers: [String: String] = [String: String]()) {
+        let baseURL = url == nil ? nil : NSURL.URLWithString(url!)
+        self.init(url: url, sessionConfig: sessionConfig, requestSerializer: JsonRequestSerializer(url: baseURL, headers: headers), responseSerializer: JsonResponseSerializer())
     }
     
-    init(url: String, sessionConfig: NSURLSessionConfiguration?, requestSerializer: RequestSerializer, responseSerializer: ResponseSerializer) {
-        self.baseURL = NSURL.URLWithString(url)
+    public init(url: String?, sessionConfig: NSURLSessionConfiguration?, requestSerializer: RequestSerializer, responseSerializer: ResponseSerializer) {
+        self.baseURL = url == nil ? nil : NSURL.URLWithString(url!)
         self.session = (sessionConfig == nil) ? NSURLSession.sharedSession() : NSURLSession(configuration: sessionConfig!)
         self.requestSerializer = requestSerializer
         self.responseSerializer = responseSerializer
@@ -42,24 +45,23 @@ public class Session {
     
     func call(url: NSURL, method: HttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
         
-        let serializedRequest = requestSerializer.request(method, parameters: parameters)
+        let serializedRequest = requestSerializer.request(url, method: method, parameters: parameters)
         
         if (serializedRequest != nil) {
             let task = session.dataTaskWithRequest(serializedRequest!,
                 completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
-                    println("response\(response)")
                     if error != nil {
                         failure(error)
                         return
                     }
                     var myError = NSError()
-                    var isValid = self.responseSerializer?.validateResponse(response, data: data, error: &myError)
+                    var isValid = self.responseSerializer.validateResponse(response, data: data, error: &myError)
                     if (isValid == false) {
                         failure(myError)
                         return
                     }
                     if data != nil {
-                        var responseObject: AnyObject? = self.responseSerializer?.response(data)
+                        var responseObject: AnyObject? = self.responseSerializer.response(data)
                         success(responseObject)
                     }
             })
@@ -68,47 +70,56 @@ public class Session {
     }
     
     public func GET(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        self.call(self.baseURL, method: .GET, parameters: parameters, success, failure)
+        if let unwrappedURL = baseURL {
+            self.call(unwrappedURL, method: .GET, parameters: parameters, success, failure)
+        }
     }
     
     public func POST(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        self.call(self.baseURL, method: .POST, parameters: parameters, success, failure)
+        if let unwrappedURL = baseURL {
+            self.call(unwrappedURL, method: .POST, parameters: parameters, success, failure)
+        }
     }
     
     public func PUT(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        self.call(self.baseURL, method: .PUT, parameters: parameters, success, failure)
+        if let unwrappedURL = baseURL {
+            self.call(unwrappedURL, method: .PUT, parameters: parameters, success, failure)
+        }
     }
     
     public func DELETE(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        self.call(self.baseURL, method: .DELETE, parameters: parameters, success, failure)
+        if let unwrappedURL = baseURL {
+            self.call(unwrappedURL, method: .DELETE, parameters: parameters, success, failure)
+        }
     }
     
     public func HEAD(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        self.call(self.baseURL, method: .HEAD, parameters: parameters, success, failure)
+        if let unwrappedURL = baseURL {
+            self.call(unwrappedURL, method: .HEAD, parameters: parameters, success, failure)
+        }
     }
     
-    public func multiPartUpload(parameters: [String: AnyObject], success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
+    public func multiPartUpload(url: NSURL, parameters: [String: AnyObject], success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
         
-        let serializedRequest = requestSerializer.multiPartRequest(.POST)
+        let serializedRequest = requestSerializer.multiPartRequest(url, method: .POST)
         
         var body = buildBody(parameters)
         if (serializedRequest != nil) {
             let task = session.uploadTaskWithRequest(serializedRequest!,
                 fromData: body,
                 completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
-                    println("response\(response)")
                     if error != nil {
                         failure(error)
                         return
                     }
                     var myError = NSError()
-                    var isValid = self.responseSerializer?.validateResponse(response, data: data, error: &myError)
+                    var isValid = self.responseSerializer.validateResponse(response, data: data, error: &myError)
                     if (isValid == false) {
                         failure(myError)
                         return
                     }
                     if data != nil {
-                        var responseObject: AnyObject? = self.responseSerializer?.response(data)
+                        var responseObject: AnyObject? = self.responseSerializer.response(data)
                         success(responseObject)
                     }
             })
@@ -122,7 +133,7 @@ public class Session {
         for (key, value) in parameters {
             if (value is NSData) {
                 body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-                // TODO fileName associated with image similar to FilePart
+                // TODO AGIOS-229 fileName associated with image similar to FilePart
                 body.appendData("Content-Disposition: form-data; name=\"photo\"; filename=\"filename.jpg\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
                 //body
             } else {

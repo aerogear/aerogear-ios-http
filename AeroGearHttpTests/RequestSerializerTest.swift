@@ -34,18 +34,17 @@ class RequestSerializerTests: XCTestCase {
     func testGETWithParameters() {
         var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
         var serialiser = JsonRequestSerializer(url: url, headers: [String: String]())
-        var result = serialiser.request(.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
+        var result = serialiser.request(url, method:.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
         let unwrappedResult = result!
         let expectedString = "http://api.icndb.com/jokes/12?array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four&param1=value1&numeric=5"
         XCTAssertTrue(unwrappedResult.URL.absoluteString == expectedString)
     }
     
-    func testMultiPartRequestWithPost() {
+    func testStringResponseSerializer() {
         var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
-        var serialiser = JsonRequestSerializer(url: url, headers: [String: String]())
-        var result: NSURLRequest = serialiser.multiPartRequest(.POST)!
-
-        //XCTAssertTrue(result.description.rangeOfString("multipart/form-data; boundary=BOUNDARY_STRING\";"))
+        var serialiser = StringResponseSerializer()
+        
+        let result: String? = serialiser.response("some text received".dataUsingEncoding(NSUTF8StringEncoding)!) as? String
+        XCTAssertTrue(result == "some text received")
     }
-    
 }
