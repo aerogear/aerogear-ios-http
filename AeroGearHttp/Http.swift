@@ -22,6 +22,7 @@ public class Http {
     var session: NSURLSession
     public var requestSerializer: RequestSerializer
     public var responseSerializer: ResponseSerializer
+    public var authzModule: AuthzModule?
     
     public convenience init() {
         self.init(url: nil)
@@ -43,9 +44,9 @@ public class Http {
         self.responseSerializer = responseSerializer
     }
     
-    func call(url: NSURL, method: HttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    func call(url: NSURL, method: HttpMethod, parameters: Dictionary<String, AnyObject>?, headers:[String: String]?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
         
-        let serializedRequest = requestSerializer.request(url, method: method, parameters: parameters)
+        let serializedRequest = requestSerializer.request(url, method: method, parameters: parameters, headers: headers)
         
         if (serializedRequest != nil) {
             let task = session.dataTaskWithRequest(serializedRequest!,
@@ -55,14 +56,32 @@ public class Http {
                         return
                     }
                     var myError = NSError()
-                    var isValid = self.responseSerializer.validateResponse(response, data: data, error: &myError)
-                    if (isValid == false) {
-                        failure(myError)
-                        return
-                    }
-                    if data != nil {
-                        var responseObject: AnyObject? = self.responseSerializer.response(data)
-                        success(responseObject)
+                    var httpResponse = response as NSHTTPURLResponse
+                    if httpResponse.statusCode == 401 {
+                        
+                        if let unwrappedAuthz = self.authzModule {
+                            unwrappedAuthz.requestAccessSuccess({ (obj:AnyObject?) in
+                                if let unwrappedURL = self.baseURL {
+                                    let toto = unwrappedAuthz.authorizationFields()!
+                                    println("toto \(toto) \(unwrappedURL)")
+                                    self.call(unwrappedURL, method: method, parameters: parameters, headers: unwrappedAuthz.authorizationFields()!, success, failure)
+                                }
+                            }, failure: {(error: NSError) in
+                                    failure(error)
+                            })
+                        }
+                        
+                    } else {
+                        var isValid = self.responseSerializer.validateResponse(response, data: data, error: &myError)
+                        if (isValid == false) {
+                            failure(myError)
+                            return
+                        }
+                    
+                        if data != nil {
+                            var responseObject: AnyObject? = self.responseSerializer.response(data)
+                            success(responseObject)
+                        }
                     }
             })
             task.resume()
@@ -71,37 +90,38 @@ public class Http {
     
     public func GET(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
         if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .GET, parameters: parameters, success, failure)
+            self.call(unwrappedURL, method: .GET, parameters: parameters, headers: self.authzModule?.authorizationFields(), success, failure)
         }
     }
     
     public func POST(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
         if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .POST, parameters: parameters, success, failure)
+            self.call(unwrappedURL, method: .POST, parameters: parameters, headers: self.authzModule?.authorizationFields(), success, failure)
         }
     }
     
     public func PUT(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
         if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .PUT, parameters: parameters, success, failure)
+            self.call(unwrappedURL, method: .PUT, parameters: parameters, headers: self.authzModule?.authorizationFields(), success, failure)
         }
     }
     
     public func DELETE(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
         if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .DELETE, parameters: parameters, success, failure)
+            self.call(unwrappedURL, method: .DELETE, parameters: parameters, headers: self.authzModule?.authorizationFields(), success, failure)
         }
     }
     
     public func HEAD(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
         if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .HEAD, parameters: parameters, success, failure)
+            self.call(unwrappedURL, method: .HEAD, parameters: parameters, headers: self.authzModule?.authorizationFields(), success, failure)
         }
     }
     
+    // TODO add retry for sealless integration http-authz
     public func multiPartUpload(url: NSURL, parameters: [String: AnyObject], success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
         
-        let serializedRequest = requestSerializer.multiPartRequest(url, method: .POST)
+        let serializedRequest = requestSerializer.multiPartRequest(url, method: .POST, headers: self.authzModule?.authorizationFields())
         
         var body = buildBody(parameters)
         if (serializedRequest != nil) {
