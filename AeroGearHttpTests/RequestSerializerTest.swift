@@ -40,14 +40,6 @@ class RequestSerializerTests: XCTestCase {
         XCTAssertTrue(unwrappedResult.URL.absoluteString == expectedString)
     }
     
-    func testMultiPartRequestWithPost() {
-        var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
-        var serialiser = JsonRequestSerializer(url: url, headers: [String: String]())
-        var result: NSURLRequest = serialiser.multiPartRequest(url, method: .POST)!
-
-        //XCTAssertTrue(result.description.rangeOfString("multipart/form-data; boundary=BOUNDARY_STRING\";"))
-    }
-    
     func testStringResponseSerializer() {
         var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
         var serialiser = StringResponseSerializer()
