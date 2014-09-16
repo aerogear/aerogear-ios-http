@@ -17,14 +17,16 @@
 
 import Foundation
 
-public protocol RequestSerializer {
-    var url: NSURL? {get set}
-    var headers: [String: String]? {get set}
-    var stringEncoding: NSNumber {get}
-    var cachePolicy: NSURLRequestCachePolicy {get}
-    var timeoutInterval: NSTimeInterval {get set}
-    var boundary: String {get}
-    
-    func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]?) -> NSURLRequest?
-    func multiPartRequest(url:NSURL, method: HttpMethod, headers: [String: String]?) -> NSURLRequest?
+public typealias SuccessType = AnyObject?->()
+public typealias FailureType = NSError->()
+
+public protocol AuthzModule {
+    var http: Http {get}
+    func requestAccessSuccess(success: SuccessType, failure: FailureType)
+    func requestAuthorizationCodeSuccess(success: SuccessType, failure: FailureType)
+    func exchangeAuthorizationCodeForAccessToken(code: String, success: SuccessType, failure: FailureType)
+    func refreshAccessTokenSuccess(success: SuccessType, failure: FailureType)
+    func revokeAccessSuccess(success: SuccessType, failure: FailureType)
+    func authorizationFields() -> [String: String]?
+    func isAuthorized() -> Bool
 }
