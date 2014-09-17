@@ -33,13 +33,13 @@ public class JsonRequestSerializer  : RequestSerializer {
         self.cachePolicy = .UseProtocolCachePolicy
     }
     
-    public func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?) -> NSURLRequest? {
+    public func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]? = nil) -> NSURLRequest? {
         var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
         request.HTTPMethod = method.toRaw()
         
         // apply headers to new request
         if(headers != nil) {
-            for (key,val) in self.headers! {
+            for (key,val) in headers! {
                 request.addValue(val, forHTTPHeaderField: key)
             }
         }
@@ -66,12 +66,12 @@ public class JsonRequestSerializer  : RequestSerializer {
         return request
     }
     
-    public func multiPartRequest(url:NSURL, method: HttpMethod) -> NSURLRequest? {
+    public func multiPartRequest(url:NSURL, method: HttpMethod, headers: [String: String]?) -> NSURLRequest? {
         assert(method == .POST || method == .PUT, "PUT or POST only")
         var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
         request.HTTPMethod = method.toRaw()
         if(headers != nil) {
-            for (key,val) in self.headers! {
+            for (key,val) in headers! {
                 request.addValue(val, forHTTPHeaderField: key)
             }
         }
