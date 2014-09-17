@@ -21,7 +21,7 @@ public typealias SuccessType = AnyObject?->()
 public typealias FailureType = NSError->()
 
 public protocol AuthzModule {
-    var http: Http {get}
+    
     func requestAccessSuccess(success: SuccessType, failure: FailureType)
     func requestAuthorizationCodeSuccess(success: SuccessType, failure: FailureType)
     func exchangeAuthorizationCodeForAccessToken(code: String, success: SuccessType, failure: FailureType)
@@ -29,4 +29,5 @@ public protocol AuthzModule {
     func revokeAccessSuccess(success: SuccessType, failure: FailureType)
     func authorizationFields() -> [String: String]?
     func isAuthorized() -> Bool
+    
 }
