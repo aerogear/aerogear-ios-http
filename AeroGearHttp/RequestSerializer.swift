@@ -18,7 +18,7 @@
 import Foundation
 
 public protocol RequestSerializer {
-    var url: NSURL? {get set}
+    var url: NSURL {get set}
     var headers: [String: String]? {get set}
     var stringEncoding: NSNumber {get}
     var cachePolicy: NSURLRequestCachePolicy {get}

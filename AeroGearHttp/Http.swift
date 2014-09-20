@@ -18,28 +18,27 @@
 import Foundation
 
 public class Http {
-    public var baseURL: NSURL?
+
+    var baseURL: NSURL
     var session: NSURLSession
-    public var requestSerializer: RequestSerializer
-    public var responseSerializer: ResponseSerializer
-    public var authzModule: AuthzModule?
+    var requestSerializer: RequestSerializer
+    var responseSerializer: ResponseSerializer
+    var authzModule: AuthzModule?
     
-    public convenience init() {
-        self.init(url: nil)
+    public convenience init(url: String) {
+        self.init(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
     }
     
-    public convenience init(url: String?) {
-        self.init(url: url, sessionConfig: nil)
+    public convenience init(url: String, sessionConfig: NSURLSessionConfiguration) {
+        self.init(url: url,
+            sessionConfig: sessionConfig,
+            requestSerializer: JsonRequestSerializer(url: url),
+            responseSerializer: JsonResponseSerializer())
     }
     
-    public convenience init(url: String?, sessionConfig: NSURLSessionConfiguration?, headers: [String: String] = [String: String]()) {
-        let baseURL = url == nil ? nil : NSURL.URLWithString(url!)
-        self.init(url: url, sessionConfig: sessionConfig, requestSerializer: JsonRequestSerializer(url: baseURL, headers: headers), responseSerializer: JsonResponseSerializer())
-    }
-    
-    public init(url: String?, sessionConfig: NSURLSessionConfiguration?, requestSerializer: RequestSerializer, responseSerializer: ResponseSerializer) {
-        self.baseURL = url == nil ? nil : NSURL.URLWithString(url!)
-        self.session = (sessionConfig == nil) ? NSURLSession.sharedSession() : NSURLSession(configuration: sessionConfig!)
+    public init(url: String, sessionConfig: NSURLSessionConfiguration, requestSerializer: RequestSerializer, responseSerializer: ResponseSerializer) {
+        self.baseURL = NSURL.URLWithString(url)
+        self.session = NSURLSession(configuration: sessionConfig)
         self.requestSerializer = requestSerializer
         self.responseSerializer = responseSerializer
     }
@@ -57,26 +56,23 @@ public class Http {
                     }
                     var myError = NSError()
                     var httpResponse = response as NSHTTPURLResponse
-                    if httpResponse.statusCode == 401 {
+                    if httpResponse.statusCode == 401 && self.authzModule != nil {
                         
-                        if let unwrappedAuthz = self.authzModule {
-                            unwrappedAuthz.requestAccessSuccess({ (obj:AnyObject?) in
-                                if let unwrappedURL = self.baseURL {
-                                    // replay request
-                                    self.call(unwrappedURL, method: method, parameters: parameters, success, failure)
-                                }
-                                }, failure: {(error: NSError) in
-                                    failure(error)
+                            self.authzModule!.requestAccessSuccess({ (response) in
+                                // replay request
+                                self.call(self.baseURL, method: method, parameters: parameters, success, failure)
+
+                            }, failure: {(error) in
+                                failure(error)
                             })
-                        }
-                        
+
                     } else {
                         var isValid = self.responseSerializer.validateResponse(response, data: data, error: &myError)
                         if (isValid == false) {
                             failure(myError)
                             return
                         }
-                        
+                    
                         if data != nil {
                             var responseObject: AnyObject? = self.responseSerializer.response(data)
                             success(responseObject)
@@ -88,33 +84,23 @@ public class Http {
     }
     
     public func GET(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .GET, parameters: parameters, success, failure)
-        }
+        self.call(baseURL, method: .GET, parameters: parameters, success, failure)
     }
     
     public func POST(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .POST, parameters: parameters, success, failure)
-        }
+        self.call(baseURL, method: .POST, parameters: parameters, success, failure)
     }
     
     public func PUT(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .PUT, parameters: parameters, success, failure)
-        }
+        self.call(baseURL, method: .PUT, parameters: parameters, success, failure)
     }
     
     public func DELETE(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .DELETE, parameters: parameters, success, failure)
-        }
+        self.call(baseURL, method: .DELETE, parameters: parameters, success, failure)
     }
     
     public func HEAD(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .HEAD, parameters: parameters, success, failure)
-        }
+        self.call(baseURL, method: .HEAD, parameters: parameters, success, failure)
     }
     
     // TODO add retry for sealless integration http-authz

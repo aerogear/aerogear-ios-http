@@ -18,16 +18,16 @@
 import Foundation
 
 public class JsonRequestSerializer  : RequestSerializer {
-    public var url: NSURL?
+    
+    public var url: NSURL
     public var headers: [String: String]?
     public var stringEncoding: NSNumber
     public var cachePolicy: NSURLRequestCachePolicy
     public var timeoutInterval: NSTimeInterval
     public var boundary = "BOUNDARY_STRING"
     
-    public init(url: NSURL? = nil, headers: [String: String]? = nil) {
-        self.url = url
-        self.headers = headers
+    public init(url: String) {
+        self.url = NSURL.URLWithString(url)
         self.stringEncoding = NSUTF8StringEncoding
         self.timeoutInterval = 60
         self.cachePolicy = .UseProtocolCachePolicy
