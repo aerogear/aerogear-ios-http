@@ -43,68 +43,70 @@ public class Http {
         self.responseSerializer = responseSerializer
     }
     
-    func call(url: NSURL, method: HttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    func call(url: NSURL, method: HttpMethod, parameters: Dictionary<String, AnyObject>?, completionHandler: (AnyObject?, NSError?) -> Void) {
         
         let serializedRequest = requestSerializer.request(url, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
         
         if (serializedRequest != nil) {
             let task = session.dataTaskWithRequest(serializedRequest!,
-                completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
+                completionHandler: {(data, response, error) in
                     if error != nil {
-                        failure(error)
+                        completionHandler(nil, error)
                         return
                     }
-                    var myError = NSError()
                     var httpResponse = response as NSHTTPURLResponse
                     if httpResponse.statusCode == 401 && self.authzModule != nil {
                         
-                            self.authzModule!.requestAccessSuccess({ (response) in
+                            self.authzModule!.requestAccess({ (response, error) in
                                 // replay request
-                                self.call(self.baseURL, method: method, parameters: parameters, success, failure)
+                                self.call(self.baseURL, method: method, parameters: parameters, completionHandler: completionHandler)
 
-                            }, failure: {(error) in
-                                failure(error)
                             })
 
                     } else {
-                        var isValid = self.responseSerializer.validateResponse(response, data: data, error: &myError)
+                        
+                        var error: NSError?
+                        var isValid = self.responseSerializer.validateResponse(response, data: data, error: &error)
+                        
                         if (isValid == false) {
-                            failure(myError)
+                            completionHandler(nil, error)
                             return
                         }
                     
                         if data != nil {
                             var responseObject: AnyObject? = self.responseSerializer.response(data)
-                            success(responseObject)
+                            completionHandler(responseObject, nil)
                         }
                     }
             })
+            
+            // schedule task
             task.resume()
         }
     }
     
-    public func GET(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        self.call(baseURL, method: .GET, parameters: parameters, success, failure)
+    public func GET(parameters: [String: AnyObject]? = nil, completionHandler: (AnyObject?, NSError?) -> Void) {
+        self.call(baseURL, method: .GET, parameters: parameters, completionHandler: completionHandler)
     }
     
-    public func POST(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        self.call(baseURL, method: .POST, parameters: parameters, success, failure)
+    public func POST(parameters: [String: AnyObject]? = nil, completionHandler: (AnyObject?, NSError?) -> Void) {
+        self.call(baseURL, method: .POST, parameters: parameters, completionHandler: completionHandler)
     }
     
-    public func PUT(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        self.call(baseURL, method: .PUT, parameters: parameters, success, failure)
+    public func PUT(parameters: [String: AnyObject]? = nil, completionHandler: (AnyObject?, NSError?) -> Void) {
+        self.call(baseURL, method: .PUT, parameters: parameters, completionHandler: completionHandler)
     }
     
-    public func DELETE(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        self.call(baseURL, method: .DELETE, parameters: parameters, success, failure)
+    public func DELETE(parameters: [String: AnyObject]? = nil, completionHandler: (AnyObject?, NSError?) -> Void) {
+        self.call(baseURL, method: .DELETE, parameters: parameters, completionHandler: completionHandler)
     }
     
-    public func HEAD(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        self.call(baseURL, method: .HEAD, parameters: parameters, success, failure)
+    public func HEAD(parameters: [String: AnyObject]? = nil, completionHandler: (AnyObject?, NSError?) -> Void) {
+        self.call(baseURL, method: .HEAD, parameters: parameters, completionHandler: completionHandler)
     }
     
     // TODO add retry for sealless integration http-authz
-    public func multiPartUpload(url: NSURL, parameters: [String: AnyObject], success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
+    public func multiPartUpload(url: NSURL, parameters: [String: AnyObject], completionHandler: (AnyObject?, NSError?) -> Void) {
         
         let serializedRequest = requestSerializer.multiPartRequest(url, method: .POST, headers: self.authzModule?.authorizationFields())
         
@@ -114,18 +116,18 @@ public class Http {
                 fromData: body,
                 completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
                     if error != nil {
-                        failure(error)
+                        completionHandler(nil, error)
                         return
                     }
-                    var myError = NSError()
-                    var isValid = self.responseSerializer.validateResponse(response, data: data, error: &myError)
+                    var error: NSError?
+                    var isValid = self.responseSerializer.validateResponse(response, data: data, error: &error)
                     if (isValid == false) {
-                        failure(myError)
+                        completionHandler(nil, error)
                         return
                     }
                     if data != nil {
                         var responseObject: AnyObject? = self.responseSerializer.response(data)
-                        success(responseObject)
+                        completionHandler(responseObject, nil)
                     }
             })
             task.resume()

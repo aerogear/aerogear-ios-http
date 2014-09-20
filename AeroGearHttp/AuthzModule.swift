@@ -17,16 +17,13 @@
 
 import Foundation
 
-public typealias SuccessType = AnyObject?->()
-public typealias FailureType = NSError->()
-
 public protocol AuthzModule {
 
-    func requestAccessSuccess(success: SuccessType, failure: FailureType)
-    func requestAuthorizationCodeSuccess(success: SuccessType, failure: FailureType)
-    func exchangeAuthorizationCodeForAccessToken(code: String, success: SuccessType, failure: FailureType)
-    func refreshAccessTokenSuccess(success: SuccessType, failure: FailureType)
-    func revokeAccessSuccess(success: SuccessType, failure: FailureType)
+    func requestAccess(completionHandler: (AnyObject?, NSError?) -> Void)
+    func requestAuthorizationCode(completionHandler: (AnyObject?, NSError?) -> Void)
+    func exchangeAuthorizationCodeForAccessToken(code: String, completionHandler: (AnyObject?, NSError?) -> Void)
+    func refreshAccessToken(completionHandler: (AnyObject?, NSError?) -> Void)
+    func revokeAccess(completionHandler: (AnyObject?, NSError?) -> Void)
     func authorizationFields() -> [String: String]?
     func isAuthorized() -> Bool
     
