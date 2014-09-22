@@ -56,15 +56,12 @@ class HttpTests: XCTestCase {
         
         var url = "http://whatever.com"
         var http = Http(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-        http.GET(success: {(response: AnyObject?) in
+        http.GET(completionHandler: {(response, error) in
             if (response != nil) {
                 XCTAssertTrue(response!["key1"] as NSString == "value1")
                 getExpectation.fulfill()
             }
-            }, failure: {(error: NSError) in
-                XCTAssertTrue(false, "should have retrieved jokes")
-                getExpectation.fulfill()
-            })
+        })
         
         waitForExpectationsWithTimeout(10, handler: nil)
     }
@@ -79,14 +76,12 @@ class HttpTests: XCTestCase {
         
         var url = "http://api.icndb.com/jokes"
         var http = Http(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-        http.GET(success: {(response: AnyObject?) in
+        http.GET(completionHandler: {(response, error) in
                 if (response != nil) {
                     getExpectation.fulfill()
                 }
-            }, failure: {(error: NSError) in
-                XCTAssertTrue(false, "should have retrieved jokes")
-                getExpectation.fulfill()
-            })
+        })
+
         waitForExpectationsWithTimeout(10, handler:nil)
 
     }
@@ -101,14 +96,12 @@ class HttpTests: XCTestCase {
         
         var url = "http://api.icndb.com/jokes/12"
         var http = Http(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-        http.GET(success: {(response: AnyObject?) in
+        http.GET(completionHandler: {(response, error) in
             if (response != nil) {
                 getExpectation.fulfill()
             }
-            }, failure: {(error: NSError) in
-                XCTAssertTrue(false, "should have retrieved jokes")
-                getExpectation.fulfill()
-            })
+        })
+        
         waitForExpectationsWithTimeout(10, handler: {(error: NSError!) -> () in })
         
     }

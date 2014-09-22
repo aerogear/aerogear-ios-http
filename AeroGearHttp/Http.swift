@@ -55,8 +55,10 @@ public class Http {
                         return
                     }
                     var httpResponse = response as NSHTTPURLResponse
-                    if httpResponse.statusCode == 401 && self.authzModule != nil {
-                        
+                    if (    (httpResponse.statusCode == 401  /* Unauthorized */
+                          || httpResponse.statusCode == 400) /* Bad Request */
+                        && self.authzModule != nil) {
+                            // replay request with authz set
                             self.authzModule!.requestAccess({ (response, error) in
                                 // replay request
                                 self.call(self.baseURL, method: method, parameters: parameters, completionHandler: completionHandler)
@@ -104,54 +106,4 @@ public class Http {
     public func HEAD(parameters: [String: AnyObject]? = nil, completionHandler: (AnyObject?, NSError?) -> Void) {
         self.call(baseURL, method: .HEAD, parameters: parameters, completionHandler: completionHandler)
     }
-    
-    // TODO add retry for sealless integration http-authz
-    public func multiPartUpload(url: NSURL, parameters: [String: AnyObject], completionHandler: (AnyObject?, NSError?) -> Void) {
-        
-        let serializedRequest = requestSerializer.multiPartRequest(url, method: .POST, headers: self.authzModule?.authorizationFields())
-        
-        var body = buildBody(parameters)
-        if (serializedRequest != nil) {
-            let task = session.uploadTaskWithRequest(serializedRequest!,
-                fromData: body,
-                completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
-                    if error != nil {
-                        completionHandler(nil, error)
-                        return
-                    }
-                    var error: NSError?
-                    var isValid = self.responseSerializer.validateResponse(response, data: data, error: &error)
-                    if (isValid == false) {
-                        completionHandler(nil, error)
-                        return
-                    }
-                    if data != nil {
-                        var responseObject: AnyObject? = self.responseSerializer.response(data)
-                        completionHandler(responseObject, nil)
-                    }
-            })
-            task.resume()
-        }
-    }
-    
-    func buildBody(parameters: [String: AnyObject]) -> NSData {
-        var body: NSMutableData = NSMutableData()
-        
-        for (key, value) in parameters {
-            if (value is NSData) {
-                body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-                // TODO AGIOS-229 fileName associated with image similar to FilePart
-                body.appendData("Content-Disposition: form-data; name=\"photo\"; filename=\"filename.jpg\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-                //body
-            } else {
-                body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-                body.appendData("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n\(value)".dataUsingEncoding(NSUTF8StringEncoding)!)
-                
-            }
-        }
-        body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        body.appendData("".dataUsingEncoding(NSUTF8StringEncoding)!)
-        return body
-    }
-    
 }
