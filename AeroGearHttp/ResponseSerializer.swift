@@ -18,6 +18,8 @@
 import Foundation
 
 public protocol ResponseSerializer {
+    
     func response(data: NSData) -> (AnyObject?)
-    func validateResponse(response: NSURLResponse!, data: NSData!, inout error: NSError) -> Bool
+    func validateResponse(response: NSURLResponse!, data: NSData!, error: NSErrorPointer) -> Bool
+
 }

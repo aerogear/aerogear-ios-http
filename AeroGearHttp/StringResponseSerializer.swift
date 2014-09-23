@@ -24,7 +24,7 @@ public class StringResponseSerializer : ResponseSerializer {
         return NSString(data: data, encoding:NSUTF8StringEncoding)
     }
     
-    public func validateResponse(response: NSURLResponse!, data: NSData!, inout error: NSError) -> Bool {
+    public func validateResponse(response: NSURLResponse!, data: NSData!, error: NSErrorPointer) -> Bool {
         let httpResponse = response as NSHTTPURLResponse
         var isValid = true
         
@@ -35,7 +35,9 @@ public class StringResponseSerializer : ResponseSerializer {
                 NSURLErrorFailingURLErrorKey: httpResponse.URL?.absoluteString as NSString!
             ]
             
-            error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
+            if (error != nil) {
+                error.memory = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
+            }
         }
         
         return isValid

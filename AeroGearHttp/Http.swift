@@ -18,152 +18,92 @@
 import Foundation
 
 public class Http {
-    public var baseURL: NSURL?
+
+    var baseURL: NSURL
     var session: NSURLSession
-    public var requestSerializer: RequestSerializer
-    public var responseSerializer: ResponseSerializer
-    public var authzModule: AuthzModule?
+    var requestSerializer: RequestSerializer
+    var responseSerializer: ResponseSerializer
+    var authzModule: AuthzModule?
     
-    public convenience init() {
-        self.init(url: nil)
+    public convenience init(url: String) {
+        self.init(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
     }
     
-    public convenience init(url: String?) {
-        self.init(url: url, sessionConfig: nil)
+    public convenience init(url: String, sessionConfig: NSURLSessionConfiguration) {
+        self.init(url: url,
+            sessionConfig: sessionConfig,
+            requestSerializer: JsonRequestSerializer(url: url),
+            responseSerializer: JsonResponseSerializer())
     }
     
-    public convenience init(url: String?, sessionConfig: NSURLSessionConfiguration?, headers: [String: String] = [String: String]()) {
-        let baseURL = url == nil ? nil : NSURL.URLWithString(url!)
-        self.init(url: url, sessionConfig: sessionConfig, requestSerializer: JsonRequestSerializer(url: baseURL, headers: headers), responseSerializer: JsonResponseSerializer())
-    }
-    
-    public init(url: String?, sessionConfig: NSURLSessionConfiguration?, requestSerializer: RequestSerializer, responseSerializer: ResponseSerializer) {
-        self.baseURL = url == nil ? nil : NSURL.URLWithString(url!)
-        self.session = (sessionConfig == nil) ? NSURLSession.sharedSession() : NSURLSession(configuration: sessionConfig!)
+    public init(url: String, sessionConfig: NSURLSessionConfiguration, requestSerializer: RequestSerializer, responseSerializer: ResponseSerializer) {
+        self.baseURL = NSURL.URLWithString(url)
+        self.session = NSURLSession(configuration: sessionConfig)
         self.requestSerializer = requestSerializer
         self.responseSerializer = responseSerializer
     }
     
-    func call(url: NSURL, method: HttpMethod, parameters: Dictionary<String, AnyObject>?, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) -> Void {
+    func call(url: NSURL, method: HttpMethod, parameters: Dictionary<String, AnyObject>?, completionHandler: (AnyObject?, NSError?) -> Void) {
         
         let serializedRequest = requestSerializer.request(url, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
         
         if (serializedRequest != nil) {
             let task = session.dataTaskWithRequest(serializedRequest!,
-                completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
+                completionHandler: {(data, response, error) in
                     if error != nil {
-                        failure(error)
+                        completionHandler(nil, error)
                         return
                     }
-                    var myError = NSError()
                     var httpResponse = response as NSHTTPURLResponse
-                    if httpResponse.statusCode == 401 {
-                        
-                        if let unwrappedAuthz = self.authzModule {
-                            unwrappedAuthz.requestAccessSuccess({ (obj:AnyObject?) in
-                                if let unwrappedURL = self.baseURL {
-                                    // replay request
-                                    self.call(unwrappedURL, method: method, parameters: parameters, success, failure)
-                                }
-                                }, failure: {(error: NSError) in
-                                    failure(error)
+                    if (    (httpResponse.statusCode == 401  /* Unauthorized */
+                          || httpResponse.statusCode == 400) /* Bad Request */
+                        && self.authzModule != nil) {
+                            // replay request with authz set
+                            self.authzModule!.requestAccess({ (response, error) in
+                                // replay request
+                                self.call(self.baseURL, method: method, parameters: parameters, completionHandler: completionHandler)
+
                             })
-                        }
-                        
+
                     } else {
-                        var isValid = self.responseSerializer.validateResponse(response, data: data, error: &myError)
+                        
+                        var error: NSError?
+                        var isValid = self.responseSerializer.validateResponse(response, data: data, error: &error)
+                        
                         if (isValid == false) {
-                            failure(myError)
+                            completionHandler(nil, error)
                             return
                         }
-                        
+                    
                         if data != nil {
                             var responseObject: AnyObject? = self.responseSerializer.response(data)
-                            success(responseObject)
+                            completionHandler(responseObject, nil)
                         }
                     }
             })
+            
+            // schedule task
             task.resume()
         }
     }
     
-    public func GET(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .GET, parameters: parameters, success, failure)
-        }
+    public func GET(parameters: [String: AnyObject]? = nil, completionHandler: (AnyObject?, NSError?) -> Void) {
+        self.call(baseURL, method: .GET, parameters: parameters, completionHandler: completionHandler)
     }
     
-    public func POST(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .POST, parameters: parameters, success, failure)
-        }
+    public func POST(parameters: [String: AnyObject]? = nil, completionHandler: (AnyObject?, NSError?) -> Void) {
+        self.call(baseURL, method: .POST, parameters: parameters, completionHandler: completionHandler)
     }
     
-    public func PUT(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .PUT, parameters: parameters, success, failure)
-        }
+    public func PUT(parameters: [String: AnyObject]? = nil, completionHandler: (AnyObject?, NSError?) -> Void) {
+        self.call(baseURL, method: .PUT, parameters: parameters, completionHandler: completionHandler)
     }
     
-    public func DELETE(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .DELETE, parameters: parameters, success, failure)
-        }
+    public func DELETE(parameters: [String: AnyObject]? = nil, completionHandler: (AnyObject?, NSError?) -> Void) {
+        self.call(baseURL, method: .DELETE, parameters: parameters, completionHandler: completionHandler)
     }
     
-    public func HEAD(parameters: [String: AnyObject]? = nil, success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        if let unwrappedURL = baseURL {
-            self.call(unwrappedURL, method: .HEAD, parameters: parameters, success, failure)
-        }
+    public func HEAD(parameters: [String: AnyObject]? = nil, completionHandler: (AnyObject?, NSError?) -> Void) {
+        self.call(baseURL, method: .HEAD, parameters: parameters, completionHandler: completionHandler)
     }
-    
-    // TODO add retry for sealless integration http-authz
-    public func multiPartUpload(url: NSURL, parameters: [String: AnyObject], success:((AnyObject?) -> Void)!, failure:((NSError) -> Void)!) {
-        
-        let serializedRequest = requestSerializer.multiPartRequest(url, method: .POST, headers: self.authzModule?.authorizationFields())
-        
-        var body = buildBody(parameters)
-        if (serializedRequest != nil) {
-            let task = session.uploadTaskWithRequest(serializedRequest!,
-                fromData: body,
-                completionHandler: {(data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
-                    if error != nil {
-                        failure(error)
-                        return
-                    }
-                    var myError = NSError()
-                    var isValid = self.responseSerializer.validateResponse(response, data: data, error: &myError)
-                    if (isValid == false) {
-                        failure(myError)
-                        return
-                    }
-                    if data != nil {
-                        var responseObject: AnyObject? = self.responseSerializer.response(data)
-                        success(responseObject)
-                    }
-            })
-            task.resume()
-        }
-    }
-    
-    func buildBody(parameters: [String: AnyObject]) -> NSData {
-        var body: NSMutableData = NSMutableData()
-        
-        for (key, value) in parameters {
-            if (value is NSData) {
-                body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-                // TODO AGIOS-229 fileName associated with image similar to FilePart
-                body.appendData("Content-Disposition: form-data; name=\"photo\"; filename=\"filename.jpg\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-                //body
-            } else {
-                body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-                body.appendData("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n\(value)".dataUsingEncoding(NSUTF8StringEncoding)!)
-                
-            }
-        }
-        body.appendData("\r\n--\(requestSerializer.boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        body.appendData("".dataUsingEncoding(NSUTF8StringEncoding)!)
-        return body
-    }
-    
 }

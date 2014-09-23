@@ -32,9 +32,9 @@ class RequestSerializerTests: XCTestCase {
     }
     
     func testGETWithParameters() {
-        var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
-        var serialiser = JsonRequestSerializer(url: url, headers: [String: String]())
-        var result = serialiser.request(url, method:.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
+        var url = "http://api.icndb.com/jokes/12"
+        var serialiser = JsonRequestSerializer(url: url)
+        var result = serialiser.request(NSURL.URLWithString(url), method:.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
         let unwrappedResult = result!
         let expectedString = "http://api.icndb.com/jokes/12?array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four&param1=value1&numeric=5"
         XCTAssertTrue(unwrappedResult.URL.absoluteString == expectedString)

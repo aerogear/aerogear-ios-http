@@ -17,13 +17,25 @@
 
 import Foundation
 
-public protocol RequestSerializer {
+public class MultiPartData {
+
+    public var name: String
+    public var filename: String
+    public var mimeType: String
+    public var data: NSData
     
-    var url: NSURL {get set}
-    var headers: [String: String]? {get set}
-    var stringEncoding: NSNumber {get}
-    var cachePolicy: NSURLRequestCachePolicy {get}
-    var timeoutInterval: NSTimeInterval {get set}
+    init(url: NSURL, mimeType: String) {
+        self.name = url.lastPathComponent
+        self.filename = url.lastPathComponent
+        self.mimeType = mimeType;
+        
+        self.data = NSData(contentsOfURL: url)
+    }
     
-    func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]?) -> NSURLRequest?
+    init(data: NSData, name: String, filename: String, mimeType: String) {
+        self.data = data;
+        self.name = name;
+        self.filename = filename;
+        self.mimeType = mimeType;
+    }
 }

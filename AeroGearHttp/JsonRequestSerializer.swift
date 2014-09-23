@@ -18,16 +18,15 @@
 import Foundation
 
 public class JsonRequestSerializer  : RequestSerializer {
-    public var url: NSURL?
+    
+    public var url: NSURL
     public var headers: [String: String]?
     public var stringEncoding: NSNumber
     public var cachePolicy: NSURLRequestCachePolicy
     public var timeoutInterval: NSTimeInterval
-    public var boundary = "BOUNDARY_STRING"
     
-    public init(url: NSURL? = nil, headers: [String: String]? = nil) {
-        self.url = url
-        self.headers = headers
+    public init(url: String) {
+        self.url = NSURL.URLWithString(url)
         self.stringEncoding = NSUTF8StringEncoding
         self.timeoutInterval = 60
         self.cachePolicy = .UseProtocolCachePolicy
@@ -43,43 +42,49 @@ public class JsonRequestSerializer  : RequestSerializer {
                 request.addValue(val, forHTTPHeaderField: key)
             }
         }
-        var queryString = ""
-        if parameters != nil {
-            queryString = self.stringFromParameters(parameters!)
-        }
-
+        
         if method == HttpMethod.GET || method == HttpMethod.HEAD || method == HttpMethod.DELETE {
             var paramSeparator = request.URL?.query != nil ? "&" : "?"
             var newUrl:String
-            if (request.URL?.absoluteString != nil) {
-                newUrl = "\(request.URL!.absoluteString!)\(paramSeparator)\(queryString)"
-                request.URL = NSURL.URLWithString(newUrl)
+            if (request.URL?.absoluteString != nil && parameters != nil) {
+                    let queryString = self.stringFromParameters(parameters!)
+                    newUrl = "\(request.URL!.absoluteString!)\(paramSeparator)\(queryString)"
+                    request.URL = NSURL.URLWithString(newUrl)
             }
+            
         } else {
-            // POST, PUT
-            var charset = CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding))
-            if request.valueForHTTPHeaderField("Content-Type") == nil {
-                request.setValue("application/x-www-form-urlencoded; charset=\(charset)", forHTTPHeaderField:"Content-Type")
+            
+            var type: String?
+            var body: NSData?
+            
+            // determine if params contain multipart data
+            if hasMultiPartData(parameters!) {
+                let boundary = "AG-boundary-\(arc4random())-\(arc4random())"
+                body = self.multiPartBodyFromParams(parameters!, boundary: boundary)
+                type = "multipart/form-data; boundary=\(boundary)"
             }
-            request.HTTPBody = queryString.dataUsingEncoding(NSUTF8StringEncoding)
+            else {
+                
+                // TODO: this should be really json
+                //body =  NSJSONSerialization.dataWithJSONObject(parameters!, options: nil, error: nil)
+                //type = "application/json"
+                
+                // this should be json
+                body = self.stringFromParameters(parameters!).dataUsingEncoding(NSUTF8StringEncoding)
+                type = "application/x-www-form-urlencoded"
+            }
+            
+            if body != nil {
+                request.setValue(type, forHTTPHeaderField: "Content-Type")
+                request.setValue("\(body?.length)", forHTTPHeaderField: "Content-Length")
+                request.HTTPBody = body
+            }
         }
+        
         return request
     }
     
-    public func multiPartRequest(url:NSURL, method: HttpMethod, headers: [String: String]?) -> NSURLRequest? {
-        assert(method == .POST || method == .PUT, "PUT or POST only")
-        var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
-        request.HTTPMethod = method.toRaw()
-        if(headers != nil) {
-            for (key,val) in headers! {
-                request.addValue(val, forHTTPHeaderField: key)
-            }
-        }
-        var contentType = "multipart/form-data; boundary=\(boundary)"
-        request.addValue(contentType, forHTTPHeaderField:"Content-Type")
-        return request
-    }
-    
+
     func stringFromParameters(parameters: [String: AnyObject]) -> String {
         return join("&", map(serialize((nil, parameters)), {(tuple) in
             return self.stringValue(tuple)
@@ -126,4 +131,56 @@ public class JsonRequestSerializer  : RequestSerializer {
         return "\(escapeString(tuple.0!))=\(escapeString(val))"
     }
     
+    func multiPartBodyFromParams(parameters: [String: AnyObject], boundary: String) -> NSData {
+        var data = NSMutableData()
+        
+        let prefixData = "--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)
+        let seperData = "\r\n".dataUsingEncoding(NSUTF8StringEncoding)
+
+        for (key, value) in parameters {
+            var sectionData: NSData?
+            var sectionType: String?
+            var sectionFilename = ""
+            
+            if value is MultiPartData {
+                let multiData = value as MultiPartData
+                sectionData = multiData.data
+                sectionType = multiData.mimeType
+                sectionFilename = " filename=\"\(multiData.filename)\""
+            } else {
+                sectionData = "\(value)".dataUsingEncoding(NSUTF8StringEncoding)
+            }
+            
+            data.appendData(prefixData!)
+            
+            let sectionDisposition = "Content-Disposition: form-data; name=\"\(key)\";\(sectionFilename)\r\n".dataUsingEncoding(NSUTF8StringEncoding)
+            data.appendData(sectionDisposition!)
+            
+            if let type = sectionType {
+                let contentType = "Content-Type: \(type)\r\n".dataUsingEncoding(NSUTF8StringEncoding)
+                data.appendData(contentType!)
+            }
+            
+            // append data
+            data.appendData(seperData!)
+            data.appendData(sectionData!)
+            data.appendData(seperData!)
+        }
+        
+        data.appendData("--\(boundary)--\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+
+        return data
+    }
+    
+    func hasMultiPartData(parameters: [String: AnyObject]) -> Bool {
+        var isMultiPart = false
+        for (_, value) in parameters {
+            if value is MultiPartData {
+                isMultiPart = true
+                break
+            }
+        }
+        
+        return isMultiPart
+    }
 }
