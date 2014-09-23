@@ -19,11 +19,11 @@ import Foundation
 
 public class Http {
 
-    var baseURL: NSURL
-    var session: NSURLSession
-    var requestSerializer: RequestSerializer
-    var responseSerializer: ResponseSerializer
-    var authzModule: AuthzModule?
+    public var baseURL: NSURL
+    public var session: NSURLSession
+    public var requestSerializer: RequestSerializer
+    public var responseSerializer: ResponseSerializer
+    public var authzModule: AuthzModule?
     
     public convenience init(url: String) {
         self.init(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
