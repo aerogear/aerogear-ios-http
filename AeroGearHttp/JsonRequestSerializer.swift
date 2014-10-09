@@ -17,7 +17,7 @@
 
 import Foundation
 
-public class JsonRequestSerializer  : RequestSerializer {
+public class JsonRequestSerializer:  RequestSerializer {
     
     public var url: NSURL
     public var headers: [String: String]?
@@ -26,7 +26,7 @@ public class JsonRequestSerializer  : RequestSerializer {
     public var timeoutInterval: NSTimeInterval
     
     public init(url: String) {
-        self.url = NSURL.URLWithString(url)
+        self.url = NSURL(string:  url)!
         self.stringEncoding = NSUTF8StringEncoding
         self.timeoutInterval = 60
         self.cachePolicy = .UseProtocolCachePolicy
@@ -34,7 +34,7 @@ public class JsonRequestSerializer  : RequestSerializer {
     
     public func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]? = nil) -> NSURLRequest? {
         var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
-        request.HTTPMethod = method.toRaw()
+        request.HTTPMethod = method.rawValue
         
         // apply headers to new request
         if(headers != nil) {
@@ -49,7 +49,7 @@ public class JsonRequestSerializer  : RequestSerializer {
             if (request.URL?.absoluteString != nil && parameters != nil) {
                     let queryString = self.stringFromParameters(parameters!)
                     newUrl = "\(request.URL!.absoluteString!)\(paramSeparator)\(queryString)"
-                    request.URL = NSURL.URLWithString(newUrl)
+                request.URL = NSURL(string: newUrl)!
             }
             
         } else {

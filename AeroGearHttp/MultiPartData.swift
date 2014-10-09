@@ -29,7 +29,7 @@ public class MultiPartData {
         self.filename = url.lastPathComponent
         self.mimeType = mimeType;
         
-        self.data = NSData(contentsOfURL: url)
+        self.data = NSData(contentsOfURL: url)!
     }
     
     init(data: NSData, name: String, filename: String, mimeType: String) {

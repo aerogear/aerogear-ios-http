@@ -1,5 +1,5 @@
 // To run this playground, follow the instruction in README.md
-
+/*
 import XCPlayground
 import AeroGearHttp
 
@@ -27,3 +27,4 @@ httpPost.POST(success: {(response: AnyObject?) in
 
 
 XCPSetExecutionShouldContinueIndefinitely()
+*/

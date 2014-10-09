@@ -34,14 +34,14 @@ class RequestSerializerTests: XCTestCase {
     func testGETWithParameters() {
         var url = "http://api.icndb.com/jokes/12"
         var serialiser = JsonRequestSerializer(url: url)
-        var result = serialiser.request(NSURL.URLWithString(url), method:.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
+        var result = serialiser.request(NSURL(string: url)!, method:.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
         let unwrappedResult = result!
-        let expectedString = "http://api.icndb.com/jokes/12?array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four&param1=value1&numeric=5"
+        let expectedString = "http://api.icndb.com/jokes/12?param1=value1&numeric=5&array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four"
         XCTAssertTrue(unwrappedResult.URL.absoluteString == expectedString)
     }
     
     func testStringResponseSerializer() {
-        var url = NSURL.URLWithString("http://api.icndb.com/jokes/12")
+        var url = NSURL(string: "http://api.icndb.com/jokes/12")
         var serialiser = StringResponseSerializer()
         
         let result: String? = serialiser.response("some text received".dataUsingEncoding(NSUTF8StringEncoding)!) as? String

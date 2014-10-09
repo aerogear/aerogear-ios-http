@@ -21,7 +21,7 @@ public class Http {
 
     public var baseURL: NSURL
     public var session: NSURLSession
-    public var requestSerializer: RequestSerializer
+    public var requestSerializer: JsonRequestSerializer
     public var responseSerializer: ResponseSerializer
     public var authzModule: AuthzModule?
     
@@ -36,8 +36,8 @@ public class Http {
             responseSerializer: JsonResponseSerializer())
     }
     
-    public init(url: String, sessionConfig: NSURLSessionConfiguration, requestSerializer: RequestSerializer, responseSerializer: ResponseSerializer) {
-        self.baseURL = NSURL.URLWithString(url)
+    public init(url: String, sessionConfig: NSURLSessionConfiguration, requestSerializer: JsonRequestSerializer, responseSerializer: ResponseSerializer) {
+        self.baseURL = NSURL(string: url)!
         self.session = NSURLSession(configuration: sessionConfig)
         self.requestSerializer = requestSerializer
         self.responseSerializer = responseSerializer
