@@ -24,7 +24,7 @@ public class MultiPartData {
     public var mimeType: String
     public var data: NSData
     
-    init(url: NSURL, mimeType: String) {
+    public init(url: NSURL, mimeType: String) {
         self.name = url.lastPathComponent
         self.filename = url.lastPathComponent
         self.mimeType = mimeType;
@@ -32,7 +32,7 @@ public class MultiPartData {
         self.data = NSData(contentsOfURL: url)!
     }
     
-    init(data: NSData, name: String, filename: String, mimeType: String) {
+    public init(data: NSData, name: String, filename: String, mimeType: String) {
         self.data = data;
         self.name = name;
         self.filename = filename;

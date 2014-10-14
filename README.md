@@ -1,4 +1,4 @@
-# aerogear-ios-http
+:a# aerogear-ios-http
 Thin layer to take care of your http requests working with NSURLSession. 
 Taking care of: 
 

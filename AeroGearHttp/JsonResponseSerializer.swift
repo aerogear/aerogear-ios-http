@@ -17,8 +17,7 @@
 
 import Foundation
 
-let HttpResponseSerializationErrorDomain = "org.aerogear.http.response";
-
+let HttpResponseSerializationErrorDomain = "org.aerogear.http.response"
 
 public class JsonResponseSerializer : ResponseSerializer {
     
@@ -26,7 +25,7 @@ public class JsonResponseSerializer : ResponseSerializer {
         return NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)
     }
 
-    public func validateResponse(response: NSURLResponse!, data: NSData!, error: NSErrorPointer) -> Bool {
+    public func validateResponse(response: NSURLResponse!, data: NSData, error: NSErrorPointer) -> Bool {
         let httpResponse = response as NSHTTPURLResponse
         var isValid = true
 

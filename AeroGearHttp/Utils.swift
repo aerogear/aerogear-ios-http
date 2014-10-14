@@ -17,11 +17,14 @@
 
 import Foundation
 
-
-public enum HttpMethod: String {
-    case GET = "GET"
-    case HEAD = "HEAD"
-    case DELETE = "DELETE"
-    case POST = "POST"
-    case PUT = "PUT"
+extension String {
+    
+    public func urlEncode() -> String {
+        let encodedURL = CFURLCreateStringByAddingPercentEscapes(nil,
+            self as NSString,
+            nil,
+            "!@#$%&*'();:=+,/?[]",
+            CFStringBuiltInEncodings.UTF8.rawValue)
+        return encodedURL as NSString
+    }
 }
