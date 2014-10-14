@@ -22,20 +22,6 @@ import AGURLSessionStubs
 
 class HttpTests: XCTestCase {
 
-    func http_200(request: NSURLRequest!, params:[String: String]?) -> StubResponse {
-        var data: NSData
-        if ((params) != nil) {
-            data = NSJSONSerialization.dataWithJSONObject(params!, options: nil, error: nil)!
-        } else {
-            data = NSData()
-        }
-        return StubResponse(data:data, statusCode: 200, headers: ["Content-Type" : "text/json"])
-    }
-    
-    func http_200_response(request: NSURLRequest!) -> StubResponse {
-        return http_200(request, params: ["key1":"value1"])
-    }
-    
     override func setUp() {
         super.setUp()
     }
@@ -45,72 +31,178 @@ class HttpTests: XCTestCase {
         StubsManager.removeAllStubs()
     }
     
-    func testGETWithoutParametersStub() {
-        // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse:( http_200_response ))
-        
+    func testGET() {
         // async test expectation
-        let getExpectation = expectationWithDescription("Retrieve data with GET without parameters");
+        let getExpectation = expectationWithDescription("'GET' http method test");
+
+        var http = Http(baseURL: "http://httpbin.org")
         
-        var url = "http://whatever.com"
-        var http = Http(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-        http.GET(completionHandler: {(response, error) in
-            if (response != nil) {
-                XCTAssertTrue(response!["key1"] as NSString == "value1")
-                getExpectation.fulfill()
-            }
+        http.GET("/get",  parameters: ["key": "value"], completionHandler: {(response, error) in
+            XCTAssertNil(error, "error should be nil")
+            
+            var resp = (response as NSDictionary!)["args"] as NSDictionary!
+            XCTAssertEqual(resp["key"] as String,  "value", "should be equal")
+            
+            getExpectation.fulfill()
         })
         
         waitForExpectationsWithTimeout(10, handler: nil)
     }
     
-    func testGETWithoutParameters() {
-        // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse:( http_200_response ))
+    func testPOST() {
         // async test expectation
-        let getExpectation = expectationWithDescription("Retrieve list of jokes");
+        let getExpectation = expectationWithDescription("'POST' http method test");
         
-        var url = "http://api.icndb.com/jokes"
-        var http = Http(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-        http.GET(completionHandler: {(response, error) in
-                if (response != nil) {
-                    getExpectation.fulfill()
-                }
+        var http = Http(baseURL: "http://httpbin.org")
+        
+        http.POST("/post",  parameters: ["key": "value"], completionHandler: {(response, error) in
+            XCTAssertNil(error, "error should be nil")
+            
+            var resp = (response as NSDictionary!)["data"] as String!
+            XCTAssertEqual("{\"key\":\"value\"}", resp, "should be equal")
+
+            getExpectation.fulfill()
         })
-
-        waitForExpectationsWithTimeout(10, handler:nil)
-
+        
+        waitForExpectationsWithTimeout(10, handler: nil)
     }
     
-    func testGETWithoutParametersWithspecificId() {
-        // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse:( http_200_response ))
+    func testPUT() {
         // async test expectation
-        let getExpectation = expectationWithDescription("Retrieve list of jokes");
+        let getExpectation = expectationWithDescription("'PUT' http method test");
         
-        var url = "http://api.icndb.com/jokes/12"
-        var http = Http(url: url, sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration())
-        http.GET(completionHandler: {(response, error) in
-            if (response != nil) {
+        var http = Http(baseURL: "http://httpbin.org")
+        
+        http.PUT("/put",  parameters: ["key": "value"], completionHandler: {(response, error) in
+            XCTAssertNil(error, "error should be nil")
+            
+            var resp = (response as NSDictionary!)["data"] as String!
+            XCTAssertEqual("{\"key\":\"value\"}", resp, "should be equal")
+
+            getExpectation.fulfill()
+        })
+        
+        waitForExpectationsWithTimeout(10, handler: nil)
+    }
+    
+    func testDELETE() {
+        // async test expectation
+        let getExpectation = expectationWithDescription("'DELETE' http method test");
+        
+        var http = Http(baseURL: "http://httpbin.org")
+        
+        http.DELETE("/delete",  parameters: ["key": "value"], completionHandler: {(response, error) in
+            XCTAssertNil(error, "error should be nil")
+            
+            var resp = (response as NSDictionary!)["args"] as NSDictionary!
+            XCTAssertEqual(resp["key"] as String,  "value", "should be equal")
+            
+            getExpectation.fulfill()
+        })
+        
+        waitForExpectationsWithTimeout(10, handler: nil)
+    }
+    
+    func testMultipart() {
+        var data = "Lorem ipsum dolor sit amet".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+        
+        let file = MultiPartData(data: data, name: "lorem", filename: "lorem.txt", mimeType: "plain/text")
+        
+        // async test expectation
+        let getExpectation = expectationWithDescription("'POST' http method test");
+        
+        var http = Http(baseURL: "http://httpbin.org")
+        
+        http.POST("/post",  parameters: ["key": "value", "file": file], completionHandler: {(response, error) in
+            XCTAssertNil(error, "error should be nil")
+            
+            // should contain form data
+            var form = (response as NSDictionary!)["form"] as NSDictionary!
+            XCTAssertEqual(form["key"] as String,  "value", "should be equal")
+
+            // should contain file data
+            var files = (response as NSDictionary!)["files"] as NSDictionary!
+            XCTAssertNotNil(files["file"], "should contain file")
+            
+            getExpectation.fulfill()
+        })
+        
+        waitForExpectationsWithTimeout(10, handler: nil)
+    }
+
+    func testDownloadWithDefaultDestinationDirectory() {
+        // async test expectation
+        let getExpectation = expectationWithDescription("Download");
+
+        var http = Http()
+        
+        var FILENAME = "aerogear_icon_64px.png"
+        http.download("http://design.jboss.org/aerogear/logo/final/\(FILENAME)",
+            progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)  in
+                println("bytesWritten: \(bytesWritten), totalBytesWritten: \(totalBytesWritten), totalBytesExpectedToWrite: \(totalBytesExpectedToWrite)")
+            }, completionHandler: { (response, error) in
+                XCTAssertNil(error, "error should be nil")
+                
+                var fileManager = NSFileManager.defaultManager()
+
+                var path  = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+                var finalDestination = path.stringByAppendingPathComponent(FILENAME)
+                
+                XCTAssertTrue(NSFileManager.defaultManager().fileExistsAtPath(finalDestination), "should have been downloaded")
+                
+                // remove file
+                fileManager.removeItemAtPath(finalDestination, error:nil)
+                
                 getExpectation.fulfill()
-            }
         })
         
-        waitForExpectationsWithTimeout(10, handler: {(error: NSError!) -> () in })
+        waitForExpectationsWithTimeout(600, handler: nil)
+    }
+    
+    func testDownloadWithUserProvidedDestinationDirectory() {
+        // async test expectation
+        let getExpectation = expectationWithDescription("Download");
         
+        var http = Http()
+
+        var fileManager = NSFileManager.defaultManager()
+        // create destination directory
+        var path  = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+        var tempDir = path.stringByAppendingPathComponent("Temporary")
+        fileManager.createDirectoryAtPath(tempDir, withIntermediateDirectories: true, attributes: nil, error: nil)
+
+        var FILENAME = "aerogear_icon_64px.png"
+        http.download("http://design.jboss.org/aerogear/logo/final/\(FILENAME)",
+            destinationDirectory: tempDir,
+            progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)  in
+                println("bytesWritten: \(bytesWritten), totalBytesWritten: \(totalBytesWritten), totalBytesExpectedToWrite: \(totalBytesExpectedToWrite)")
+            }, completionHandler: { (response, error) in
+                XCTAssertNil(error, "error should be nil")
+
+                var finalDestination = tempDir.stringByAppendingPathComponent(FILENAME)
+                XCTAssertTrue(NSFileManager.defaultManager().fileExistsAtPath(finalDestination), "should have been downloaded")
+                
+                // delete test directory (recursive
+                fileManager.removeItemAtPath(tempDir, error:nil)
+                getExpectation.fulfill()
+        })
+        
+        waitForExpectationsWithTimeout(600, handler: nil)
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock() {
-            // Put the code you want to measure the time of here.
-        }
+    func testUpload() {
+        // async test expectation
+        let getExpectation = expectationWithDescription("Download");
+        
+        var http = Http(baseURL: "http://httpbin.org")
+        http.upload("/post",  data: "contents of a file".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!,
+            progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)  in
+                println("bytesWritten: \(bytesWritten), totalBytesWritten: \(totalBytesWritten), totalBytesExpectedToWrite: \(totalBytesExpectedToWrite)")
+            }, completionHandler: { (response, error) in
+                XCTAssertNil(error, "error should be nil")
+                getExpectation.fulfill()
+        })
+        
+        waitForExpectationsWithTimeout(600, handler: nil)
     }
-    
 }
