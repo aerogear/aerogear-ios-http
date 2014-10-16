@@ -17,6 +17,9 @@
 
 import Foundation
 
+/**
+ A response deserializer to a generic String object
+*/
 public class StringResponseSerializer : ResponseSerializer {
     
     public func response(data: NSData) -> (AnyObject?) {

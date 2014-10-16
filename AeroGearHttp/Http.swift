@@ -17,6 +17,15 @@
 
 import Foundation
 
+/**
+The HTTP method verb
+
+- GET:    GET http verb
+- HEAD:   HEAD http verb
+- DELETE:  DELETE http verb
+- POST:   POST http verb
+- PUT:    PUT http verb
+*/
 public enum HttpMethod: String {
     case GET = "GET"
     case HEAD = "HEAD"
@@ -25,11 +34,24 @@ public enum HttpMethod: String {
     case PUT = "PUT"
 }
 
+/**
+The file request type
+
+- Download: Download request
+- Upload:   Upload request
+*/
 enum FileRequestType {
     case Download(String?)
     case Upload(UploadType)
 }
 
+/**
+The Upload enum type
+
+- Data:   for a generic NSData object
+- File:   for File passing the URL of the local file to upload
+- Stream:  for a Stream request passing the actual NSInputStream
+*/
 enum UploadType {
     case Data(NSData)
     case File(NSURL)
@@ -39,6 +61,9 @@ enum UploadType {
 public typealias ProgressBlock = (Int64, Int64, Int64) -> Void
 public typealias CompletionBlock = (AnyObject?, NSError?) -> Void
 
+/**
+*  Main class for performing HTTP operations across RESTful resources
+*/
 public class Http {
 
     var baseURL: String?
@@ -49,6 +74,16 @@ public class Http {
     
     private var delegate: SessionDelegate;
     
+    /**
+    Initialize an HTTP object
+    
+    :param: baseURL              the remote base URL of the application (optional)
+    :param: sessionConfig       the SessionConfiguration object (by default it uses a defaultSessionConfiguration)
+    :param: requestSerializer   the actual request serializer to use when performing requests
+    :param: responseSerializer the actual response serializer to use upon receiving a response
+    
+    :returns: the newly intitialized HTTP object
+    */
     public init(baseURL: String? = nil,
                     sessionConfig: NSURLSessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration(),
                     requestSerializer: RequestSerializer = JsonRequestSerializer(),
@@ -63,7 +98,15 @@ public class Http {
     deinit {
         self.session.invalidateAndCancel()
     }
-
+    
+    /**
+    Gateway to perform different http requests including multipart
+    
+    :param: url               the url of the resource
+    :param: parameters  the request parameters
+    :param: method       the method to be used,
+    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
+    */
     private func request(url: String, parameters: [String: AnyObject]? = nil,  method:HttpMethod, completionHandler: CompletionBlock) {
         let block: () -> Void =  {
             var finalURL = self.calculateURL(self.baseURL, url: url)
@@ -102,6 +145,16 @@ public class Http {
         }
     }
     
+    /**
+    Gateway to perform different file requests either download or upload
+    
+    :param: url               the url of the resource
+    :param: parameters  the request parameters
+    :param: method       the method to be used,
+    :param: type             the file request type
+    :param: progress        a block that will be invoked to report progress during either download or upload
+    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
+    */
     private func fileRequest(url: String, parameters: [String: AnyObject]? = nil,  method: HttpMethod,  type: FileRequestType, progress: ProgressBlock?, completionHandler: CompletionBlock) {
         
         let block: () -> Void  = {
@@ -157,41 +210,119 @@ public class Http {
         }
     }
     
+    /**
+    performs an HTTP GET request
+    
+    :param: url               the url of the resource
+    :param: parameters  the request parameters
+    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
+    */
     public func GET(url: String, parameters: [String: AnyObject]? = nil, completionHandler: CompletionBlock) {
         request(url, parameters: parameters,  method:.GET, completionHandler: completionHandler)
     }
     
+    /**
+    performs an HTTP POST request
+    
+    :param: url               the url of the resource
+    :param: parameters   the request parameters
+    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
+    */
     public func POST(url: String, parameters: [String: AnyObject]? = nil, completionHandler: CompletionBlock) {
         request(url, parameters: parameters, method:.POST, completionHandler: completionHandler)
     }
     
+    /**
+    performs an HTTP PUT request
+    
+    :param: url               the url of the resource
+    :param: parameters   the request parameters
+    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
+    */
     public func PUT(url: String, parameters: [String: AnyObject]? = nil, completionHandler: CompletionBlock) {
         request(url, parameters: parameters, method:.PUT, completionHandler: completionHandler)
     }
     
+    /**
+    performs an HTTP DELETE request
+    
+    :param: url               the url of the resource
+    :param: parameters  the request parameters
+    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
+    */
     public func DELETE(url: String, parameters: [String: AnyObject]? = nil, completionHandler: CompletionBlock) {
         request(url, parameters: parameters, method:.DELETE, completionHandler: completionHandler)
     }
     
+    /**
+    performs an HTTP HEAD request
+    
+    :param: url               the url of the resource
+    :param: parameters   the request parameters
+    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
+    */
     public func HEAD(url: String, parameters: [String: AnyObject]? = nil, completionHandler: CompletionBlock) {
         request(url, parameters: parameters, method:.HEAD, completionHandler: completionHandler)
     }
+
+    /**
+    Request to download a file
     
+    :param: url                      the URL of the downloadable resource
+    :param: destinationDirectory the destination directory where the file would be stored, if not specified application's default '.Documents' directory would be used
+    :param: parameters          the request parameters
+    :param: method               the method to be used, by default a .GET request
+    :param: progress              a block that will be invoked to report progress during download
+    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
+    */
     public func download(url: String,  destinationDirectory: String? = nil, parameters: [String: AnyObject]? = nil,  method: HttpMethod = .GET, progress: ProgressBlock?, completionHandler: CompletionBlock) {
         fileRequest(url, parameters: parameters, method: method, type: .Download(destinationDirectory), progress: progress, completionHandler: completionHandler)
     }
+
+    /**
+    Request to upload a file using an NURL of a local file
     
+    :param: url              the URL to upload resource into
+    :param: file              the URL of the local file to be uploaded
+    :param: parameters  the request parameters
+    :param: method       the method to be used, by default a .POST request
+    :param: progress      a block that will be invoked to report progress during upload
+    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
+    */
     public func upload(url: String,  file: NSURL, parameters: [String: AnyObject]? = nil,  method: HttpMethod = .POST, progress: ProgressBlock?, completionHandler: CompletionBlock) {
         fileRequest(url, parameters: parameters, method: method, type: .Upload(.File(file)), progress: progress, completionHandler: completionHandler)
     }
     
+    /**
+    Request to upload a file using a raw NSData object
+    
+    :param: url              the URL to upload resource into
+    :param: data            the data to be uploaded
+    :param: parameters  the request parameters
+    :param: method       the method to be used, by default a .POST request
+    :param: progress      a block that will be invoked to report progress during upload
+    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
+    */
     public func upload(url: String,  data: NSData, parameters: [String: AnyObject]? = nil, method: HttpMethod = .POST, progress: ProgressBlock?, completionHandler: CompletionBlock) {
         fileRequest(url, parameters: parameters, method: method, type: .Upload(.Data(data)), progress: progress, completionHandler: completionHandler)
     }
     
+    /**
+    Request to upload a file using an NSInputStream object
+    
+    :param: url              the URL to upload resource into
+    :param: stream         the stream that will be used for uploading
+    :param: parameters  the request parameters
+    :param: method       the method to be used, by default a .POST request
+    :param: progress      a block that will be invoked to report progress during upload
+    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
+    */
     public func upload(url: String,  stream: NSInputStream,  parameters: [String: AnyObject]? = nil, method: HttpMethod = .POST, progress: ProgressBlock?, completionHandler: CompletionBlock) {
         fileRequest(url, parameters: parameters, method: method, type: .Upload(.Stream(stream)), progress: progress, completionHandler: completionHandler)
     }
+    
+    
+    // MARK: Private API
     
     // MARK: SessionDelegate
     class SessionDelegate: NSObject, NSURLSessionDelegate,  NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate {

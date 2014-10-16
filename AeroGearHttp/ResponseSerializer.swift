@@ -17,9 +17,22 @@
 
 import Foundation
 
+/**
+ The protocol that response serializers must adhere to
+*/
 public protocol ResponseSerializer {
     
-    func response(data: NSData) -> (AnyObject?)
-    func validateResponse(response: NSURLResponse!, data: NSData, error: NSErrorPointer) -> Bool
+    /**
+     Deserialize the response received
 
+     :returns: the serialized response
+    */
+    func response(data: NSData) -> (AnyObject?)
+    
+    /**
+     Validate the response received
+    
+     :returns:  either true or false if the response is valid for this particular serializer
+    */
+    func validateResponse(response: NSURLResponse!, data: NSData, error: NSErrorPointer) -> Bool
 }

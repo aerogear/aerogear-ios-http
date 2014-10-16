@@ -17,6 +17,9 @@
 
 import Foundation
 
+/**
+ An HttpRequest serializer that handles form-encoded URL requess including multipart support
+*/
 public class HttpRequestSerializer:  RequestSerializer {
     
     public var url: NSURL?

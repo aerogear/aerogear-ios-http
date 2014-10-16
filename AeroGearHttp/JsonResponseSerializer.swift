@@ -19,6 +19,9 @@ import Foundation
 
 let HttpResponseSerializationErrorDomain = "org.aerogear.http.response"
 
+/**
+A response deserializer to JSON objects
+*/
 public class JsonResponseSerializer : ResponseSerializer {
     
     public func response(data: NSData) -> (AnyObject?) {
