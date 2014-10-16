@@ -17,6 +17,9 @@
 
 import Foundation
 
+/**
+Handy extensions and utilities
+*/
 extension String {
     
     public func urlEncode() -> String {

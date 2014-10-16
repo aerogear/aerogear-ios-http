@@ -17,6 +17,9 @@
 
 import Foundation
 
+/**
+ A request serializer to JSON objects
+*/
 public class JsonRequestSerializer:  HttpRequestSerializer {
     
     public override func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]? = nil) -> NSURLRequest {
