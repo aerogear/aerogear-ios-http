@@ -65,7 +65,7 @@ public protocol AuthzModule {
     func authorizationFields() -> [String: String]?
     
     /**
-    Returns a bolean indicating whether authorization has been granted
+    Returns a boolean indicating whether authorization has been granted
     
     :returns: true if authorized, false otherwise
     */
