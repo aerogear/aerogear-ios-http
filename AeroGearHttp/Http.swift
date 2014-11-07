@@ -62,7 +62,7 @@ public typealias ProgressBlock = (Int64, Int64, Int64) -> Void
 public typealias CompletionBlock = (AnyObject?, NSError?) -> Void
 
 /**
-*  Main class for performing HTTP operations across RESTful resources
+Main class for performing HTTP operations across RESTful resources
 */
 public class Http {
 
