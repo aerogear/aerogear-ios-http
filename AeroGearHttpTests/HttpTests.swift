@@ -137,17 +137,20 @@ class HttpTests: XCTestCase {
         var http = Http()
         
         var FILENAME = "aerogear_icon_64px.png"
+        var fileManager = NSFileManager.defaultManager()
+        
+        var path  = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+        fileManager.createDirectoryAtPath(path, withIntermediateDirectories: true, attributes: nil, error: nil)
+        
+        var finalDestination = path.stringByAppendingPathComponent(FILENAME)
+
         http.download("http://design.jboss.org/aerogear/logo/final/\(FILENAME)",
             progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)  in
                 println("bytesWritten: \(bytesWritten), totalBytesWritten: \(totalBytesWritten), totalBytesExpectedToWrite: \(totalBytesExpectedToWrite)")
             }, completionHandler: { (response, error) in
                 XCTAssertNil(error, "error should be nil")
                 
-                var fileManager = NSFileManager.defaultManager()
-
-                var path  = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-                var finalDestination = path.stringByAppendingPathComponent(FILENAME)
-                
+               // assert file exists
                 XCTAssertTrue(NSFileManager.defaultManager().fileExistsAtPath(finalDestination), "should have been downloaded")
                 
                 // remove file
