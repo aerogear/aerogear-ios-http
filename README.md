@@ -1,4 +1,4 @@
-# aerogear-ios-http
+# aerogear-ios-http  [![Build Status](https://travis-ci.org/aerogear/aerogear-ios-http.png)](https://travis-ci.org/aerogear/aerogear-ios-http)
 Thin layer to take care of your http requests working with NSURLSession. 
 Taking care of: 
 
