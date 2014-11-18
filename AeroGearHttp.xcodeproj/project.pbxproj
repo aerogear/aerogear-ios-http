@@ -21,6 +21,8 @@
 		6F24AEB619CFFE6D002BB280 /* MultiPartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F24AEB519CFFE6D002BB280 /* MultiPartData.swift */; };
 		6F53F67E19ED0FEF00DCFC72 /* HttpRequestSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F53F67C19ED0FEF00DCFC72 /* HttpRequestSerializer.swift */; };
 		6F53F67F19ED0FEF00DCFC72 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F53F67D19ED0FEF00DCFC72 /* Utils.swift */; };
+		6F8895001A166F6200496D11 /* AGURLSessionStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 48F463EB19A4C32E002858E0 /* AGURLSessionStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FCD63A31A166FB60020E52D /* AeroGearHttp.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 488B6B5C196B19BC000297C9 /* AeroGearHttp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C5CD06EB19B9B82600A80052 /* AGURLSessionStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F463EB19A4C32E002858E0 /* AGURLSessionStubs.framework */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +70,21 @@
 			remoteInfo = AGURLSessionStubsTests;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6F8894FF1A166F5900496D11 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6FCD63A31A166FB60020E52D /* AeroGearHttp.framework in Copy Frameworks */,
+				6F8895001A166F6200496D11 /* AGURLSessionStubs.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4833049419AF2D43002F8DA9 /* JsonRequestSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonRequestSerializer.swift; sourceTree = "<group>"; };
@@ -224,6 +241,7 @@
 				488B6B63196B19BC000297C9 /* Sources */,
 				488B6B64196B19BC000297C9 /* Frameworks */,
 				488B6B65196B19BC000297C9 /* Resources */,
+				6F8894FF1A166F5900496D11 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);

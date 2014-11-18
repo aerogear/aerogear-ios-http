@@ -1,0 +1,12 @@
+language: objective-c
+osx_image: xcode61
+xcode_workspace: AeroGearHttp.xcworkspace
+xcode_scheme: AeroGearHttp
+xcode_sdk: iphonesimulator
+
+notifications:
+  irc: "irc.freenode.org#aerogear"
+
+branches:
+  only:
+    - master
