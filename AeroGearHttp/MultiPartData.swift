@@ -40,8 +40,8 @@ public class MultiPartData {
     :returns: the newly created multipart data
     */
     public init(url: NSURL, mimeType: String) {
-        self.name = url.lastPathComponent
-        self.filename = url.lastPathComponent
+        self.name = url.lastPathComponent!
+        self.filename = url.lastPathComponent!
         self.mimeType = mimeType;
         
         self.data = NSData(contentsOfURL: url)!
