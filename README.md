@@ -25,6 +25,8 @@ http.GET(success: {(response: AnyObject?) in
 ```
 Do you want to try it on your end? Follow next section steps.
 
+> **NOTE:**  The library has been tested with Xcode 6.1.1
+
 ## Build, test and play with aerogear-ios-http
 
 1. Clone this project
