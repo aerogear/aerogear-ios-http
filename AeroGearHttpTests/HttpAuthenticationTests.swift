@@ -34,7 +34,7 @@ class HttpAuthenticationTests: XCTestCase {
     func testHTTPBasicAuthenticationWithValidCredentials() {
         // async test expectation
         let getExpectation = expectationWithDescription("'HTTPBasicAuthentication with valid credentials");
-
+        
         let user = "john"
         let password = "pass"
         let credential = NSURLCredential(user: user, password: password, persistence: .None)
@@ -67,7 +67,7 @@ class HttpAuthenticationTests: XCTestCase {
             XCTAssertNil(response, "response should be nil")
             XCTAssertNotNil(error, "error should not be nil")
             XCTAssert(error?.code == -999, "error code should be equal to -999:'cancelled'")
-
+            
             getExpectation.fulfill()
         })
         
@@ -116,5 +116,43 @@ class HttpAuthenticationTests: XCTestCase {
         
         waitForExpectationsWithTimeout(10, handler: nil)
     }
+    
+    func testHTTPAuthenticationWithProtectionSpace() {
+        // async test expectation
+        let getExpectation = expectationWithDescription("'testHTTPAuthenticationWithProtectionSpace");
 
+        let user = "user"
+        let password = "password"
+        // notice that we use '.ForSession' type otherwise credential storage will discard and
+        // won't save it when doing 'credentialStorage.setDefaultCredential' later on
+        let credential = NSURLCredential(user: user, password: password, persistence: .ForSession)
+
+        // create a protection space
+        var protectionSpace: NSURLProtectionSpace = NSURLProtectionSpace(host: "httpbin.org", port: 80,`protocol`: NSURLProtectionSpaceHTTP, realm: "me@kennethreitz.com", authenticationMethod: NSURLAuthenticationMethodHTTPDigest);
+        
+        // assign it to credential storage
+        var credentialStorage: NSURLCredentialStorage = NSURLCredentialStorage.sharedCredentialStorage()
+        credentialStorage.setDefaultCredential(credential, forProtectionSpace: protectionSpace);
+
+        // set up default configuration and assign credential storage
+        var configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        configuration.URLCredentialStorage = credentialStorage
+        
+        println(configuration.URLCredentialStorage?.allCredentials.count);
+        // assign custom configuration to Http
+        var http = Http(baseURL: "http://httpbin.org", sessionConfig: configuration)
+        
+        // perform request, the credentials would be used when requested
+        http.GET("/digest-auth/auth/\(user)/\(password)", completionHandler: {(response, error) in
+            XCTAssertNil(error, "error should be nil")
+            
+            var JSON = response as NSDictionary!
+            XCTAssertTrue(JSON["authenticated"] as Bool)
+            
+            getExpectation.fulfill()
+        })
+        
+        waitForExpectationsWithTimeout(10, handler: nil)
+    }
+    
 }
