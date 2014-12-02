@@ -18,7 +18,6 @@
 
 import XCTest
 import AeroGearHttp
-import AGURLSessionStubs
 
 class HttpAuthenticationTests: XCTestCase {
     
@@ -28,7 +27,6 @@ class HttpAuthenticationTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
-        StubsManager.removeAllStubs()
     }
     
     func testHTTPBasicAuthenticationWithValidCredentials() {
