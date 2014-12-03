@@ -70,7 +70,7 @@ public class Http {
     var session: NSURLSession
     var requestSerializer: RequestSerializer
     var responseSerializer: ResponseSerializer
-    var authzModule:  AuthzModule?
+    public var authzModule:  AuthzModule?
     
     private var delegate: SessionDelegate;
     
