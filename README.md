@@ -40,7 +40,7 @@ http.GET("/protected/endpoint", credential: credential, completionHandler: {(res
 })
 ```
 
- You can also set a credential per protection space, so it's automatically picked up once http challenge is requested by the server, thus omitting the need to pass the credential on each request. In this case, you must initialize the ```Http``` object with a custom session configuration object, that has it's credential storage initialized with your credentials:
+ You can also set a credential per protection space, so it's automatically picked up once http challenge is requested by the server, thus omitting the need to pass the credential on each request. In this case, you must initialize the ```Http``` object with a custom session configuration object, that has its credentials storage initialized with your credentials:
 
  ```swift
 // create a protection space
