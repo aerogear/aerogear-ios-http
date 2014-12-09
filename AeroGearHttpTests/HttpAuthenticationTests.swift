@@ -37,7 +37,7 @@ class HttpAuthenticationTests: XCTestCase {
         let password = "pass"
         let credential = NSURLCredential(user: user, password: password, persistence: .None)
         
-        var http = Http(baseURL: "http://httpbin.org")
+        var http = Http(baseURL: "https://httpbin.org")
         
         http.GET("/basic-auth/\(user)/\(password)", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
@@ -59,7 +59,7 @@ class HttpAuthenticationTests: XCTestCase {
         let password = "pass"
         let credential = NSURLCredential(user: user, password: password, persistence: .None)
         
-        var http = Http(baseURL: "http://httpbin.org")
+        var http = Http(baseURL: "https://httpbin.org")
         
         http.GET("/basic-auth/\(user)/invalid", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(response, "response should be nil")
@@ -80,7 +80,7 @@ class HttpAuthenticationTests: XCTestCase {
         let password = "password"
         let credential = NSURLCredential(user: user, password: password, persistence: .None)
         
-        var http = Http(baseURL: "http://httpbin.org")
+        var http = Http(baseURL: "https://httpbin.org")
         
         http.GET("/digest-auth/auth/\(user)/\(password)", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
@@ -102,7 +102,7 @@ class HttpAuthenticationTests: XCTestCase {
         let password = "pass"
         let credential = NSURLCredential(user: user, password: password, persistence: .None)
         
-        var http = Http(baseURL: "http://httpbin.org")
+        var http = Http(baseURL: "https://httpbin.org")
         
         http.GET("/digest-auth/auth/\(user)/invalid", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(response, "response should be nil")
@@ -126,7 +126,7 @@ class HttpAuthenticationTests: XCTestCase {
         let credential = NSURLCredential(user: user, password: password, persistence: .ForSession)
 
         // create a protection space
-        var protectionSpace: NSURLProtectionSpace = NSURLProtectionSpace(host: "httpbin.org", port: 80,`protocol`: NSURLProtectionSpaceHTTP, realm: "me@kennethreitz.com", authenticationMethod: NSURLAuthenticationMethodHTTPDigest);
+        var protectionSpace: NSURLProtectionSpace = NSURLProtectionSpace(host: "httpbin.org", port: 443,`protocol`: NSURLProtectionSpaceHTTPS, realm: "me@kennethreitz.com", authenticationMethod: NSURLAuthenticationMethodHTTPDigest);
         
         // assign it to credential storage
         var credentialStorage: NSURLCredentialStorage = NSURLCredentialStorage.sharedCredentialStorage()
@@ -138,7 +138,7 @@ class HttpAuthenticationTests: XCTestCase {
         
         println(configuration.URLCredentialStorage?.allCredentials.count);
         // assign custom configuration to Http
-        var http = Http(baseURL: "http://httpbin.org", sessionConfig: configuration)
+        var http = Http(baseURL: "https://httpbin.org", sessionConfig: configuration)
         
         // perform request, the credentials would be used when requested
         http.GET("/digest-auth/auth/\(user)/\(password)", completionHandler: {(response, error) in
