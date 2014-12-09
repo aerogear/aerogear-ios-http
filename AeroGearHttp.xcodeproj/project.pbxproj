@@ -23,6 +23,7 @@
 		6F53F67F19ED0FEF00DCFC72 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F53F67D19ED0FEF00DCFC72 /* Utils.swift */; };
 		6F8895001A166F6200496D11 /* AGURLSessionStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 48F463EB19A4C32E002858E0 /* AGURLSessionStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6FCD63A31A166FB60020E52D /* AeroGearHttp.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 488B6B5C196B19BC000297C9 /* AeroGearHttp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6FD555171A36F677003E82EE /* JSONRequestSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD555161A36F677003E82EE /* JSONRequestSerializer.swift */; };
 		C5CD06EB19B9B82600A80052 /* AGURLSessionStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F463EB19A4C32E002858E0 /* AGURLSessionStubs.framework */; };
 /* End PBXBuildFile section */
 
@@ -106,6 +107,7 @@
 		6F24AEB519CFFE6D002BB280 /* MultiPartData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartData.swift; sourceTree = "<group>"; };
 		6F53F67C19ED0FEF00DCFC72 /* HttpRequestSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpRequestSerializer.swift; sourceTree = "<group>"; };
 		6F53F67D19ED0FEF00DCFC72 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		6FD555161A36F677003E82EE /* JSONRequestSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONRequestSerializer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +182,7 @@
 				48F463E519A4C32E002858E0 /* AGURLSessionStubs.xcodeproj */,
 				488B6B6E196B19BC000297C9 /* HttpTests.swift */,
 				4840C2AC196D5CBE00065270 /* RequestSerializerTest.swift */,
+				6FD555161A36F677003E82EE /* JSONRequestSerializer.swift */,
 				488B6B6C196B19BC000297C9 /* Supporting Files */,
 			);
 			path = AeroGearHttpTests;
@@ -355,6 +358,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				488B6B6F196B19BC000297C9 /* HttpTests.swift in Sources */,
+				6FD555171A36F677003E82EE /* JSONRequestSerializer.swift in Sources */,
 				4840C2AD196D5CBE00065270 /* RequestSerializerTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
