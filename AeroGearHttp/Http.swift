@@ -58,6 +58,13 @@ enum UploadType {
     case Stream(NSInputStream)
 }
 
+/** error domain*/
+public let HttpErrorDomain = "HttpDomain"
+/** request error */
+public let NetworkingOperationFailingURLRequestErrorKey = "NetworkingOperationFailingURLRequestErrorKey"
+/* response error */
+public let NetworkingOperationFailingURLResponseErrorKey = "NetworkingOperationFailingURLResponseErrorKey"
+
 public typealias ProgressBlock = (Int64, Int64, Int64) -> Void
 public typealias CompletionBlock = (AnyObject?, NSError?) -> Void
 

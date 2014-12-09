@@ -17,6 +17,9 @@
 
 import Foundation
 
+/** error domain for serializers */
+public let HttpResponseSerializationErrorDomain = "ResponseSerializerDomain"
+
 /**
  The protocol that response serializers must adhere to
 */

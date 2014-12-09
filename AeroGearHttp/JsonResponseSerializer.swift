@@ -17,8 +17,6 @@
 
 import Foundation
 
-let HttpResponseSerializationErrorDomain = "org.aerogear.http.response"
-
 /**
 A response deserializer to JSON objects
 */
@@ -30,21 +28,33 @@ public class JsonResponseSerializer : ResponseSerializer {
 
     public func validateResponse(response: NSURLResponse!, data: NSData, error: NSErrorPointer) -> Bool {
         let httpResponse = response as NSHTTPURLResponse
-        var isValid = true
-
+        
         if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-            isValid = false
-            var userInfo: [NSObject: AnyObject] = [
-                NSLocalizedDescriptionKey: "Request failed: \(httpResponse.statusCode)" as NSString,
-                NSURLErrorFailingURLErrorKey: httpResponse.URL?.absoluteString as NSString!
-            ]
+            var userInfo = [
+                NSLocalizedDescriptionKey: NSHTTPURLResponse.localizedStringForStatusCode(httpResponse.statusCode),
+                NetworkingOperationFailingURLResponseErrorKey: response]
 
             if (error != nil) {
                 error.memory = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
             }
+            
+            return false
         }
         
-        return isValid
+        // validate JSON
+        if (nil == NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)) {
+            let userInfo = [
+                NSLocalizedDescriptionKey: "Invalid response received, can't parse JSON" as NSString,
+                NetworkingOperationFailingURLResponseErrorKey: response]
+            
+            if (error != nil) {
+                error.memory = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
+            }
+            
+            return false;
+        }
+        
+        return true
     }
     
     public init() {
