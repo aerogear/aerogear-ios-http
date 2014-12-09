@@ -30,7 +30,9 @@ http.POST("/post",  parameters: ["key": "value"], completionHandler: {(response,
 
 ### Authentication
 
-The library also leverages the build-in foundation support for http/digest authentication and exposes a convenient interface by allowing the credential object to be passed on the request. Here is an example
+The library also leverages the build-in foundation support for http/digest authentication and exposes a convenient interface by allowing the credential object to be passed on the request. Here is an example:
+
+> **NOTE:**  It is advised that HTTPS should be used when performing authentication of this type
 
 ```swift
 let credential = NSURLCredential(user: "john", password: "pass", persistence: .None)
@@ -44,7 +46,7 @@ http.GET("/protected/endpoint", credential: credential, completionHandler: {(res
 
  ```swift
 // create a protection space
-var protectionSpace: NSURLProtectionSpace = NSURLProtectionSpace(host: "httpbin.org", port: 80,`protocol`: NSURLProtectionSpaceHTTP, realm: "me@kennethreitz.com", authenticationMethod: NSURLAuthenticationMethodHTTPDigest);
+var protectionSpace: NSURLProtectionSpace = NSURLProtectionSpace(host: "httpbin.org", port: 443,`protocol`: NSURLProtectionSpaceHTTPS, realm: "me@kennethreitz.com", authenticationMethod: NSURLAuthenticationMethodHTTPDigest);
 
 // setup credential
 // notice that we use '.ForSession' type otherwise credential storage will discard and
