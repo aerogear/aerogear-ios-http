@@ -79,7 +79,7 @@ public class Http {
     var responseSerializer: ResponseSerializer
     public var authzModule:  AuthzModule?
     
-    private var delegate: SessionDelegate;
+    private var delegate: SessionDelegate
     
     /**
     Initialize an HTTP object
@@ -103,7 +103,7 @@ public class Http {
     }
     
     deinit {
-        self.session.invalidateAndCancel()
+        self.session.finishTasksAndInvalidate()
     }
     
     /**
