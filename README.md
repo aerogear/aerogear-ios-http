@@ -104,6 +104,7 @@ pod 'AeroGearHttp'
 ```
 
 and then:
+
 ```bash
 bundle install
 bundle exec pod install
