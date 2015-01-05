@@ -512,14 +512,15 @@ public class Http {
             
             var error: NSError?
             var isValid = self.responseSerializer?.validateResponse(response, data: data!, error: &error)
+            var responseObject: AnyObject? = self.responseSerializer?.response(data!)
             
             if (isValid == false) {
-                completionHandler?(nil, error)
+                completionHandler?(responseObject, error)
                 return
             }
             
             if (data != nil) {
-                var responseObject: AnyObject? = self.responseSerializer?.response(data!)
+                
                 completionHandler?(responseObject, nil)
             }
         }
