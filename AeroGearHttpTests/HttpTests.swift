@@ -193,10 +193,29 @@ class HttpTests: XCTestCase {
     
     func testUpload() {
         // async test expectation
-        let getExpectation = expectationWithDescription("Download");
+        let getExpectation = expectationWithDescription("Upload");
         
         var http = Http(baseURL: "http://httpbin.org")
         http.upload("/post",  data: "contents of a file".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!,
+            progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)  in
+                println("bytesWritten: \(bytesWritten), totalBytesWritten: \(totalBytesWritten), totalBytesExpectedToWrite: \(totalBytesExpectedToWrite)")
+            }, completionHandler: { (response, error) in
+                XCTAssertNil(error, "error should be nil")
+                getExpectation.fulfill()
+        })
+        
+        waitForExpectationsWithTimeout(600, handler: nil)
+    }
+    
+    func testUploadWithMultipart() {
+        // async test expectation
+        let getExpectation = expectationWithDescription("Upload multipart");
+        
+        var http = Http(baseURL: "http://httpbin.org")
+        let multiPartData = MultiPartData(data: "contents of a file".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, name: "name", filename: "filename.jpg", mimeType: "image/jpg")
+        let parameters = ["file": multiPartData]
+        
+        http.upload("/post", stream: NSInputStream(data: "contents of a file".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!), parameters: parameters,
             progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)  in
                 println("bytesWritten: \(bytesWritten), totalBytesWritten: \(totalBytesWritten), totalBytesExpectedToWrite: \(totalBytesExpectedToWrite)")
             }, completionHandler: { (response, error) in

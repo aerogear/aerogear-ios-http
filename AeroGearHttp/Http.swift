@@ -173,7 +173,13 @@ public class Http {
         
         let block: () -> Void  = {
             var finalURL = self.calculateURL(self.baseURL, url: url)
-            let request = self.requestSerializer.request(finalURL, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
+            var request: NSURLRequest
+            // care for multipart request is multipart data are set
+            if (self.hasMultiPartData(parameters)) {
+                request = self.requestSerializer.multipartRequest(finalURL, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
+            } else {
+                request = self.requestSerializer.request(finalURL, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
+            }
             
             var task: NSURLSessionTask
             
