@@ -66,7 +66,7 @@ public let NetworkingOperationFailingURLRequestErrorKey = "NetworkingOperationFa
 public let NetworkingOperationFailingURLResponseErrorKey = "NetworkingOperationFailingURLResponseErrorKey"
 
 public typealias ProgressBlock = (Int64, Int64, Int64) -> Void
-public typealias CompletionBlock = (AnyObject?, NSError?) -> Void
+public typealias CompletionBlock = (NSHTTPURLResponse?, NSError?, AnyObject?) -> Void
 
 /**
 Main class for performing HTTP operations across RESTful resources
@@ -139,10 +139,10 @@ public class Http {
         
         // cater for authz and pre-authorize prior to performing request
         if (self.authzModule != nil) {
-            self.authzModule?.requestAccess({ (response, error ) in
+            self.authzModule?.requestAccess({ (response, error, data ) in
                 // if there was an error during authz, no need to continue
                 if (error != nil) {
-                    completionHandler(nil, error)
+                    completionHandler(response, error, data)
                     return
                 }
                 // ..otherwise proceed normally
@@ -206,10 +206,10 @@ public class Http {
         
         // cater for authz and pre-authorize prior to performing request
         if (self.authzModule != nil) {
-            self.authzModule?.requestAccess({ (response, error ) in
+            self.authzModule?.requestAccess({ (response, error, data ) in
                 // if there was an error during authz, no need to continue
                 if (error != nil) {
-                    completionHandler(nil, error)
+                    completionHandler(response, error, data)
                     return
                 }
                 // ..otherwise proceed normally
@@ -459,7 +459,7 @@ public class Http {
     private class TaskDelegate: NSObject, NSURLSessionTaskDelegate {
         
         var data: NSData? { return nil }
-        var completionHandler:  ((AnyObject?, NSError?) -> Void)?
+        var completionHandler:  ((NSHTTPURLResponse?, NSError?, AnyObject?) -> Void)?
         var responseSerializer: ResponseSerializer?
         
         var credential: NSURLCredential?
@@ -494,34 +494,33 @@ public class Http {
         
         func URLSession(session: NSURLSession!, task: NSURLSessionTask!, didCompleteWithError error: NSError!) {
             if error != nil {
-                completionHandler?(nil, error)
+                completionHandler?(nil, error, nil)
                 return
             }
             
             var response = task.response as NSHTTPURLResponse
             
             if  let downloadTask = task as? NSURLSessionDownloadTask {
-                completionHandler?(response, error)
+                completionHandler?(response, error, nil)
                 return
             }
             
             if let uploadTask = task as? NSURLSessionUploadTask {
-                completionHandler?(response, error)
+                completionHandler?(response, error, nil)
                 return
             }
             
             var error: NSError?
             var isValid = self.responseSerializer?.validateResponse(response, data: data!, error: &error)
-            var responseObject: AnyObject? = self.responseSerializer?.response(data!)
+            var responseData: AnyObject? = self.responseSerializer?.response(data!)
             
             if (isValid == false) {
-                completionHandler?(responseObject, error)
+                completionHandler?(response, error, responseData)
                 return
             }
             
             if (data != nil) {
-                
-                completionHandler?(responseObject, nil)
+                completionHandler?(response, nil, responseData)
             }
         }
     }
