@@ -40,6 +40,13 @@ public class JsonRequestSerializer:  HttpRequestSerializer {
                     request.HTTPBody = body
                 }
             }
+            
+            // apply headers to new request
+            if(headers != nil) {
+                for (key,val) in headers! {
+                    request.addValue(val, forHTTPHeaderField: key)
+                }
+            }
 
             return request
         }
