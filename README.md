@@ -20,12 +20,11 @@ http.GET("/get", completionHandler: {(response, error) in
      // handle response
 })
 
-http.POST("/post",  parameters: ["key": "value"], completionHandler: {(response, error) in
+http.POST("/post",  parameters: ["key": "value"], 
+                    completionHandler: {(response, error) in
      // handle response
 })
 ...
-
-
 ```
 
 ### Authentication
@@ -35,26 +34,35 @@ The library also leverages the build-in foundation support for http/digest authe
 > **NOTE:**  It is advised that HTTPS should be used when performing authentication of this type
 
 ```swift
-let credential = NSURLCredential(user: "john", password: "pass", persistence: .None)
+let credential = NSURLCredential(user: "john", 
+                                 password: "pass", 
+                                 persistence: .None)
 
-http.GET("/protected/endpoint", credential: credential, completionHandler: {(response, error) in
+http.GET("/protected/endpoint", credential: credential, 
+                                completionHandler: {(response, error) in
    // handle response
 })
 ```
 
- You can also set a credential per protection space, so it's automatically picked up once http challenge is requested by the server, thus omitting the need to pass the credential on each request. In this case, you must initialize the ```Http``` object with a custom session configuration object, that has its credentials storage initialized with your credentials:
+You can also set a credential per protection space, so it's automatically picked up once http challenge is requested by the server, thus omitting the need to pass the credential on each request. In this case, you must initialize the ```Http``` object with a custom session configuration object, that has its credentials storage initialized with your credentials:
 
- ```swift
+```swift
 // create a protection space
-var protectionSpace: NSURLProtectionSpace = NSURLProtectionSpace(host: "httpbin.org", port: 443,`protocol`: NSURLProtectionSpaceHTTPS, realm: "me@kennethreitz.com", authenticationMethod: NSURLAuthenticationMethodHTTPDigest);
+var protectionSpace = NSURLProtectionSpace(host: "httpbin.org", 
+                                    port: 443,
+                                    protocol: NSURLProtectionSpaceHTTPS, 
+                                    realm: "me@kennethreitz.com", 
+                                    authenticationMethod: NSURLAuthenticationMethodHTTPDigest)
 
 // setup credential
 // notice that we use '.ForSession' type otherwise credential storage will discard and
 // won't save it when doing 'credentialStorage.setDefaultCredential' later on
-let credential = NSURLCredential(user: user, password: password, persistence: .ForSession)
+let credential = NSURLCredential(user: user, 
+                                 password: password, 
+                                 persistence: .ForSession)
 
 // assign it to credential storage
-var credentialStorage: NSURLCredentialStorage = NSURLCredentialStorage.sharedCredentialStorage()
+var credentialStorage = NSURLCredentialStorage.sharedCredentialStorage()
 credentialStorage.setDefaultCredential(credential, forProtectionSpace: protectionSpace);
 
 // set up default configuration and assign credential storage
@@ -73,7 +81,6 @@ http.GET("/protected/endpoint", completionHandler: {(response, error) in
 
 To support the OAuth2 protocol, we have created a separate library [aerogear-ios-oauth2](https://github.com/aerogear/aerogear-ios-oauth2) that can be easily integrated, in order to provide  out-of-the-box support for communicated with OAuth2 protected endpoints. Please have a look at the "Http and OAuth2Module" section on our [documentation page](http://aerogear.org/docs/guides/aerogear-ios-2.X/Authorization/) for more information. 
 
-
 Do you want to try it on your end? Follow next section steps.
 
 > **NOTE:**  The library has been tested with Xcode 6.1.1
@@ -84,20 +91,17 @@ Do you want to try it on your end? Follow next section steps.
 
 2. Get the dependencies
 
-The project uses [aerogear-ios-httpstub](https://github.com/aerogear/aerogear-ios-httpstub) framework for stubbing its http network requests and utilizes [cocoapods](http://cocoapods.org) for handling it's dependencies. On the root directory of the project run:
-
+The project uses [aerogear-ios-httpstub](https://github.com/aerogear/aerogear-ios-httpstub) framework for stubbing its http network requests and utilizes [cocoapods](http://cocoapods.org) 0.36.0 pre-release for handling its dependencies. As a pre-requisite, install [cocoapods pre-release](http://blog.cocoapods.org/Pod-Authors-Guide-to-CocoaPods-Frameworks/) and then install the pod. On the root directory of the project run:
 ```bash
-bundle install
-bundle exec pod install
+pod install
 ```
-
 3. open AeroGearHttp.xcworkspace
 
 ## Adding the library to your project 
 To add the library in your project, you can either use [Cocoapods](http://cocoapods.org) or simply drag the library in your project. See the respective sections below for instructions
 
 ### Using [Cocoapods](http://cocoapods.org)
-At this time, Cocoapods support for Swift frameworks is supported in a preview [branch](https://github.com/CocoaPods/CocoaPods/tree/swift) but tests shown that it's pretty stable to use. Simply [include a Gemfile](http://swiftwala.com/cocoapods-is-ready-for-swift/) in your project pointing to that branch and in your ```Podfile``` add:
+At this time, Cocoapods support for Swift frameworks is supported in a [pre-release](http://blog.cocoapods.org/Pod-Authors-Guide-to-CocoaPods-Frameworks/).
 
 ```
 pod 'AeroGearHttp'
@@ -106,8 +110,7 @@ pod 'AeroGearHttp'
 and then:
 
 ```bash
-bundle install
-bundle exec pod install
+pod install
 ```
 
 to install your dependencies
