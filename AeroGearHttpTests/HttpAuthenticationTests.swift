@@ -48,7 +48,7 @@ class HttpAuthenticationTests: XCTestCase {
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(10, handler: nil)
+        waitForExpectationsWithTimeout(300, handler: nil)
     }
     
     func testHTTPBasicAuthenticationWithInvalidCredentials() {
@@ -69,7 +69,7 @@ class HttpAuthenticationTests: XCTestCase {
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(10, handler: nil)
+        waitForExpectationsWithTimeout(300, handler: nil)
     }
     
     func testHTTPDigestAuthenticationWithValidCredentials() {
@@ -91,7 +91,7 @@ class HttpAuthenticationTests: XCTestCase {
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(10, handler: nil)
+        waitForExpectationsWithTimeout(300, handler: nil)
     }
     
     func testHTTPDigestAuthenticationWithInvalidCredentials() {
@@ -112,7 +112,7 @@ class HttpAuthenticationTests: XCTestCase {
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(10, handler: nil)
+        waitForExpectationsWithTimeout(300, handler: nil)
     }
     
     func testHTTPAuthenticationWithProtectionSpace() {
@@ -150,7 +150,7 @@ class HttpAuthenticationTests: XCTestCase {
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(10, handler: nil)
+        waitForExpectationsWithTimeout(300, handler: nil)
     }
     
 }
