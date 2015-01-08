@@ -29,7 +29,7 @@ class HttpAuthenticationTests: XCTestCase {
         super.tearDown()
     }
     
-    func notestHTTPBasicAuthenticationWithValidCredentials() {
+    func testHTTPBasicAuthenticationWithValidCredentials() {
         // async test expectation
         let getExpectation = expectationWithDescription("HTTPBasicAuthentication with valid credentials");
         
@@ -51,7 +51,7 @@ class HttpAuthenticationTests: XCTestCase {
         waitForExpectationsWithTimeout(300, handler: nil)
     }
     
-    func notestHTTPBasicAuthenticationWithInvalidCredentials() {
+    func testHTTPBasicAuthenticationWithInvalidCredentials() {
         // async test expectation
         let getExpectation = expectationWithDescription("HTTPBasicAuthentication with invalid credentials");
         
@@ -72,7 +72,7 @@ class HttpAuthenticationTests: XCTestCase {
         waitForExpectationsWithTimeout(300, handler: nil)
     }
     
-    func notestHTTPDigestAuthenticationWithValidCredentials() {
+    func testHTTPDigestAuthenticationWithValidCredentials() {
         // async test expectation
         let getExpectation = expectationWithDescription("HTTPDigestAuthentication with valid credentials");
         
@@ -94,7 +94,7 @@ class HttpAuthenticationTests: XCTestCase {
         waitForExpectationsWithTimeout(300, handler: nil)
     }
     
-    func notestHTTPDigestAuthenticationWithInvalidCredentials() {
+    func testHTTPDigestAuthenticationWithInvalidCredentials() {
         // async test expectation
         let getExpectation = expectationWithDescription("HTTPDigestAuthentication with invalid credentials");
         
@@ -115,7 +115,7 @@ class HttpAuthenticationTests: XCTestCase {
         waitForExpectationsWithTimeout(300, handler: nil)
     }
     
-    func notestHTTPAuthenticationWithProtectionSpace() {
+    func testHTTPAuthenticationWithProtectionSpace() {
         // async test expectation
         let getExpectation = expectationWithDescription("HTTPAuthenticationWithProtectionSpace");
 

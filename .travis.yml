@@ -7,6 +7,9 @@ xcode_sdk: iphonesimulator
 before_install:
     - gem install cocoapods --pre --no-rdoc --no-ri --no-document --quiet
 
+script:
+    - set -o pipefail && xcodebuild -workspace AeroGearHttp.xcworkspace -scheme AeroGearHttp -sdk iphonesimulator -configuration Release clean test
+
 notifications:
   irc: "irc.freenode.org#aerogear"
 
