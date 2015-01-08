@@ -18,7 +18,7 @@
 import Foundation
 
 /**
-Represents a multipart object containing a file plus metadata to be processed during upload
+Represents a multipart object containing a file plus metadata to be processed during upload.
 */
 public class MultiPartData {
 
@@ -48,7 +48,7 @@ public class MultiPartData {
     }
     
     /**
-    Initialize a multipart object using an NSData plus metadata
+    Initialize a multipart object using an NSData plus metadata.
     
     :param: data       the actual data to be uploaded
     :param: name     the 'name' to be used on the request

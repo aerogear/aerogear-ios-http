@@ -18,7 +18,7 @@
 import Foundation
 
 /**
- A response deserializer to a generic String object
+A response deserializer to a generic String object.
 */
 public class StringResponseSerializer : ResponseSerializer {
     
