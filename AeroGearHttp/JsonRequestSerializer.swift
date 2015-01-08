@@ -18,7 +18,7 @@
 import Foundation
 
 /**
- A request serializer to JSON objects
+A request serializer to JSON objects/
 */
 public class JsonRequestSerializer:  HttpRequestSerializer {
     

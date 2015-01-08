@@ -18,7 +18,7 @@
 import Foundation
 
 /**
-The protocol that request serializers must adhere to
+The protocol that request serializers must adhere to.
 */
 public protocol RequestSerializer {
     
@@ -34,7 +34,7 @@ public protocol RequestSerializer {
     var timeoutInterval: NSTimeInterval { get set }
     
     /**
-    Build an request using the specified params passed in
+    Build an request using the specified params passed in.
     
     :param: url               the url of the resource
     :param: method        the method to be used,
@@ -46,7 +46,7 @@ public protocol RequestSerializer {
     func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]?) -> NSURLRequest
     
     /**
-    Build an multipart request using the specified params passed in
+    Build an multipart request using the specified params passed in.
     
     :param: url               the url of the resource
     :param: method       the method to be used,

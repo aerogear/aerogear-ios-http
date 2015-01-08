@@ -18,7 +18,7 @@
 import Foundation
 
 /**
-A response deserializer to JSON objects
+A response deserializer to JSON objects.
 */
 public class JsonResponseSerializer : ResponseSerializer {
     

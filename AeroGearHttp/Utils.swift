@@ -18,7 +18,7 @@
 import Foundation
 
 /**
-Handy extensions and utilities
+Handy extensions and utilities.
 */
 extension String {
     

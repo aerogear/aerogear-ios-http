@@ -31,7 +31,7 @@ class HttpAuthenticationTests: XCTestCase {
     
     func testHTTPBasicAuthenticationWithValidCredentials() {
         // async test expectation
-        let getExpectation = expectationWithDescription("'HTTPBasicAuthentication with valid credentials");
+        let getExpectation = expectationWithDescription("HTTPBasicAuthentication with valid credentials");
         
         let user = "john"
         let password = "pass"
@@ -48,12 +48,12 @@ class HttpAuthenticationTests: XCTestCase {
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(10, handler: nil)
+        waitForExpectationsWithTimeout(300, handler: nil)
     }
     
     func testHTTPBasicAuthenticationWithInvalidCredentials() {
         // async test expectation
-        let getExpectation = expectationWithDescription("'HTTPBasicAuthentication with invalid credentials");
+        let getExpectation = expectationWithDescription("HTTPBasicAuthentication with invalid credentials");
         
         let user = "john"
         let password = "pass"
@@ -69,12 +69,12 @@ class HttpAuthenticationTests: XCTestCase {
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(10, handler: nil)
+        waitForExpectationsWithTimeout(300, handler: nil)
     }
     
     func testHTTPDigestAuthenticationWithValidCredentials() {
         // async test expectation
-        let getExpectation = expectationWithDescription("'HTTPDigestAuthentication with valid credentials");
+        let getExpectation = expectationWithDescription("HTTPDigestAuthentication with valid credentials");
         
         let user = "user"
         let password = "password"
@@ -91,12 +91,12 @@ class HttpAuthenticationTests: XCTestCase {
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(10, handler: nil)
+        waitForExpectationsWithTimeout(300, handler: nil)
     }
     
     func testHTTPDigestAuthenticationWithInvalidCredentials() {
         // async test expectation
-        let getExpectation = expectationWithDescription("'HTTPDigestAuthentication with invalid credentials");
+        let getExpectation = expectationWithDescription("HTTPDigestAuthentication with invalid credentials");
         
         let user = "john"
         let password = "pass"
@@ -112,12 +112,12 @@ class HttpAuthenticationTests: XCTestCase {
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(10, handler: nil)
+        waitForExpectationsWithTimeout(300, handler: nil)
     }
     
     func testHTTPAuthenticationWithProtectionSpace() {
         // async test expectation
-        let getExpectation = expectationWithDescription("'testHTTPAuthenticationWithProtectionSpace");
+        let getExpectation = expectationWithDescription("HTTPAuthenticationWithProtectionSpace");
 
         let user = "user"
         let password = "password"
@@ -150,7 +150,7 @@ class HttpAuthenticationTests: XCTestCase {
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(10, handler: nil)
+        waitForExpectationsWithTimeout(300, handler: nil)
     }
     
 }
