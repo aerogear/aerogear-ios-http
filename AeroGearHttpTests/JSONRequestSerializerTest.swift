@@ -31,7 +31,7 @@ class JSONRequestSerializer: XCTestCase {
     
     func testHttpDeinitShouldHappenAfterAllTasksAreCompleted() {
         // async test expectation
-        let getExpectation = expectationWithDescription("'request with valid JSON data");
+        let getExpectation = expectationWithDescription("request with valid JSON data");
         var http: Http?
         http = Http(baseURL: "http://httpbin.org")
         
@@ -50,7 +50,7 @@ class JSONRequestSerializer: XCTestCase {
     
     func testJSONSerializerWithValidRequest() {
         // async test expectation
-        let getExpectation = expectationWithDescription("'request with valid JSON data");
+        let getExpectation = expectationWithDescription("request with valid JSON data");
         
         var http = Http(baseURL: "http://httpbin.org")
         
