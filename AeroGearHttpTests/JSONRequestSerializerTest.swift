@@ -18,8 +18,27 @@
 import UIKit
 import XCTest
 import AeroGearHttp
+import AGURLSessionStubs
 
 class JSONRequestSerializer: XCTestCase {
+    
+    func httpStubResponseWithInputParams(request: NSURLRequest!, status: Int, params:[String: AnyObject]?) -> StubResponse {
+        var data: NSData
+        if params != nil {
+            data = NSJSONSerialization.dataWithJSONObject(params!, options: nil, error: nil)!
+        } else {
+            data = "invalid json".dataUsingEncoding(NSUTF8StringEncoding)!
+        }
+        return StubResponse(data:data, statusCode: status, headers: ["Content-Type" : "text/json"])
+    }
+    
+    func httpSuccessWithResponse(request: NSURLRequest!) -> StubResponse {
+        return httpStubResponseWithInputParams(request, status: 200, params: ["key" : "value"])
+    }
+    
+    func httpSuccessWithInvalidJson(request: NSURLRequest!) -> StubResponse {
+        return httpStubResponseWithInputParams(request, status: 200, params: nil)
+    }
     
     override func setUp() {
         super.setUp()
@@ -27,20 +46,22 @@ class JSONRequestSerializer: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
+        StubsManager.removeAllStubs()
     }
     
     func testHttpDeinitShouldHappenAfterAllTasksAreCompleted() {
+        // set up http stub
+        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+            return true
+            }, withStubResponse: httpSuccessWithResponse)
         // async test expectation
         let getExpectation = expectationWithDescription("request with valid JSON data");
         var http: Http?
-        http = Http(baseURL: "http://httpbin.org")
+        http = Http(baseURL: "http://whatever.com")
         
-        http?.GET("/get",  parameters: ["key": "value"], completionHandler: {(response, error) in
+        http?.GET("/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
-            
-            var resp = (response as NSDictionary!)["args"] as NSDictionary!
-            XCTAssertEqual(resp["key"] as String,  "value", "should be equal")
-            
+            XCTAssertTrue(response!["key"] as NSString == "value")
             getExpectation.fulfill()
         })
         // set http to nil to trigger deinit
@@ -49,17 +70,16 @@ class JSONRequestSerializer: XCTestCase {
     }
     
     func testJSONSerializerWithValidRequest() {
+        // set up http stub
+        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+            return true
+            }, withStubResponse: httpSuccessWithResponse)
+        var http = Http(baseURL: "http://whatever.com")
         // async test expectation
-        let getExpectation = expectationWithDescription("request with valid JSON data");
-        
-        var http = Http(baseURL: "http://httpbin.org")
-        
-        http.GET("/get",  parameters: ["key": "value"], completionHandler: {(response, error) in
+        let getExpectation = expectationWithDescription("request with valid JSON data")
+        http.GET("/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
-            
-            var resp = (response as NSDictionary!)["args"] as NSDictionary!
-            //XCTAssertEqual(resp["key"] as String,  "value", "should be equal")
-            
+            XCTAssertTrue(response!["key"] as NSString == "value")
             getExpectation.fulfill()
         })
         
@@ -67,20 +87,21 @@ class JSONRequestSerializer: XCTestCase {
     }
     
     func testJSONSerializerWithInvalidRequest() {
+        // set up http stub
+        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+            return true
+            }, withStubResponse: httpSuccessWithInvalidJson)
+        var http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("request with invalid JSON data");
-        
-        var http = Http(baseURL: "http://httpbin.org")
-        
         // request html data although json serializer is setup
         http.GET("/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
+            XCTAssertNil(response, "response is nil")
             XCTAssertNotNil(error, "error should be not nil")
-            // should be bad server response
             XCTAssertEqual(error!.code, NSURLErrorBadServerResponse)
             
             getExpectation.fulfill()
         })
-        
         waitForExpectationsWithTimeout(10, handler: nil)
     }
     
@@ -106,3 +127,4 @@ class JSONRequestSerializer: XCTestCase {
         XCTAssertTrue(header == "a value", "header should match")
     }
 }
+
