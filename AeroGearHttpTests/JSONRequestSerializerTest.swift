@@ -83,4 +83,26 @@ class JSONRequestSerializer: XCTestCase {
         
         waitForExpectationsWithTimeout(10, handler: nil)
     }
+    
+    func testHeadersShouldExistOnRequestWhenPUT() {
+        var url = "http://api.icndb.com/jokes/12"
+        var serialiser = JsonRequestSerializer()
+        var result = serialiser.request(NSURL(string: url)!, method:.PUT, parameters: ["param1": "value1"], headers: ["CUSTOM_HEADER": "a value"])
+        // header should be contained on the returned request
+        var header = result.allHTTPHeaderFields!["CUSTOM_HEADER"] as String
+        
+        XCTAssertNotNil(header)
+        XCTAssertEqual(header, "a value")
+    }
+    
+    func testHeadersShouldExistOnRequestWhenPOST() {
+        var url = "http://api.icndb.com/jokes/12"
+        var serialiser = JsonRequestSerializer()
+        var result = serialiser.request(NSURL(string: url)!, method:.POST, parameters: ["param1": "value1"], headers: ["CUSTOM_HEADER": "a value"])
+        // header should be contained on the returned request
+        var header = result.allHTTPHeaderFields!["CUSTOM_HEADER"] as String
+        
+        XCTAssertNotNil(header)
+        XCTAssertEqual(header, "a value")
+    }
 }
