@@ -28,7 +28,7 @@ class HttpTests: XCTestCase {
         } else {
             data = NSData()
         }
-        return StubResponse(data:data, statusCode: status, headers: ["Content-Type" : "text/json"])
+        return StubResponse(data:data, statusCode: status, headers: ["Content-Type" : "application/json"])
     }
     
     func httpSuccessWithResponse(request: NSURLRequest!) -> StubResponse {

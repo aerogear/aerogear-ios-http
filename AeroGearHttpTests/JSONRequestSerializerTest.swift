@@ -29,7 +29,7 @@ class JSONRequestSerializer: XCTestCase {
         } else {
             data = "invalid json".dataUsingEncoding(NSUTF8StringEncoding)!
         }
-        return StubResponse(data:data, statusCode: status, headers: ["Content-Type" : "text/json"])
+        return StubResponse(data:data, statusCode: status, headers: ["Content-Type" : "application/json"])
     }
     
     func httpSuccessWithResponse(request: NSURLRequest!) -> StubResponse {
