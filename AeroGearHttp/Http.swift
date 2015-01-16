@@ -125,16 +125,19 @@ public class Http {
             var finalURL = self.calculateURL(self.baseURL, url: url)
             
             var request: NSURLRequest
-            
+            var task: NSURLSessionTask
+            var delegate: TaskDataDelegate
             // care for multipart request is multipart data are set
             if (self.hasMultiPartData(parameters)) {
                 request = self.requestSerializer.multipartRequest(finalURL, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
+                task = self.session.uploadTaskWithStreamedRequest(request)
+                delegate = TaskUploadDelegate()
             } else {
                 request = self.requestSerializer.request(finalURL, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
+                task = self.session.dataTaskWithRequest(request);
+                delegate = TaskDataDelegate()
             }
             
-            let task = self.session.dataTaskWithRequest(request);
-            let delegate = TaskDataDelegate()
             delegate.completionHandler = completionHandler
             delegate.responseSerializer = self.responseSerializer
             delegate.credential = credential
@@ -173,7 +176,13 @@ public class Http {
         
         let block: () -> Void  = {
             var finalURL = self.calculateURL(self.baseURL, url: url)
-            let request = self.requestSerializer.request(finalURL, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
+            var request: NSURLRequest
+            // care for multipart request is multipart data are set
+            if (self.hasMultiPartData(parameters)) {
+                request = self.requestSerializer.multipartRequest(finalURL, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
+            } else {
+                request = self.requestSerializer.request(finalURL, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
+            }
             
             var task: NSURLSessionTask
             
@@ -507,11 +516,6 @@ public class Http {
             var response = task.response as NSHTTPURLResponse
             
             if  let downloadTask = task as? NSURLSessionDownloadTask {
-                completionHandler?(response, error)
-                return
-            }
-            
-            if let uploadTask = task as? NSURLSessionUploadTask {
                 completionHandler?(response, error)
                 return
             }
