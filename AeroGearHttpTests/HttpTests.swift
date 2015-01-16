@@ -156,25 +156,6 @@ class HttpTests: XCTestCase {
                 XCTAssertTrue(result.statusCode == 200)
                 getExpectation.fulfill()
         })
-        waitForExpectationsWithTimeout(600, handler: nil)
-    }
-    
-    func testSucessfulUpload() {
-        // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse: httpSuccessWithResponse)
-        var http = Http(baseURL: "http://whatever.com")
-        // async test expectation
-        let getExpectation = expectationWithDescription("Upload http method test");
-        http.upload("/post",  data: "contents of a file".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!,
-            progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)  in
-            }, completionHandler: { (response, error) in
-                XCTAssertNil(error, "error should be nil")
-                let result = response as NSHTTPURLResponse
-                XCTAssertTrue(result.statusCode == 200)
-                getExpectation.fulfill()
-        })
         waitForExpectationsWithTimeout(10, handler: nil)
     }
     
