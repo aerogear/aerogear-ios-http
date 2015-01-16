@@ -92,7 +92,7 @@ class JSONRequestSerializer: XCTestCase {
         var header = result.allHTTPHeaderFields!["CUSTOM_HEADER"] as String
         
         XCTAssertNotNil(header)
-        XCTAssertEqual(header, "a value")
+        XCTAssertTrue(header == "a value", "header should match")
     }
     
     func testHeadersShouldExistOnRequestWhenPOST() {
@@ -103,6 +103,6 @@ class JSONRequestSerializer: XCTestCase {
         var header = result.allHTTPHeaderFields!["CUSTOM_HEADER"] as String
         
         XCTAssertNotNil(header)
-        XCTAssertEqual(header, "a value")
+        XCTAssertTrue(header == "a value", "header should match")
     }
 }
