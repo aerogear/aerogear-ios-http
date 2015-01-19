@@ -17,7 +17,7 @@
 
 import XCTest
 import AeroGearHttp
-import AGURLSessionStubs
+import AeroGearHttpStub
 
 class HttpTests: XCTestCase {
 
