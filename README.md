@@ -1,4 +1,7 @@
 # aerogear-ios-http  [![Build Status](https://travis-ci.org/aerogear/aerogear-ios-http.png)](https://travis-ci.org/aerogear/aerogear-ios-http)
+
+> **NOTE:**  The library has been tested with Xcode 6.1.1
+
 Thin layer to take care of your http requests working with NSURLSession. 
 Taking care of: 
 
@@ -92,8 +95,6 @@ http.GET("/protected/endpoint", completionHandler: {(response, error) in
 To support the OAuth2 protocol, we have created a separate library [aerogear-ios-oauth2](https://github.com/aerogear/aerogear-ios-oauth2) that can be easily integrated, in order to provide  out-of-the-box support for communicated with OAuth2 protected endpoints. Please have a look at the "Http and OAuth2Module" section on our [documentation page](http://aerogear.org/docs/guides/aerogear-ios-2.X/Authorization/) for more information. 
 
 Do you want to try it on your end? Follow next section steps.
-
-> **NOTE:**  The library has been tested with Xcode 6.1.1
 
 ### Build, test and play with aerogear-ios-http
 
