@@ -18,25 +18,24 @@
 import UIKit
 import XCTest
 import AeroGearHttp
-import AeroGearHttpStub
 
 class JSONRequestSerializer: XCTestCase {
     
-    func httpStubResponseWithInputParams(request: NSURLRequest!, status: Int, params:[String: AnyObject]?) -> StubResponse {
+    func httpStubResponseWithInputParams(request: NSURLRequest!, status: Int, params:[String: AnyObject]?) -> OHHTTPStubsResponse {
         var data: NSData
         if params != nil {
             data = NSJSONSerialization.dataWithJSONObject(params!, options: nil, error: nil)!
         } else {
             data = "invalid json".dataUsingEncoding(NSUTF8StringEncoding)!
         }
-        return StubResponse(data:data, statusCode: status, headers: ["Content-Type" : "application/json"])
+        return OHHTTPStubsResponse(data:data, statusCode: CInt(status), headers: ["Content-Type" : "application/json"])
     }
     
-    func httpSuccessWithResponse(request: NSURLRequest!) -> StubResponse {
+    func httpSuccessWithResponse(request: NSURLRequest!) -> OHHTTPStubsResponse {
         return httpStubResponseWithInputParams(request, status: 200, params: ["key" : "value"])
     }
     
-    func httpSuccessWithInvalidJson(request: NSURLRequest!) -> StubResponse {
+    func httpSuccessWithInvalidJson(request: NSURLRequest!) -> OHHTTPStubsResponse {
         return httpStubResponseWithInputParams(request, status: 200, params: nil)
     }
     
@@ -46,12 +45,12 @@ class JSONRequestSerializer: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
-        StubsManager.removeAllStubs()
+        OHHTTPStubs.removeAllStubs()
     }
     
     func testHttpDeinitShouldHappenAfterAllTasksAreCompleted() {
         // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         // async test expectation
@@ -71,7 +70,7 @@ class JSONRequestSerializer: XCTestCase {
     
     func testJSONSerializerWithValidRequest() {
         // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         var http = Http(baseURL: "http://whatever.com")
@@ -88,7 +87,7 @@ class JSONRequestSerializer: XCTestCase {
     
     func testJSONSerializerWithInvalidRequest() {
         // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithInvalidJson)
         var http = Http(baseURL: "http://whatever.com")
