@@ -2,8 +2,9 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 xcodeproj 'AeroGearHttp.xcodeproj'
 platform :ios, '8.0'
+use_frameworks!
 
 target 'AeroGearHttpTests' do
-    pod 'AeroGearHttpStub', :git => "https://github.com/aerogear/aerogear-ios-httpstub.git", :branch => "master"
+    pod 'OHHTTPStubs', '3.1.10'
 end
 

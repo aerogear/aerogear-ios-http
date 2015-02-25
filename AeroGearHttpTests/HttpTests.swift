@@ -17,25 +17,25 @@
 
 import XCTest
 import AeroGearHttp
-import AeroGearHttpStub
+import OHHTTPStubs
 
 class HttpTests: XCTestCase {
 
-    func httpStubResponseWithInputParams(request: NSURLRequest!, status: Int, params:[String: AnyObject]?) -> StubResponse {
+    func httpStubResponseWithInputParams(request: NSURLRequest!, status: Int, params:[String: AnyObject]?) -> OHHTTPStubsResponse {
         var data: NSData
         if ((params) != nil) {
             data = NSJSONSerialization.dataWithJSONObject(params!, options: nil, error: nil)!
         } else {
             data = NSData()
         }
-        return StubResponse(data:data, statusCode: status, headers: ["Content-Type" : "application/json"])
+        return OHHTTPStubsResponse(data: data, statusCode: CInt(status), headers: ["Content-Type":"application/json"])
     }
     
-    func httpSuccessWithResponse(request: NSURLRequest!) -> StubResponse {
+    func httpSuccessWithResponse(request: NSURLRequest!) -> OHHTTPStubsResponse {
         return httpStubResponseWithInputParams(request, status: 200, params: ["key" : "value"])
     }
     
-    func httpMultipartUploadSuccessWithResponse(request: NSURLRequest!) -> StubResponse {
+    func httpMultipartUploadSuccessWithResponse(request: NSURLRequest!) -> OHHTTPStubsResponse {
         return httpStubResponseWithInputParams(request, status: 200, params: ["files" : ["file" : "Lorem ipsum dolor sit amet"], "form" : ["key" : "value"] ])
     }
     
@@ -45,12 +45,12 @@ class HttpTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
-        StubsManager.removeAllStubs()
+        OHHTTPStubs.removeAllStubs()
     }
 
     func testSucessfulGET() {
         // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         var http = Http(baseURL: "http://whatever.com")
@@ -66,7 +66,7 @@ class HttpTests: XCTestCase {
     
     func testSucessfulPOST() {
         // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         var http = Http(baseURL: "http://whatever.com")
@@ -82,7 +82,7 @@ class HttpTests: XCTestCase {
     
     func testSucessfulPUT() {
         // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         var http = Http(baseURL: "http://whatever.com")
@@ -98,7 +98,7 @@ class HttpTests: XCTestCase {
     
     func testDELETE() {
         // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         var http = Http(baseURL: "http://whatever.com")
@@ -114,7 +114,7 @@ class HttpTests: XCTestCase {
 
     func testSucessfulMultipartUploadWithPOST() {
         // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpMultipartUploadSuccessWithResponse)
         var http = Http(baseURL: "http://whatever.com")
@@ -137,7 +137,7 @@ class HttpTests: XCTestCase {
 
     func testSucessfulDownloadWithDefaultDestinationDirectory() {
         // set up http stub
-        StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         var http = Http(baseURL: "http://whatever.com")
