@@ -17,6 +17,7 @@
 
 import XCTest
 import AeroGearHttp
+import OHHTTPStubs
 
 class HttpTests: XCTestCase {
 

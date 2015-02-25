@@ -18,6 +18,7 @@
 import UIKit
 import XCTest
 import AeroGearHttp
+import OHHTTPStubs
 
 class JSONRequestSerializer: XCTestCase {
     
