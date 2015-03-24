@@ -58,11 +58,11 @@ enum UploadType {
     case Stream(NSInputStream)
 }
 
-/** 
+/**
 Error domain.
 **/
 public let HttpErrorDomain = "HttpDomain"
-/** 
+/**
 Request error.
 **/
 public let NetworkingOperationFailingURLRequestErrorKey = "NetworkingOperationFailingURLRequestErrorKey"
@@ -129,7 +129,7 @@ public class Http {
             var delegate: TaskDataDelegate
             var headerToSend = headers
             if headerToSend == nil {
-                headerToSend = self.authzModule?.authorizationFields()
+                headerToSend = self.authzModule?.authorizationFields(url, parameters: parameters)
             }
             // care for multipart request is multipart data are set
             if (self.hasMultiPartData(parameters)) {
@@ -183,7 +183,7 @@ public class Http {
             var request: NSURLRequest
             var headerToSend = headers
             if headerToSend == nil {
-                headerToSend = self.authzModule?.authorizationFields()
+                headerToSend = self.authzModule?.authorizationFields(url, parameters: parameters)
             }
             // care for multipart request is multipart data are set
             if (self.hasMultiPartData(parameters)) {
