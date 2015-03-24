@@ -32,8 +32,11 @@ public protocol AuthzModule {
     /**
     Return any authorization fields.
     
-   :returns:  a dictionary filled with the authorization fields.
+    :param: url used for oauth1 which required signature of the method
+    :param: parameters used for oauth1 which required signature of the method. it should be all parameters (oauth1 plus additional one)
+    
+    :returns:  a dictionary filled with the authorization fields.
     */
-    func authorizationFields() -> [String: String]?
+    func authorizationFields(url: String?, parameters: [String: AnyObject]?) -> [String: String]?
     
 }
