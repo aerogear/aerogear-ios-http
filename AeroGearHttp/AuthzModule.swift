@@ -28,47 +28,15 @@ public protocol AuthzModule {
     :param: completionHandler A block object to be executed when the request operation finishes.
     */
     func requestAccess(completionHandler: (AnyObject?, NSError?) -> Void)
-
-    /**
-    Request an authorization code.
-    
-    :param: completionHandler A block object to be executed when the request operation finishes.
-    */
-    func requestAuthorizationCode(completionHandler: (AnyObject?, NSError?) -> Void)
-
-    /**
-    Exchange an authorization code for an access token.
-    
-    :param: completionHandler A block object to be executed when the request operation finishes.
-    */
-    func exchangeAuthorizationCodeForAccessToken(code: String, completionHandler: (AnyObject?, NSError?) -> Void)
-    
-    /**
-    Request to refresh an access token.
-    
-    :param: completionHandler A block object to be executed when the request operation finishes.
-    */
-    func refreshAccessToken(completionHandler: (AnyObject?, NSError?) -> Void)
-    
-    /**
-    Request to revoke access.
-    
-    :param: completionHandler A block object to be executed when the request operation finishes.
-    */
-    func revokeAccess(completionHandler: (AnyObject?, NSError?) -> Void)
     
     /**
     Return any authorization fields.
     
-   :returns:  a dictionary filled with the authorization fields.
-    */
-    func authorizationFields() -> [String: String]?
+    :param: url used for oauth1 which required signature of the method
+    :param: parameters used for oauth1 which required signature of the method. it should be all parameters (oauth1 plus additional one)
     
-    /**
-    Returns a boolean indicating whether authorization has been granted.
-    
-    :returns: true if authorized, false otherwise.
+    :returns:  a dictionary filled with the authorization fields.
     */
-    func isAuthorized() -> Bool
+    func authorizationFields(url: String?, parameters: [String: AnyObject]?) -> [String: String]?
     
 }
