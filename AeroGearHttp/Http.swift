@@ -117,6 +117,7 @@ public class Http {
     
     :param: url         the url of the resource.
     :param: parameters  the request parameters.
+    :param: headers     the request headers. Used when making authz call without using AuthzModule.
     :param: method      the method to be used.
     :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
     */
@@ -171,6 +172,7 @@ public class Http {
     
     :param: url         the url of the resource.
     :param: parameters  the request parameters.
+    :param: headers     the request headers. Used when making authz call without using AuthzModule.
     :param: method      the method to be used.
     :param: type        the file request type
     :param: progress    a block that will be invoked to report progress during either download or upload.
@@ -248,6 +250,7 @@ public class Http {
     
     :param: url         the url of the resource.
     :param: parameters  the request parameters.
+    :param: headers     the request headers. Used when making authz call without using AuthzModule.
     :param: credential  the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
     :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
     */
@@ -260,6 +263,7 @@ public class Http {
     
     :param: url          the url of the resource.
     :param: parameters   the request parameters.
+    :param: headers     the request headers. Used when making authz call without using AuthzModule.
     :param: credential   the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
     :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
     */
@@ -272,6 +276,7 @@ public class Http {
     
     :param: url          the url of the resource.
     :param: parameters   the request parameters.
+    :param: headers     the request headers. Used when making authz call without using AuthzModule.
     :param: credential   the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
     :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
     */
@@ -296,6 +301,7 @@ public class Http {
     
     :param: url         the url of the resource.
     :param: parameters  the request parameters.
+    :param: headers     the request headers. Used when making authz call without using AuthzModule.
     :param: credential  the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
     :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
     */
@@ -309,6 +315,7 @@ public class Http {
     :param: url                     the URL of the downloadable resource.
     :param: destinationDirectory    the destination directory where the file would be stored, if not specified. application's default '.Documents' directory would be used.
     :param: parameters              the request parameters.
+    :param: headers     the request headers. Used when making authz call without using AuthzModule.
     :param: credential              the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
     :param: method                  the method to be used, by default a .GET request.
     :param: progress                a block that will be invoked to report progress during download.
@@ -339,6 +346,7 @@ public class Http {
     :param: url         the URL to upload resource into.
     :param: data        the data to be uploaded.
     :param: parameters  the request parameters.
+    :param: headers     the request headers. Used when making authz call without using AuthzModule.
     :param: credential  the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
     :param: method       the method to be used, by default a .POST request.
     :param: progress     a block that will be invoked to report progress during upload.
@@ -354,6 +362,7 @@ public class Http {
     :param: url         the URL to upload resource into.
     :param: stream      the stream that will be used for uploading.
     :param: parameters  the request parameters.
+    :param: headers     the request headers. Used when making authz call without using AuthzModule.
     :param: credential  the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
     :param: method      the method to be used, by default a .POST request.
     :param: progress    a block that will be invoked to report progress during upload.
