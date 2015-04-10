@@ -87,7 +87,6 @@
 		48BC695519BA0BD700497B4E /* StringResponseSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringResponseSerializer.swift; sourceTree = "<group>"; };
 		48BC695919BA0BE400497B4E /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
 		48DB692319C8864A00452837 /* AuthzModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthzModule.swift; sourceTree = "<group>"; };
-		48ECBB2A19AF677B00B53059 /* AeroGearHttpSample.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = AeroGearHttpSample.playground; sourceTree = "<group>"; };
 		6F24AEB519CFFE6D002BB280 /* MultiPartData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartData.swift; sourceTree = "<group>"; };
 		6F3D93A21A24EC4000235911 /* HttpAuthenticationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpAuthenticationTests.swift; sourceTree = "<group>"; };
 		6F4F1E3A1A38A12000ECF717 /* JSONRequestSerializerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONRequestSerializerTest.swift; sourceTree = "<group>"; };
@@ -129,7 +128,6 @@
 		488B6B52196B19BC000297C9 = {
 			isa = PBXGroup;
 			children = (
-				48ECBB2A19AF677B00B53059 /* AeroGearHttpSample.playground */,
 				488B6B5E196B19BC000297C9 /* AeroGearHttp */,
 				488B6B6B196B19BC000297C9 /* AeroGearHttpTests */,
 				488B6B5D196B19BC000297C9 /* Products */,
