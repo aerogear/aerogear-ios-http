@@ -27,7 +27,7 @@ public class StringResponseSerializer : ResponseSerializer {
     }
     
     public func validateResponse(response: NSURLResponse!, data: NSData, error: NSErrorPointer) -> Bool {
-        let httpResponse = response as NSHTTPURLResponse
+        let httpResponse = response as! NSHTTPURLResponse
         
         if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
             var userInfo = [

@@ -143,7 +143,7 @@ public class HttpRequestSerializer:  RequestSerializer {
             var sectionFilename = ""
             
             if value is MultiPartData {
-                let multiData = value as MultiPartData
+                let multiData = value as! MultiPartData
                 sectionData = multiData.data
                 sectionType = multiData.mimeType
                 sectionFilename = " filename=\"\(multiData.filename)\""

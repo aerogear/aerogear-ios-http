@@ -378,28 +378,28 @@ public class Http {
             super.init()
         }
         
-        func URLSession(session: NSURLSession!, didBecomeInvalidWithError error: NSError!) {
+        func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
             // TODO
         }
         
-        func URLSession(session: NSURLSession!, didReceiveChallenge challenge: NSURLAuthenticationChallenge!, completionHandler: ((NSURLSessionAuthChallengeDisposition, NSURLCredential!) -> Void)!) {
+        func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: ((NSURLSessionAuthChallengeDisposition, NSURLCredential!) -> Void)) {
             completionHandler(.PerformDefaultHandling, nil)
         }
         
-        func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession!) {
+        func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
             // TODO
         }
         
         // MARK: NSURLSessionTaskDelegate
         
-        func URLSession(session: NSURLSession!, task: NSURLSessionTask!, willPerformHTTPRedirection response: NSHTTPURLResponse!, newRequest request: NSURLRequest!, completionHandler: ((NSURLRequest!) -> Void)!) {
+        func URLSession(session: NSURLSession, task: NSURLSessionTask, willPerformHTTPRedirection response: NSHTTPURLResponse, newRequest request: NSURLRequest, completionHandler: ((NSURLRequest!) -> Void)) {
             
             if let delegate = self[task] {
                 delegate.URLSession(session, task: task, willPerformHTTPRedirection: response, newRequest: request, completionHandler: completionHandler)
             }
         }
         
-        func URLSession(session: NSURLSession!, task: NSURLSessionTask!, didReceiveChallenge challenge: NSURLAuthenticationChallenge!, completionHandler: ((NSURLSessionAuthChallengeDisposition, NSURLCredential!) -> Void)!) {
+        func URLSession(session: NSURLSession, task: NSURLSessionTask, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: ((NSURLSessionAuthChallengeDisposition, NSURLCredential!) -> Void)) {
             if let delegate = self[task] {
                 delegate.URLSession(session, task: task, didReceiveChallenge: challenge, completionHandler: completionHandler)
             } else {
@@ -407,19 +407,19 @@ public class Http {
             }
         }
         
-        func URLSession(session: NSURLSession!, task: NSURLSessionTask!, needNewBodyStream completionHandler: ((NSInputStream!) -> Void)!) {
+        func URLSession(session: NSURLSession, task: NSURLSessionTask, needNewBodyStream completionHandler: ((NSInputStream!) -> Void)) {
             if let delegate = self[task] {
                 delegate.URLSession(session, task: task, needNewBodyStream: completionHandler)
             }
         }
         
-        func URLSession(session: NSURLSession!, task: NSURLSessionTask!, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+        func URLSession(session: NSURLSession, task: NSURLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
             if let delegate = self[task] as? TaskUploadDelegate {
                 delegate.URLSession(session, task: task, didSendBodyData: bytesSent, totalBytesSent: totalBytesSent, totalBytesExpectedToSend: totalBytesExpectedToSend)
             }
         }
         
-        func URLSession(session: NSURLSession!, task: NSURLSessionTask!, didCompleteWithError error: NSError!) {
+        func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
             if let delegate = self[task] {
                 delegate.URLSession(session, task: task, didCompleteWithError: error)
                 
@@ -429,22 +429,22 @@ public class Http {
         
         // MARK: NSURLSessionDataDelegate
         
-        func URLSession(session: NSURLSession!, dataTask: NSURLSessionDataTask!, didReceiveResponse response: NSURLResponse!, completionHandler: ((NSURLSessionResponseDisposition) -> Void)!) {
+        func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: ((NSURLSessionResponseDisposition) -> Void)) {
             completionHandler(.Allow)
         }
         
-        func URLSession(session: NSURLSession!, dataTask: NSURLSessionDataTask!, didBecomeDownloadTask downloadTask: NSURLSessionDownloadTask!) {
+        func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didBecomeDownloadTask downloadTask: NSURLSessionDownloadTask) {
             let downloadDelegate = TaskDownloadDelegate()
             self[downloadTask] = downloadDelegate
         }
         
-        func URLSession(session: NSURLSession!, dataTask: NSURLSessionDataTask!, didReceiveData data: NSData!) {
+        func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
             if let delegate = self[dataTask] as? TaskDataDelegate {
                 delegate.URLSession(session, dataTask: dataTask, didReceiveData: data)
             }
         }
         
-        func URLSession(session: NSURLSession!, dataTask: NSURLSessionDataTask!, willCacheResponse proposedResponse: NSCachedURLResponse!, completionHandler: ((NSCachedURLResponse!) -> Void)!) {
+        func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, willCacheResponse proposedResponse: NSCachedURLResponse, completionHandler: ((NSCachedURLResponse!) -> Void)) {
             
             completionHandler(proposedResponse)
         }
@@ -513,7 +513,7 @@ public class Http {
                 return
             }
             
-            var response = task.response as NSHTTPURLResponse
+            var response = task.response as! NSHTTPURLResponse
             
             if  let downloadTask = task as? NSURLSessionDownloadTask {
                 completionHandler?(response, error)
@@ -570,14 +570,14 @@ public class Http {
         var resumeData: NSData?
         var destinationDirectory: String?
         
-        func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
+        @objc func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
             let filename = downloadTask.response?.suggestedFilename
             
             // calculate final destination
             var finalDestination: NSURL
             if (destinationDirectory == nil) {  // use 'default documents' directory if not set
                 // use default documents directory
-                var documentsDirectory  = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as NSURL
+                var documentsDirectory  = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as! NSURL
                 finalDestination = documentsDirectory.URLByAppendingPathComponent(filename!)
             } else {
                 // check that the directory exists

@@ -58,7 +58,7 @@ class HttpTests: XCTestCase {
         let getExpectation = expectationWithDescription("GET http method test");
         http.GET("/get", completionHandler: {(response, error) in
                 XCTAssertNil(error, "error should be nil")
-                XCTAssertTrue(response!["key"] as NSString == "value")
+                XCTAssertTrue(response!["key"] as! NSString == "value")
                 getExpectation.fulfill()
         })
         waitForExpectationsWithTimeout(10, handler: nil)
@@ -74,7 +74,7 @@ class HttpTests: XCTestCase {
         let getExpectation = expectationWithDescription("POST http method test");
         http.POST("/post", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
-            XCTAssertTrue(response!["key"] as NSString == "value")
+            XCTAssertTrue(response!["key"] as! NSString == "value")
             getExpectation.fulfill()
         })
         waitForExpectationsWithTimeout(10, handler: nil)
@@ -90,7 +90,7 @@ class HttpTests: XCTestCase {
         let getExpectation = expectationWithDescription("PUT http method test");
         http.PUT("/put",  completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
-            XCTAssertTrue(response!["key"] as NSString == "value")
+            XCTAssertTrue(response!["key"] as! NSString == "value")
             getExpectation.fulfill()
         })
         waitForExpectationsWithTimeout(10, handler: nil)
@@ -106,7 +106,7 @@ class HttpTests: XCTestCase {
         let getExpectation = expectationWithDescription("DELETE http method test");
         http.DELETE("/delete", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
-            XCTAssertTrue(response!["key"] as NSString == "value")
+            XCTAssertTrue(response!["key"] as! NSString == "value")
             getExpectation.fulfill()
         })
         waitForExpectationsWithTimeout(10, handler: nil)
@@ -125,10 +125,10 @@ class HttpTests: XCTestCase {
         http.POST("/post",  parameters: ["key": "value", "file": file], completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             // should contain form data
-            var form = (response as NSDictionary!)["form"] as NSDictionary!
-            XCTAssertEqual(form["key"] as String,  "value", "should be equal")
+            var form = (response as! NSDictionary!)["form"] as! NSDictionary!
+            XCTAssertEqual(form["key"] as! String,  "value", "should be equal")
             // should contain file data
-            var files = (response as NSDictionary!)["files"] as NSDictionary!
+            var files = (response as! NSDictionary!)["files"] as! NSDictionary!
             XCTAssertNotNil(files["file"], "should contain file")
             getExpectation.fulfill()
         })
@@ -145,14 +145,14 @@ class HttpTests: XCTestCase {
         let getExpectation = expectationWithDescription("Download");
         var FILENAME = "aerogear_icon_64px.png"
         var fileManager = NSFileManager.defaultManager()
-        var path  = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+        var path  = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
         fileManager.createDirectoryAtPath(path, withIntermediateDirectories: true, attributes: nil, error: nil)
         var finalDestination = path.stringByAppendingPathComponent(FILENAME)
         http.download("something",
             progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)  in
             }, completionHandler: { (response, error) in
                 XCTAssertNil(error, "error should be nil")
-                let result = response as NSHTTPURLResponse
+                let result = response as! NSHTTPURLResponse
                 XCTAssertTrue(result.statusCode == 200)
                 getExpectation.fulfill()
         })

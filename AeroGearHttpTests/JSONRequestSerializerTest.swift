@@ -61,7 +61,7 @@ class JSONRequestSerializer: XCTestCase {
         
         http?.GET("/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
-            XCTAssertTrue(response!["key"] as NSString == "value")
+            XCTAssertTrue(response!["key"] as! NSString == "value")
             getExpectation.fulfill()
         })
         // set http to nil to trigger deinit
@@ -79,7 +79,7 @@ class JSONRequestSerializer: XCTestCase {
         let getExpectation = expectationWithDescription("request with valid JSON data")
         http.GET("/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
-            XCTAssertTrue(response!["key"] as NSString == "value")
+            XCTAssertTrue(response!["key"] as! NSString == "value")
             getExpectation.fulfill()
         })
         
@@ -110,7 +110,7 @@ class JSONRequestSerializer: XCTestCase {
         var serialiser = JsonRequestSerializer()
         var result = serialiser.request(NSURL(string: url)!, method:.PUT, parameters: ["param1": "value1"], headers: ["CUSTOM_HEADER": "a value"])
         // header should be contained on the returned request
-        var header = result.allHTTPHeaderFields!["CUSTOM_HEADER"] as String
+        var header = result.allHTTPHeaderFields!["CUSTOM_HEADER"] as! String
         
         XCTAssertNotNil(header)
         XCTAssertTrue(header == "a value", "header should match")
@@ -121,7 +121,7 @@ class JSONRequestSerializer: XCTestCase {
         var serialiser = JsonRequestSerializer()
         var result = serialiser.request(NSURL(string: url)!, method:.POST, parameters: ["param1": "value1"], headers: ["CUSTOM_HEADER": "a value"])
         // header should be contained on the returned request
-        var header = result.allHTTPHeaderFields!["CUSTOM_HEADER"] as String
+        var header = result.allHTTPHeaderFields!["CUSTOM_HEADER"] as! String
         
         XCTAssertNotNil(header)
         XCTAssertTrue(header == "a value", "header should match")
