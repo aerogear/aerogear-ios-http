@@ -28,6 +28,6 @@ extension String {
             nil,
             "!@#$%&*'();:=+,/?[]",
             CFStringBuiltInEncodings.UTF8.rawValue)
-        return encodedURL as NSString
+        return encodedURL as String
     }
 }

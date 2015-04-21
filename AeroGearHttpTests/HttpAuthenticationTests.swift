@@ -42,8 +42,8 @@ class HttpAuthenticationTests: XCTestCase {
         http.GET("/basic-auth/\(user)/\(password)", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             
-            var JSON = response as NSDictionary!
-            XCTAssertTrue(JSON["authenticated"] as Bool)
+            var JSON = response as! NSDictionary!
+            XCTAssertTrue(JSON["authenticated"] as! Bool)
             
             getExpectation.fulfill()
         })
@@ -85,8 +85,8 @@ class HttpAuthenticationTests: XCTestCase {
         http.GET("/digest-auth/auth/\(user)/\(password)", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             
-            var JSON = response as NSDictionary!
-            XCTAssertTrue(JSON["authenticated"] as Bool)
+            var JSON = response as! NSDictionary!
+            XCTAssertTrue(JSON["authenticated"] as! Bool)
             
             getExpectation.fulfill()
         })
@@ -144,8 +144,8 @@ class HttpAuthenticationTests: XCTestCase {
         http.GET("/digest-auth/auth/\(user)/\(password)", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             
-            var JSON = response as NSDictionary!
-            XCTAssertTrue(JSON["authenticated"] as Bool)
+            var JSON = response as! NSDictionary!
+            XCTAssertTrue(JSON["authenticated"] as! Bool)
             
             getExpectation.fulfill()
         })
