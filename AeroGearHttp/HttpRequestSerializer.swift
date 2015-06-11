@@ -21,19 +21,34 @@ import Foundation
 An HttpRequest serializer that handles form-encoded URL requess including multipart support.
 */
 public class HttpRequestSerializer:  RequestSerializer {
-    
+    /// The url that this request serializer is bound to.
     public var url: NSURL?
+    /// Any headers that will be appended on the request.
     public var headers: [String: String]?
+    /// The String encoding to be used.
     public var stringEncoding: NSNumber
+    ///  The cache policy.
     public var cachePolicy: NSURLRequestCachePolicy
+    /// The timeout interval.
     public var timeoutInterval: NSTimeInterval
     
+    /// Defualt initializer.
     public init() {
         self.stringEncoding = NSUTF8StringEncoding
         self.timeoutInterval = 60
         self.cachePolicy = .UseProtocolCachePolicy
     }
     
+    /**
+    Build an request using the specified params passed in.
+    
+    :param: url the url of the resource.
+    :param: method the method to be used.
+    :param: parameters the request parameters.
+    :param: headers any headers to be used on this request.
+    
+    :returns: the URLRequest object.
+    */
     public func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]? = nil) -> NSURLRequest {
         var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
         request.HTTPMethod = method.rawValue
@@ -68,6 +83,16 @@ public class HttpRequestSerializer:  RequestSerializer {
         return request
     }
     
+    /**
+    Build an multipart request using the specified params passed in.
+    
+    :param: url the url of the resource.
+    :param: method the method to be used.
+    :param: parameters the request parameters.
+    :param: headers  any headers to be used on this request.
+    
+    :returns: the URLRequest object
+    */
     public func multipartRequest(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]? = nil) -> NSURLRequest {
         var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
         request.HTTPMethod = method.rawValue

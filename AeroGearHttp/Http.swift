@@ -90,10 +90,10 @@ public class Http {
     /**
     Initialize an HTTP object.
     
-    :param: baseURL              the remote base URL of the application (optional)
-    :param: sessionConfig       the SessionConfiguration object (by default it uses a defaultSessionConfiguration)
-    :param: requestSerializer   the actual request serializer to use when performing requests
-    :param: responseSerializer the actual response serializer to use upon receiving a response
+    :param: baseURL the remote base URL of the application (optional).
+    :param: sessionConfig the SessionConfiguration object (by default it uses a defaultSessionConfiguration).
+    :param: requestSerializer the actual request serializer to use when performing requests.
+    :param: responseSerializer the actual response serializer to use upon receiving a response.
     
     :returns: the newly intitialized HTTP object
     */
@@ -115,9 +115,9 @@ public class Http {
     /**
     Gateway to perform different http requests including multipart.
     
-    :param: url         the url of the resource.
-    :param: parameters  the request parameters.
-    :param: method      the method to be used.
+    :param: url the url of the resource.
+    :param: parameters the request parameters.
+    :param: method the method to be used.
     :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
     */
     private func request(url: String, parameters: [String: AnyObject]? = nil,  method: HttpMethod,  credential: NSURLCredential? = nil, completionHandler: CompletionBlock) {
@@ -165,11 +165,11 @@ public class Http {
     /**
     Gateway to perform different file requests either download or upload.
     
-    :param: url         the url of the resource.
-    :param: parameters  the request parameters.
-    :param: method      the method to be used.
-    :param: type        the file request type
-    :param: progress    a block that will be invoked to report progress during either download or upload.
+    :param: url the url of the resource.
+    :param: parameters the request parameters.
+    :param: method the method to be used.
+    :param: type the file request type
+    :param: progress  a block that will be invoked to report progress during either download or upload.
     :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
     */
     private func fileRequest(url: String, parameters: [String: AnyObject]? = nil,  method: HttpMethod, credential: NSURLCredential? = nil, type: FileRequestType, progress: ProgressBlock?, completionHandler: CompletionBlock) {

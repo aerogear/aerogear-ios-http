@@ -21,11 +21,20 @@ import Foundation
 A response deserializer to JSON objects.
 */
 public class JsonResponseSerializer : ResponseSerializer {
+    /**
+    Deserialize the response received.
     
+    :returns: the serialized response
+    */
     public func response(data: NSData) -> (AnyObject?) {
         return NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)
     }
-
+    
+    /**
+    Validate the response received.
+    
+    :returns:  either true or false if the response is valid for this particular serializer.
+    */
     public func validateResponse(response: NSURLResponse!, data: NSData, error: NSErrorPointer) -> Bool {
         let httpResponse = response as! NSHTTPURLResponse
         

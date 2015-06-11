@@ -21,7 +21,16 @@ import Foundation
 A request serializer to JSON objects/
 */
 public class JsonRequestSerializer:  HttpRequestSerializer {
+    /**
+    Build an request using the specified params passed in.
     
+    :param: url the url of the resource.
+    :param: method the method to be used.
+    :param: parameters the request parameters.
+    :param: headers any headers to be used on this request.
+    
+    :returns: the URLRequest object.
+    */
     public override func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]? = nil) -> NSURLRequest {
         if method == HttpMethod.GET || method == HttpMethod.HEAD || method == HttpMethod.DELETE {
             return super.request(url, method: method, parameters: parameters, headers: headers)

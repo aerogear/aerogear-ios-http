@@ -22,22 +22,22 @@ Represents a multipart object containing a file plus metadata to be processed du
 */
 public class MultiPartData {
 
-    /// The 'name' to be used on the request
+    /// The 'name' to be used on the request.
     public var name: String
-    /// The 'filename' to be used on the request
+    /// The 'filename' to be used on the request.
     public var filename: String
-    /// The 'MIME type' to be used on the request
+    /// The 'MIME type' to be used on the request.
     public var mimeType: String
-    /// The actual data to be send
+    /// The actual data to be sent.
     public var data: NSData
     
     /**
     Initialize a multipart object using an NSURL and a corresponding MIME type. 
     
-    :param: url      the url of the local file
-    :param: mimeType the MIME type
+    :param: url the url of the local file.
+    :param: mimeType the MIME type.
     
-    :returns: the newly created multipart data
+    :returns: the newly created multipart data.
     */
     public init(url: NSURL, mimeType: String) {
         self.name = url.lastPathComponent!
@@ -50,12 +50,12 @@ public class MultiPartData {
     /**
     Initialize a multipart object using an NSData plus metadata.
     
-    :param: data       the actual data to be uploaded
-    :param: name     the 'name' to be used on the request
-    :param: filename the 'filename' to be used on the request
-    :param: mimeType  the 'MIME type' to be used on the request
+    :param: data the actual data to be uploaded.
+    :param: name the 'name' to be used on the request.
+    :param: filename the 'filename' to be used on the request.
+    :param: mimeType the 'MIME type' to be used on the request.
     
-    :returns: the newly created multipart data
+    :returns: the newly created multipart data.
     */
     public init(data: NSData, name: String, filename: String, mimeType: String) {
         self.data = data;
