@@ -35,10 +35,10 @@ class RequestSerializerTests: XCTestCase {
         var url = "http://api.icndb.com/jokes/12"
         var serialiser = JsonRequestSerializer()
         var result = serialiser.request(NSURL(string: url)!, method:.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
-        if let urlString:NSString = result.URL!.absoluteString {
-            XCTAssertTrue(urlString.containsString("param1=value1"))
-            XCTAssertTrue(urlString.containsString("numeric=5"))
-            XCTAssertTrue(urlString.containsString("array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four"))
+        if let urlString = result.URL!.absoluteString  {
+            XCTAssertTrue(NSString(string: urlString).rangeOfString("param1=value1").location != NSNotFound)
+            XCTAssertTrue(NSString(string: urlString).rangeOfString("numeric=5").location != NSNotFound)
+            XCTAssertTrue(NSString(string: urlString).rangeOfString("array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four").location != NSNotFound)
         } else {
             XCTFail("url should not give an empty string")
         }

@@ -1,7 +1,7 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
 xcodeproj 'AeroGearHttp.xcodeproj'
-platform :ios, '8.0'
+platform :ios, '7.0'
 use_frameworks!
 
 target 'AeroGearHttpTests' do
