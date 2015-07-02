@@ -12,6 +12,7 @@ Taking care of:
 * background processing support
 
 100% Swift.
+Supported platforms: iOS7, iOS8.
 
 |                 | Project Info  |
 | --------------- | ------------- |
