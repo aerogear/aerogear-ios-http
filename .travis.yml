@@ -1,14 +1,13 @@
 language: objective-c
-osx_image: beta-xcode6.3
-xcode_workspace: AeroGearHttp.xcworkspace
-xcode_scheme: AeroGearHttp
-xcode_sdk: iphonesimulator
+osx_image: xcode6.4
 
 before_install:
     - gem install cocoapods --no-rdoc --no-ri --no-document --quiet
 
 script:
-    - set -o pipefail && xcodebuild -workspace AeroGearHttp.xcworkspace -scheme AeroGearHttp -sdk iphonesimulator -configuration Release clean test
+    - set -o pipefail
+    - xcodebuild -workspace AeroGearHttp.xcworkspace -scheme AeroGearHttp -sdk iphonesimulator -destination "OS=7.1,name=iPhone 4S" -configuration Release clean test
+    - xcodebuild -workspace AeroGearHttp.xcworkspace -scheme AeroGearHttp -sdk iphonesimulator -destination "OS=8.4,name=iPhone 6 Plus" -configuration Release clean test
 
 notifications:
   irc: "irc.freenode.org#aerogear"

@@ -48,7 +48,8 @@ class JSONRequestSerializer: XCTestCase {
         super.tearDown()
         OHHTTPStubs.removeAllStubs()
     }
-    
+
+
     func testHttpDeinitShouldHappenAfterAllTasksAreCompleted() {
         // set up http stub
         OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
@@ -68,6 +69,7 @@ class JSONRequestSerializer: XCTestCase {
         http = nil
         waitForExpectationsWithTimeout(10, handler: nil)
     }
+
     
     func testJSONSerializerWithValidRequest() {
         // set up http stub
