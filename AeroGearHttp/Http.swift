@@ -519,7 +519,7 @@ public class Http {
             }
             
 
-            var response = task.response as! NSHTTPURLResponse
+            let response = task.response as! NSHTTPURLResponse
             /* ios8
             if  let _ = task as? NSURLSessionDownloadTask {
                 completionHandler?(response, error)
