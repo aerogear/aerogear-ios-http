@@ -131,7 +131,7 @@ public class HttpRequestSerializer:  RequestSerializer {
             }
         } else if let dict = tuple.1 as? [String: AnyObject] {
             for (nestedKey, nestedObject: AnyObject) in dict {
-                var newKey = tuple.0 != nil ? "\(tuple.0)[\(nestedKey)]" : nestedKey
+                var newKey = tuple.0 != nil ? "\(tuple.0!)[\(nestedKey)]" : nestedKey
                 var myTuple:(String?, AnyObject) = (newKey, nestedObject)
                 collect.extend(self.serialize(myTuple))
             }
