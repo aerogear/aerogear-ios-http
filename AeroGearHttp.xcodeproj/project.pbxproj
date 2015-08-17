@@ -272,7 +272,6 @@
 					};
 					488B6B66196B19BC000297C9 = {
 						CreatedOnToolsVersion = 6.0;
-						TestTargetID = 488B6B5B196B19BC000297C9;
 					};
 				};
 			};
