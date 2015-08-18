@@ -6,8 +6,8 @@ before_install:
 
 script:
     - set -o pipefail
-    - xcodebuild -workspace AeroGearHttp.xcworkspace -scheme AeroGearHttp -sdk iphonesimulator -destination "OS=7.1,name=iPhone 4S" -configuration Release clean test
-    - xcodebuild -workspace AeroGearHttp.xcworkspace -scheme AeroGearHttp -sdk iphonesimulator -destination "OS=8.4,name=iPhone 6 Plus" -configuration Release clean test
+    - xcodebuild -workspace AeroGearHttp.xcworkspace -scheme AeroGearHttpTests -sdk iphonesimulator -destination "OS=7.1,name=iPhone 4S" -configuration Release clean test
+    - xcodebuild -workspace AeroGearHttp.xcworkspace -scheme AeroGearHttpTests -sdk iphonesimulator -destination "OS=8.4,name=iPhone 6 Plus" -configuration Release clean test
 
 notifications:
   irc: "irc.freenode.org#aerogear"
