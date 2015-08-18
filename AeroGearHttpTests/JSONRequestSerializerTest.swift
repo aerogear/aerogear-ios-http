@@ -51,7 +51,7 @@ class JSONRequestSerializer: XCTestCase {
 
     func testHttpDeinitShouldHappenAfterAllTasksAreCompleted() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> ObjCBool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         // async test expectation
@@ -72,7 +72,7 @@ class JSONRequestSerializer: XCTestCase {
     
     func testJSONSerializerWithValidRequest() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> ObjCBool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         let http = Http(baseURL: "http://whatever.com")
@@ -89,7 +89,7 @@ class JSONRequestSerializer: XCTestCase {
     
     func testJSONSerializerWithInvalidRequest() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> ObjCBool in
             return true
             }, withStubResponse: httpSuccessWithInvalidJson)
         let http = Http(baseURL: "http://whatever.com")

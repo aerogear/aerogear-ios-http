@@ -50,7 +50,7 @@ class HttpTests: XCTestCase {
 
     func testSucessfulGET() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> ObjCBool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         let http = Http(baseURL: "http://whatever.com")
@@ -66,7 +66,7 @@ class HttpTests: XCTestCase {
     
     func testSucessfulPOST() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> ObjCBool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         let http = Http(baseURL: "http://whatever.com")
@@ -82,7 +82,7 @@ class HttpTests: XCTestCase {
     
     func testSucessfulPUT() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> ObjCBool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         let http = Http(baseURL: "http://whatever.com")
@@ -98,7 +98,7 @@ class HttpTests: XCTestCase {
     
     func testDELETE() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> ObjCBool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         let http = Http(baseURL: "http://whatever.com")
@@ -114,7 +114,7 @@ class HttpTests: XCTestCase {
 
     func testSucessfulMultipartUploadWithPOST() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> ObjCBool in
             return true
             }, withStubResponse: httpMultipartUploadSuccessWithResponse)
         let http = Http(baseURL: "http://whatever.com")
@@ -126,7 +126,7 @@ class HttpTests: XCTestCase {
             XCTAssertNil(error, "error should be nil")
             // should contain form data
             let form = (response as! NSDictionary!)["form"] as! NSDictionary!
-            XCTAssertEqual(form["key"] as! String,  "value", "should be equal")
+            XCTAssertEqual(form["key"] as? String,  "value", "should be equal")
             // should contain file data
             let files = (response as! NSDictionary!)["files"] as! NSDictionary!
             XCTAssertNotNil(files["file"], "should contain file")
@@ -137,7 +137,7 @@ class HttpTests: XCTestCase {
 
     func testSucessfulDownloadWithDefaultDestinationDirectory() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> ObjCBool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
         let http = Http(baseURL: "http://whatever.com")

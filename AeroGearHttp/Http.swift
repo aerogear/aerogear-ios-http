@@ -581,7 +581,7 @@ public class Http {
         
         var downloadProgress: ((Int64, Int64, Int64) -> Void)?
         var resumeData: NSData?
-        var destinationDirectory: String?
+        var destinationDirectory: NSString?
         
         func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
             let filename = downloadTask.response?.suggestedFilename
