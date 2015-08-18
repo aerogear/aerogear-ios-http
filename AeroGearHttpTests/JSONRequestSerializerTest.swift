@@ -21,23 +21,22 @@ import AeroGearHttp
 import OHHTTPStubs
 
 class JSONRequestSerializer: XCTestCase {
-    
-    func httpStubResponseWithInputParams(request: NSURLRequest!, status: Int, params:[String: AnyObject]?) -> OHHTTPStubsResponse {
+    func httpStubResponseWithInputParams(request: NSURLRequest!, status: Int, params:[String: AnyObject]?) throws -> OHHTTPStubsResponse {
         var data: NSData
-        if params != nil {
-            data = NSJSONSerialization.dataWithJSONObject(params!, options: nil, error: nil)!
+        if ((params) != nil) {
+            try data = NSJSONSerialization.dataWithJSONObject(params!, options:  NSJSONWritingOptions(rawValue: 0))
         } else {
-            data = "invalid json".dataUsingEncoding(NSUTF8StringEncoding)!
+            data = NSData()
         }
-        return OHHTTPStubsResponse(data:data, statusCode: CInt(status), headers: ["Content-Type" : "application/json"])
+        return OHHTTPStubsResponse(data: data, statusCode: CInt(status), headers: ["Content-Type":"application/json"])
     }
     
     func httpSuccessWithResponse(request: NSURLRequest!) -> OHHTTPStubsResponse {
-        return httpStubResponseWithInputParams(request, status: 200, params: ["key" : "value"])
+        return try! httpStubResponseWithInputParams(request, status: 200, params: ["key" : "value"])
     }
     
     func httpSuccessWithInvalidJson(request: NSURLRequest!) -> OHHTTPStubsResponse {
-        return httpStubResponseWithInputParams(request, status: 200, params: nil)
+        return try! httpStubResponseWithInputParams(request, status: 200, params: nil)
     }
     
     override func setUp() {
@@ -62,7 +61,7 @@ class JSONRequestSerializer: XCTestCase {
         
         http?.GET("/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
-            XCTAssertTrue(response!["key"] as! NSString == "value")
+            XCTAssertTrue(response!["key"] == "value")
             getExpectation.fulfill()
         })
         // set http to nil to trigger deinit
@@ -76,12 +75,12 @@ class JSONRequestSerializer: XCTestCase {
         OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
-        var http = Http(baseURL: "http://whatever.com")
+        let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("request with valid JSON data")
         http.GET("/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
-            XCTAssertTrue(response!["key"] as! NSString == "value")
+            XCTAssertTrue(response!["key"] == "value")
             getExpectation.fulfill()
         })
         
@@ -93,7 +92,7 @@ class JSONRequestSerializer: XCTestCase {
         OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithInvalidJson)
-        var http = Http(baseURL: "http://whatever.com")
+        let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("request with invalid JSON data");
         // request html data although json serializer is setup
@@ -108,22 +107,22 @@ class JSONRequestSerializer: XCTestCase {
     }
     
     func testHeadersShouldExistOnRequestWhenPUT() {
-        var url = "http://api.icndb.com/jokes/12"
-        var serialiser = JsonRequestSerializer()
-        var result = serialiser.request(NSURL(string: url)!, method:.PUT, parameters: ["param1": "value1"], headers: ["CUSTOM_HEADER": "a value"])
+        let url = "http://api.icndb.com/jokes/12"
+        let serialiser = JsonRequestSerializer()
+        let result = serialiser.request(NSURL(string: url)!, method:.PUT, parameters: ["param1": "value1"], headers: ["CUSTOM_HEADER": "a value"])
         // header should be contained on the returned request
-        var header = result.allHTTPHeaderFields!["CUSTOM_HEADER"] as! String
+        let header = result.allHTTPHeaderFields!["CUSTOM_HEADER"]
         
         XCTAssertNotNil(header)
         XCTAssertTrue(header == "a value", "header should match")
     }
     
     func testHeadersShouldExistOnRequestWhenPOST() {
-        var url = "http://api.icndb.com/jokes/12"
-        var serialiser = JsonRequestSerializer()
-        var result = serialiser.request(NSURL(string: url)!, method:.POST, parameters: ["param1": "value1"], headers: ["CUSTOM_HEADER": "a value"])
+        let url = "http://api.icndb.com/jokes/12"
+        let serialiser = JsonRequestSerializer()
+        let result = serialiser.request(NSURL(string: url)!, method:.POST, parameters: ["param1": "value1"], headers: ["CUSTOM_HEADER": "a value"])
         // header should be contained on the returned request
-        var header = result.allHTTPHeaderFields!["CUSTOM_HEADER"] as! String
+        let header = result.allHTTPHeaderFields!["CUSTOM_HEADER"]
         
         XCTAssertNotNil(header)
         XCTAssertTrue(header == "a value", "header should match")

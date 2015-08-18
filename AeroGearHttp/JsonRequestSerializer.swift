@@ -35,14 +35,19 @@ public class JsonRequestSerializer:  HttpRequestSerializer {
         if method == HttpMethod.GET || method == HttpMethod.HEAD || method == HttpMethod.DELETE {
             return super.request(url, method: method, parameters: parameters, headers: headers)
         } else {
-            var request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
+            let request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
             request.HTTPMethod = method.rawValue
 
             // set type
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             // set body
             if (parameters != nil) {
-                var body =  NSJSONSerialization.dataWithJSONObject(parameters!, options: nil, error: nil)
+                var body: NSData?
+                do {
+                    body = try NSJSONSerialization.dataWithJSONObject(parameters!, options: [])
+                } catch _ {
+                    body = nil
+                }
                 // set body
                 if (body != nil) {
                     request.setValue("\(body?.length)", forHTTPHeaderField: "Content-Length")
