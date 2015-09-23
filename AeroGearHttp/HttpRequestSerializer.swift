@@ -116,9 +116,13 @@ public class HttpRequestSerializer:  RequestSerializer {
     }
     
     public func stringFromParameters(parameters: [String: AnyObject]) -> String {
-        return "&".join(serialize((nil, parameters)).map({(tuple) in
+        let parametersArray = serialize((nil, parameters)).map({(tuple) in
             return self.stringValue(tuple)
-        }))
+        })
+        return parametersArray.joinWithSeparator("&")
+//        return "&".join(serialize((nil, parameters)).map({(tuple) in
+//            return self.stringValue(tuple)
+//        }))
     }
     
     public func serialize(tuple: (String?, AnyObject)) -> [(String?, AnyObject)] {
@@ -127,13 +131,13 @@ public class HttpRequestSerializer:  RequestSerializer {
             for nestedValue : AnyObject in array {
                 let label: String = tuple.0!
                 let myTuple:(String?, AnyObject) = (label + "[]", nestedValue)
-                collect.extend(self.serialize(myTuple))
+                collect.appendContentsOf(self.serialize(myTuple))
             }
         } else if let dict = tuple.1 as? [String: AnyObject] {
             for (nestedKey, nestedObject) in dict {
                 let newKey = tuple.0 != nil ? "\(tuple.0!)[\(nestedKey)]" : nestedKey
                 let myTuple:(String?, AnyObject) = (newKey, nestedObject)
-                collect.extend(self.serialize(myTuple))
+                collect.appendContentsOf(self.serialize(myTuple))
             }
         } else {
             collect.append((tuple.0, tuple.1))

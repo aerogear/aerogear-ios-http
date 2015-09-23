@@ -631,7 +631,7 @@ public class Http {
         
         let finalURL = NSURL(string: baseURL!)!
         if (url.hasPrefix("/")) {
-            url = url.substringFromIndex(advance(url.startIndex, 0))
+            url = url.substringFromIndex(url.startIndex.advancedBy(0))
         }
         
         return finalURL.URLByAppendingPathComponent(url);
