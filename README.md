@@ -11,9 +11,7 @@ Taking care of:
 * Pluggable object serialization
 * background processing support
 
-100% Swift.
-
-**Supported platforms:** iOS7, iOS8.
+100% Swift 2.0.
 
 |                 | Project Info  |
 | --------------- | ------------- |
