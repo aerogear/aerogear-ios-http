@@ -39,5 +39,5 @@ public protocol ResponseSerializer {
     
      :returns:  either true or false if the response is valid for this particular serializer.
     */
-    func validateResponse(response: NSURLResponse!, data: NSData, error: NSErrorPointer) -> Bool
+    func validateResponse(response: NSURLResponse!, data: NSData) throws
 }

@@ -5,6 +5,6 @@ platform :ios, '7.0'
 use_frameworks!
 
 target 'AeroGearHttpTests' do
-    pod 'OHHTTPStubs', '3.1.10'
+    pod 'OHHTTPStubs', '4.2.0'
 end
 

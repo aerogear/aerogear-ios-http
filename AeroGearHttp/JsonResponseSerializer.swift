@@ -27,43 +27,38 @@ public class JsonResponseSerializer : ResponseSerializer {
     :returns: the serialized response
     */
     public func response(data: NSData) -> (AnyObject?) {
-        return NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)
+        do {
+            return try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
+        } catch _ {
+            return nil
+        }
     }
     
     /**
-    Validate the response received.
+    Validate the response received. throw an error is the response is not va;id.
     
     :returns:  either true or false if the response is valid for this particular serializer.
     */
-    public func validateResponse(response: NSURLResponse!, data: NSData, error: NSErrorPointer) -> Bool {
+    public func validateResponse(response: NSURLResponse!, data: NSData) throws {
+        var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
         let httpResponse = response as! NSHTTPURLResponse
         
         if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-            var userInfo = [
-                NSLocalizedDescriptionKey: NSHTTPURLResponse.localizedStringForStatusCode(httpResponse.statusCode),
+            let userInfo = [NSLocalizedDescriptionKey: NSHTTPURLResponse.localizedStringForStatusCode(httpResponse.statusCode),
                 NetworkingOperationFailingURLResponseErrorKey: response]
-
-            if (error != nil) {
-                error.memory = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
-            }
-            
-            return false
+            error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
+            throw error
         }
         
         // validate JSON
-        if (nil == NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)) {
-            let userInfo = [
-                NSLocalizedDescriptionKey: "Invalid response received, can't parse JSON" as NSString,
+        do {
+            try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
+        } catch  _  {
+            let userInfo = [NSLocalizedDescriptionKey: "Invalid response received, can't parse JSON" as NSString,
                 NetworkingOperationFailingURLResponseErrorKey: response]
-            
-            if (error != nil) {
-                error.memory = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
-            }
-            
-            return false;
+            let customError = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
+            throw customError;
         }
-        
-        return true
     }
     
     public init() {

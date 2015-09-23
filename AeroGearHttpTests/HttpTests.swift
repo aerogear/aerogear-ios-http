@@ -21,10 +21,10 @@ import OHHTTPStubs
 
 class HttpTests: XCTestCase {
 
-    func httpStubResponseWithInputParams(request: NSURLRequest!, status: Int, params:[String: AnyObject]?) -> OHHTTPStubsResponse {
+    func httpStubResponseWithInputParams(request: NSURLRequest!, status: Int, params:[String: AnyObject]?) throws -> OHHTTPStubsResponse {
         var data: NSData
         if ((params) != nil) {
-            data = NSJSONSerialization.dataWithJSONObject(params!, options: nil, error: nil)!
+            try data = NSJSONSerialization.dataWithJSONObject(params!, options:  NSJSONWritingOptions(rawValue: 0))
         } else {
             data = NSData()
         }
@@ -32,11 +32,11 @@ class HttpTests: XCTestCase {
     }
     
     func httpSuccessWithResponse(request: NSURLRequest!) -> OHHTTPStubsResponse {
-        return httpStubResponseWithInputParams(request, status: 200, params: ["key" : "value"])
+        return try! httpStubResponseWithInputParams(request, status: 200, params: ["key" : "value"])
     }
     
     func httpMultipartUploadSuccessWithResponse(request: NSURLRequest!) -> OHHTTPStubsResponse {
-        return httpStubResponseWithInputParams(request, status: 200, params: ["files" : ["file" : "Lorem ipsum dolor sit amet"], "form" : ["key" : "value"] ])
+        return try! httpStubResponseWithInputParams(request, status: 200, params: ["files" : ["file" : "Lorem ipsum dolor sit amet"], "form" : ["key" : "value"] ])
     }
     
     override func setUp() {
@@ -53,12 +53,12 @@ class HttpTests: XCTestCase {
         OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
-        var http = Http(baseURL: "http://whatever.com")
+        let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("GET http method test");
         http.GET("/get", completionHandler: {(response, error) in
                 XCTAssertNil(error, "error should be nil")
-                XCTAssertTrue(response!["key"] as! NSString == "value")
+                XCTAssertTrue(response!["key"] == "value")
                 getExpectation.fulfill()
         })
         waitForExpectationsWithTimeout(10, handler: nil)
@@ -69,12 +69,12 @@ class HttpTests: XCTestCase {
         OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
-        var http = Http(baseURL: "http://whatever.com")
+        let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("POST http method test");
         http.POST("/post", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
-            XCTAssertTrue(response!["key"] as! NSString == "value")
+            XCTAssertTrue(response!["key"] == "value")
             getExpectation.fulfill()
         })
         waitForExpectationsWithTimeout(10, handler: nil)
@@ -85,12 +85,12 @@ class HttpTests: XCTestCase {
         OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
-        var http = Http(baseURL: "http://whatever.com")
+        let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("PUT http method test");
         http.PUT("/put",  completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
-            XCTAssertTrue(response!["key"] as! NSString == "value")
+            XCTAssertTrue(response!["key"] == "value")
             getExpectation.fulfill()
         })
         waitForExpectationsWithTimeout(10, handler: nil)
@@ -101,12 +101,12 @@ class HttpTests: XCTestCase {
         OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
-        var http = Http(baseURL: "http://whatever.com")
+        let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("DELETE http method test");
         http.DELETE("/delete", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
-            XCTAssertTrue(response!["key"] as! NSString == "value")
+            XCTAssertTrue(response!["key"] == "value")
             getExpectation.fulfill()
         })
         waitForExpectationsWithTimeout(10, handler: nil)
@@ -117,18 +117,18 @@ class HttpTests: XCTestCase {
         OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpMultipartUploadSuccessWithResponse)
-        var http = Http(baseURL: "http://whatever.com")
-        var data = "Lorem ipsum dolor sit amet".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+        let http = Http(baseURL: "http://whatever.com")
+        let data = "Lorem ipsum dolor sit amet".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         let file = MultiPartData(data: data, name: "lorem", filename: "lorem.txt", mimeType: "plain/text")
         // async test expectation
         let getExpectation = expectationWithDescription("POST http method test");
         http.POST("/post",  parameters: ["key": "value", "file": file], completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             // should contain form data
-            var form = (response as! NSDictionary!)["form"] as! NSDictionary!
-            XCTAssertEqual(form["key"] as! String,  "value", "should be equal")
+            let form = (response as! NSDictionary!)["form"] as! NSDictionary!
+            XCTAssertEqual(form["key"] as? String,  "value", "should be equal")
             // should contain file data
-            var files = (response as! NSDictionary!)["files"] as! NSDictionary!
+            let files = (response as! NSDictionary!)["files"] as! NSDictionary!
             XCTAssertNotNil(files["file"], "should contain file")
             getExpectation.fulfill()
         })
@@ -140,14 +140,15 @@ class HttpTests: XCTestCase {
         OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
             }, withStubResponse: httpSuccessWithResponse)
-        var http = Http(baseURL: "http://whatever.com")
+        let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("Download");
-        var FILENAME = "aerogear_icon_64px.png"
-        var fileManager = NSFileManager.defaultManager()
-        var path  = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-        fileManager.createDirectoryAtPath(path, withIntermediateDirectories: true, attributes: nil, error: nil)
-        var finalDestination = path.stringByAppendingPathComponent(FILENAME)
+        let fileManager = NSFileManager.defaultManager()
+        let path  = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+        do {
+            try fileManager.createDirectoryAtPath(path, withIntermediateDirectories: true, attributes: nil)
+        } catch _ {
+        }
         http.download("something",
             progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)  in
             }, completionHandler: { (response, error) in
@@ -163,13 +164,13 @@ class HttpTests: XCTestCase {
         // async test expectation
         let getExpectation = expectationWithDescription("Upload multipart");
         
-        var http = Http(baseURL: "http://httpbin.org")
+        let http = Http(baseURL: "http://httpbin.org")
         let multiPartData = MultiPartData(data: "contents of a file".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, name: "name", filename: "filename.jpg", mimeType: "image/jpg")
         let parameters = ["file": multiPartData]
         
         http.upload("/post", stream: NSInputStream(data: "contents of a file".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!), parameters: parameters,
             progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)  in
-                println("bytesWritten: \(bytesWritten), totalBytesWritten: \(totalBytesWritten), totalBytesExpectedToWrite: \(totalBytesExpectedToWrite)")
+                print("bytesWritten: \(bytesWritten), totalBytesWritten: \(totalBytesWritten), totalBytesExpectedToWrite: \(totalBytesExpectedToWrite)")
             }, completionHandler: { (response, error) in
                 XCTAssertNil(error, "error should be nil")
                 getExpectation.fulfill()

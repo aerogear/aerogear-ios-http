@@ -31,12 +31,25 @@ class RequestSerializerTests: XCTestCase {
         super.tearDown()
     }
     
+    @available(iOS 8, *)
+    func testGETWithParameters8() {
+        let url = "http://api.icndb.com/jokes/12"
+        let serialiser = JsonRequestSerializer()
+        let result = serialiser.request(NSURL(string: url)!, method:.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
+        if let urlString:NSString = result.URL!.absoluteString {
+            XCTAssertTrue(urlString.containsString("param1=value1"))
+            XCTAssertTrue(urlString.containsString("numeric=5"))
+            XCTAssertTrue(urlString.containsString("array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four"))
+        } else {
+            XCTFail("url should not give an empty string")
+        }
+    }
+    
     func testGETWithParameters() {
-        var url = "http://api.icndb.com/jokes/12"
-        var serialiser = JsonRequestSerializer()
-        var result = serialiser.request(NSURL(string: url)!, method:.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5, "dictionary": ["key_one":"value_one"]])
-        if let urlString = result.URL!.absoluteString  {
-            println(">>>>" + (NSString(string: urlString) as String))
+        let url = "http://api.icndb.com/jokes/12"
+        let serialiser = JsonRequestSerializer()
+        let result = serialiser.request(NSURL(string: url)!, method:.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5, "dictionary": ["key_one":"value_one"]])
+        if let urlString = result.URL?.absoluteString  {
             XCTAssertTrue(NSString(string: urlString).rangeOfString("param1=value1").location != NSNotFound)
             XCTAssertTrue(NSString(string: urlString).rangeOfString("numeric=5").location != NSNotFound)
             XCTAssertTrue(NSString(string: urlString).rangeOfString("dictionary%5Bkey_one%5D=value_one").location != NSNotFound)
@@ -47,8 +60,7 @@ class RequestSerializerTests: XCTestCase {
     }
     
     func testStringResponseSerializer() {
-        var url = NSURL(string: "http://api.icndb.com/jokes/12")
-        var serialiser = StringResponseSerializer()
+        let serialiser = StringResponseSerializer()
         
         let result: String? = serialiser.response("some text received".dataUsingEncoding(NSUTF8StringEncoding)!) as? String
         XCTAssertTrue(result == "some text received")
