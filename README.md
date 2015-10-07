@@ -1,6 +1,6 @@
 # aerogear-ios-http  [![Build Status](https://travis-ci.org/aerogear/aerogear-ios-http.png)](https://travis-ci.org/aerogear/aerogear-ios-http)
 
-> This module currently build with Xcode 7 and supports iOS7, iOS8, iOS9.
+> This module currently build with Xcode 7 and supports iOS7 [1], iOS8, iOS9.
 
 Thin layer to take care of your http requests working with NSURLSession. 
 Taking care of: 
@@ -21,6 +21,8 @@ Taking care of:
 | Issue tracker:  | https://issues.jboss.org/browse/AGIOS  |
 | Mailing lists:  | [aerogear-users](http://aerogear-users.1116366.n5.nabble.com/) ([subscribe](https://lists.jboss.org/mailman/listinfo/aerogear-users))  |
 |                 | [aerogear-dev](http://aerogear-dev.1069024.n5.nabble.com/) ([subscribe](https://lists.jboss.org/mailman/listinfo/aerogear-dev))  |
+
+**Note [1]**: Cocopod central repo support dynamic library from iOS8+. If you want to deploy on iOS7, use areoger-ios-http fom master source with its podspec pointing to iOS7.
 
 ## Example Usage
 
