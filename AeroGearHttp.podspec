@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "AeroGearHttp"
-  s.version      = "0.4.0"
+  s.version      = "0.4.1"
   s.summary      = "Lightweight lib around NSURLSession to ease HTTP calls."
   s.homepage     = "https://github.com/aerogear/aerogear-ios-http"
   s.license      = 'Apache License, Version 2.0'
