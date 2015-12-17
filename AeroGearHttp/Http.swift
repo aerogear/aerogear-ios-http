@@ -389,7 +389,7 @@ public class Http {
         }
         
         func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
-        completionHandler(.PerformDefaultHandling, nil)
+        completionHandler(NSURLSessionAuthChallengeDisposition.UseCredential, NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
         }
         
         func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
