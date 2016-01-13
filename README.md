@@ -1,6 +1,6 @@
 # aerogear-ios-http  [![Build Status](https://travis-ci.org/aerogear/aerogear-ios-http.png)](https://travis-ci.org/aerogear/aerogear-ios-http)
 
-> This module currently build with Xcode 7 and supports iOS7 [1], iOS8, iOS9.
+> This module currently build with Xcode 7.2 and supports iOS7 [1], iOS8, iOS9.
 
 Thin layer to take care of your http requests working with NSURLSession. 
 Taking care of: 
