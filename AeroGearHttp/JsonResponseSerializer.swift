@@ -21,26 +21,14 @@ import Foundation
 A response deserializer to JSON objects.
 */
 public class JsonResponseSerializer : ResponseSerializer {
-    /**
-    Deserialize the response received.
-    
-    :returns: the serialized response
-    */
-    public func response(data: NSData) -> (AnyObject?) {
-        do {
-            return try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
-        } catch _ {
-            return nil
-        }
-    }
     
     /**
-    Validate the response received. throw an error is the response is not va;id.
-    
-    :returns:  either true or false if the response is valid for this particular serializer.
-    */
-    public func validateResponse(response: NSURLResponse!, data: NSData) throws {
-        var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
+     Validate the response received. throw an error is the response is not va;id.
+     
+     :returns:  either true or false if the response is valid for this particular serializer.
+     */
+    public var validateResponse: (NSURLResponse!, NSData) throws -> Void = { (response: NSURLResponse!, data: NSData) throws in
+        var error: NSError! = NSError(domain: "AeroGearHttp", code: 0, userInfo: nil)
         let httpResponse = response as! NSHTTPURLResponse
         
         if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
@@ -60,7 +48,25 @@ public class JsonResponseSerializer : ResponseSerializer {
             throw customError;
         }
     }
+
+    
+    /**
+    Deserialize the response received.
+    
+    :returns: the serialized response
+    */
+    public func response(data: NSData) -> (AnyObject?) {
+        do {
+            return try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
+        } catch _ {
+            return nil
+        }
+    }
     
     public init() {
+    }
+    
+    public init(validateResponse: (NSURLResponse!, NSData) throws -> Void) {
+        self.validateResponse = validateResponse
     }
 }

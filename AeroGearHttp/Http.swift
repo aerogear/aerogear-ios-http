@@ -539,7 +539,7 @@ public class Http {
             var responseObject: AnyObject? = nil
             do {
                 if let data = data {
-                    try self.responseSerializer?.validateResponse(response, data: data)
+                    try self.responseSerializer?.validateResponse(response, data)
                     responseObject = self.responseSerializer?.response(data)
                     completionHandler?(responseObject, nil)
                 }

@@ -35,9 +35,9 @@ public protocol ResponseSerializer {
     func response(data: NSData) -> (AnyObject?)
     
     /**
-     Validate the response received.
+     Validate the response received. This is a cutomizable closure variable.
     
      :returns:  either true or false if the response is valid for this particular serializer.
     */
-    func validateResponse(response: NSURLResponse!, data: NSData) throws
+    var validateResponse: (NSURLResponse!, NSData) throws -> Void {get set}
 }

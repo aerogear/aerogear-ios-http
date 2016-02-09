@@ -24,7 +24,7 @@
 		6F53F67E19ED0FEF00DCFC72 /* HttpRequestSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F53F67C19ED0FEF00DCFC72 /* HttpRequestSerializer.swift */; };
 		6F53F67F19ED0FEF00DCFC72 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F53F67D19ED0FEF00DCFC72 /* Utils.swift */; };
 		6FCD63A31A166FB60020E52D /* AeroGearHttp.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 488B6B5C196B19BC000297C9 /* AeroGearHttp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9738481B3E5AD4FE9A3351FD /* Pods_AeroGearHttpTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C87016D454B37752E459070D /* Pods_AeroGearHttpTests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		9738481B3E5AD4FE9A3351FD /* Pods_AeroGearHttpTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C87016D454B37752E459070D /* Pods_AeroGearHttpTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
