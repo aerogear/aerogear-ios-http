@@ -35,7 +35,7 @@ public class StringResponseSerializer : ResponseSerializer {
     
     :returns:  either true or false if the response is valid for this particular serializer.
     */
-    public func validateResponse(response: NSURLResponse!, data: NSData) throws {
+    public var validateResponse: (NSURLResponse!, NSData) throws -> Void = { (response: NSURLResponse!, data: NSData) throws in
         var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
         let httpResponse = response as! NSHTTPURLResponse
         
@@ -53,5 +53,9 @@ public class StringResponseSerializer : ResponseSerializer {
     }
     
     public init() {
+    }
+    
+    public init(validateResponse: (NSURLResponse!, NSData) throws -> Void) {
+        self.validateResponse = validateResponse
     }
 }
