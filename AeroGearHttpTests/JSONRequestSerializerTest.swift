@@ -86,6 +86,31 @@ class JSONRequestSerializer: XCTestCase {
         waitForExpectationsWithTimeout(10, handler: nil)
     }
     
+    func testJSONSerializerWithValidRequestAndCustomResponseSerializerINGETMethod() {
+        // set up http stub
+        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
+            return true
+            }, withStubResponse: httpSuccessWithResponse)
+        let http = Http(baseURL: "http://whatever.com")
+        // async test expectation
+        let getExpectation = expectationWithDescription("request with valid JSON data")
+        let jsonSerializerAlwaysFails = JsonResponseSerializer(validateResponse: { (response: NSURLResponse!, data: NSData) -> Void in
+            var error: NSError! = NSError(domain: "ERROR", code: 0, userInfo: nil)
+            error = NSError(domain: HttpResponseSerializationErrorDomain, code: 444, userInfo: ["Foo":"bar"])
+            throw error
+        })
+        
+        // call GET with cutom Serializer
+        http.GET("/get", responseSerializer: jsonSerializerAlwaysFails, completionHandler: {(response, error) in
+            XCTAssertNotNil(error, "error should not be nil")
+            XCTAssertEqual(error!.code, 444)
+            XCTAssertTrue(error!.userInfo.description.containsString("Foo"))
+            getExpectation.fulfill()
+        })
+        
+        waitForExpectationsWithTimeout(10, handler: nil)
+    }
+    
     func testJSONSerializerWithValidRequestAndCustomValidationClosure() {
         // set up http stub
         OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
