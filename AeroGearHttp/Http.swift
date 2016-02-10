@@ -168,11 +168,12 @@ public class Http {
     :param: url the url of the resource.
     :param: parameters the request parameters.
     :param: method the method to be used.
+    :param: responseSerializer the actual response serializer to use upon receiving a response
     :param: type the file request type
     :param: progress  a block that will be invoked to report progress during either download or upload.
     :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
     */
-    private func fileRequest(url: String, parameters: [String: AnyObject]? = nil,  method: HttpMethod, credential: NSURLCredential? = nil, type: FileRequestType, progress: ProgressBlock?, completionHandler: CompletionBlock) {
+    private func fileRequest(url: String, parameters: [String: AnyObject]? = nil,  method: HttpMethod, credential: NSURLCredential? = nil, responseSerializer: ResponseSerializer? = nil, type: FileRequestType, progress: ProgressBlock?, completionHandler: CompletionBlock) {
         
         let block: () -> Void  = {
             let finalURL = self.calculateURL(self.baseURL, url: url)
@@ -212,6 +213,7 @@ public class Http {
                 delegate.uploadProgress = progress
                 delegate.completionHandler = completionHandler
                 delegate.credential = credential
+                delegate.responseSerializer = responseSerializer
                 
                 self.delegate[task] = delegate
             }
@@ -318,11 +320,12 @@ public class Http {
     :param: parameters  the request parameters.
     :param: credential  the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
     :param: method      the method to be used, by default a .POST request.
+    :param: responseSerializer the actual response serializer to use upon receiving a response.
     :param: progress    a block that will be invoked to report progress during upload.
     :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
     */
-    public func upload(url: String,  file: NSURL, parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, method: HttpMethod = .POST, progress: ProgressBlock?, completionHandler: CompletionBlock) {
-        fileRequest(url, parameters: parameters, method: method, credential: credential, type: .Upload(.File(file)), progress: progress, completionHandler: completionHandler)
+    public func upload(url: String,  file: NSURL, parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, method: HttpMethod = .POST, responseSerializer: ResponseSerializer? = nil, progress: ProgressBlock?, completionHandler: CompletionBlock) {
+        fileRequest(url, parameters: parameters, method: method, credential: credential, responseSerializer: responseSerializer, type: .Upload(.File(file)), progress: progress, completionHandler: completionHandler)
     }
     
     /**
@@ -333,11 +336,12 @@ public class Http {
     :param: parameters  the request parameters.
     :param: credential  the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
     :param: method       the method to be used, by default a .POST request.
+    :param: responseSerializer the actual response serializer to use upon receiving a response.
     :param: progress     a block that will be invoked to report progress during upload.
     :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
     */
-    public func upload(url: String,  data: NSData, parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, method: HttpMethod = .POST, progress: ProgressBlock?, completionHandler: CompletionBlock) {
-        fileRequest(url, parameters: parameters, method: method, credential: credential, type: .Upload(.Data(data)), progress: progress, completionHandler: completionHandler)
+    public func upload(url: String,  data: NSData, parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, method: HttpMethod = .POST, responseSerializer: ResponseSerializer? = nil, progress: ProgressBlock?, completionHandler: CompletionBlock) {
+        fileRequest(url, parameters: parameters, method: method, credential: credential, responseSerializer: responseSerializer, type: .Upload(.Data(data)), progress: progress, completionHandler: completionHandler)
     }
     
     /**
@@ -348,11 +352,12 @@ public class Http {
     - parameter parameters:  the request parameters.
     - parameter credential:  the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
     - parameter method:      the method to be used, by default a .POST request.
+    - parameter responseSerializer: the actual response serializer to use upon receiving a response.
     - parameter progress:    a block that will be invoked to report progress during upload.
     - parameter completionHandler: A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
     */
-    public func upload(url: String,  stream: NSInputStream,  parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, method: HttpMethod = .POST, progress: ProgressBlock?, completionHandler: CompletionBlock) {
-        fileRequest(url, parameters: parameters, method: method, credential: credential, type: .Upload(.Stream(stream)), progress: progress, completionHandler: completionHandler)
+    public func upload(url: String,  stream: NSInputStream,  parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, method: HttpMethod = .POST, responseSerializer: ResponseSerializer? = nil, progress: ProgressBlock?, completionHandler: CompletionBlock) {
+        fileRequest(url, parameters: parameters, method: method, credential: credential, responseSerializer: responseSerializer, type: .Upload(.Stream(stream)), progress: progress, completionHandler: completionHandler)
     }
     
     
