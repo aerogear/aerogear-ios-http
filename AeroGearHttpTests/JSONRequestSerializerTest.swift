@@ -58,7 +58,7 @@ class JSONRequestSerializer: XCTestCase {
         var http: Http?
         http = Http(baseURL: "http://whatever.com")
         
-        http?.GET("/get", completionHandler: {(response, error) in
+        http?.request(.GET, path: "/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue(response!["key"] == "value")
             getExpectation.fulfill()
@@ -77,7 +77,7 @@ class JSONRequestSerializer: XCTestCase {
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("request with valid JSON data")
-        http.GET("/get", completionHandler: {(response, error) in
+        http.request(.GET, path: "/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue(response!["key"] == "value")
             getExpectation.fulfill()
@@ -101,7 +101,7 @@ class JSONRequestSerializer: XCTestCase {
         })
         
         // call GET with cutom Serializer
-        http.GET("/get", responseSerializer: jsonSerializerAlwaysFails, completionHandler: {(response, error) in
+        http.request(.GET, path: "/get", responseSerializer: jsonSerializerAlwaysFails, completionHandler: {(response, error) in
             XCTAssertNotNil(error, "error should not be nil")
             XCTAssertEqual(error!.code, 444)
             XCTAssertTrue(error!.userInfo.description.containsString("Foo"))
@@ -144,7 +144,7 @@ class JSONRequestSerializer: XCTestCase {
         
         // async test expectation
         let getExpectation = expectationWithDescription("request with valid JSON data")
-        http.GET("/get", completionHandler: {(response, error) in
+        http.request(.GET, path: "/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue(response!["key"] == "value")
             getExpectation.fulfill()
@@ -185,7 +185,7 @@ class JSONRequestSerializer: XCTestCase {
         // async test expectation
         let getExpectation = expectationWithDescription("request with invalid JSON data");
         // request html data although json serializer is setup
-        http.GET("/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
+        http.request(.GET, path: "/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
             XCTAssertNil(response, "response is nil")
             XCTAssertNotNil(error, "error should be not nil")
             XCTAssertEqual(error!.code, NSURLErrorBadServerResponse)
@@ -205,7 +205,7 @@ class JSONRequestSerializer: XCTestCase {
         // async test expectation
         let getExpectation = expectationWithDescription("request with invalid JSON data");
         // request html data although json serializer is setup
-        http.GET("/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
+        http.request(.GET, path: "/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
             XCTAssertNil(response, "response is nil")
             XCTAssertNotNil(error, "error should be not nil")
             XCTAssertEqual(error!.code, NSURLErrorBadServerResponse)

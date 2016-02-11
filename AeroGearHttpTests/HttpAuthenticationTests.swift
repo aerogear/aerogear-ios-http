@@ -39,7 +39,7 @@ class HttpAuthenticationTests: XCTestCase {
         
         let http = Http(baseURL: "https://httpbin.org")
         
-        http.GET("/basic-auth/\(user)/\(password)", credential: credential, completionHandler: {(response, error) in
+        http.request(.GET, path: "/basic-auth/\(user)/\(password)", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             
             let JSON = response as! NSDictionary!
@@ -61,7 +61,7 @@ class HttpAuthenticationTests: XCTestCase {
         
         let http = Http(baseURL: "https://httpbin.org")
         
-        http.GET("/basic-auth/\(user)/invalid", credential: credential, completionHandler: {(response, error) in
+        http.request(.GET, path: "/basic-auth/\(user)/invalid", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(response, "response should be nil")
             XCTAssertNotNil(error, "error should not be nil")
             XCTAssert(error?.code == -999, "error code should be equal to -999:'cancelled'")
@@ -82,7 +82,7 @@ class HttpAuthenticationTests: XCTestCase {
         
         let http = Http(baseURL: "https://httpbin.org")
         
-        http.GET("/digest-auth/auth/\(user)/\(password)", credential: credential, completionHandler: {(response, error) in
+        http.request(.GET, path: "/digest-auth/auth/\(user)/\(password)", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             
             let JSON = response as! NSDictionary!
@@ -104,7 +104,7 @@ class HttpAuthenticationTests: XCTestCase {
         
         let http = Http(baseURL: "https://httpbin.org")
         
-        http.GET("/digest-auth/auth/\(user)/invalid", credential: credential, completionHandler: {(response, error) in
+        http.request(.GET, path: "/digest-auth/auth/\(user)/invalid", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(response, "response should be nil")
             XCTAssertNotNil(error, "error should not be nil")
             XCTAssert(error?.code == -999, "error code should be equal to -999:'cancelled'")
@@ -141,7 +141,7 @@ class HttpAuthenticationTests: XCTestCase {
         let http = Http(baseURL: "https://httpbin.org", sessionConfig: configuration)
         
         // perform request, the credentials would be used when requested
-        http.GET("/digest-auth/auth/\(user)/\(password)", completionHandler: {(response, error) in
+        http.request(.GET, path: "/digest-auth/auth/\(user)/\(password)", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             
             let JSON = response as! NSDictionary!

@@ -120,9 +120,9 @@ public class Http {
     :param: method the method to be used.
     :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
     */
-    private func request(url: String, parameters: [String: AnyObject]? = nil,  method: HttpMethod,  credential: NSURLCredential? = nil, responseSerializer: ResponseSerializer? = nil, completionHandler: CompletionBlock) {
+    public func request(method: HttpMethod, path: String, parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, responseSerializer: ResponseSerializer? = nil, completionHandler: CompletionBlock) {
         let block: () -> Void =  {
-            let finalURL = self.calculateURL(self.baseURL, url: url)
+            let finalURL = self.calculateURL(self.baseURL, url: path)
             
             var request: NSURLRequest
             var task: NSURLSessionTask?
@@ -235,66 +235,6 @@ public class Http {
         } else {
             block()
         }
-    }
-    
-    /**
-    performs an HTTP GET request.
-    
-    :param: url         the url of the resource.
-    :param: parameters  the request parameters.
-    :param: credential  the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
-    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
-    */
-    public func GET(url: String, parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, responseSerializer: ResponseSerializer? = nil,completionHandler: CompletionBlock) {
-        request(url, parameters: parameters,  method:.GET,  credential: credential, responseSerializer: responseSerializer, completionHandler: completionHandler)
-    }
-    
-    /**
-    performs an HTTP POST request.
-    
-    :param: url          the url of the resource.
-    :param: parameters   the request parameters.
-    :param: credential   the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
-    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
-    */
-    public func POST(url: String, parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, responseSerializer: ResponseSerializer? = nil,completionHandler: CompletionBlock) {
-        request(url, parameters: parameters, method:.POST, credential: credential, responseSerializer: responseSerializer, completionHandler: completionHandler)
-    }
-    
-    /**
-    performs an HTTP PUT request.
-    
-    :param: url          the url of the resource.
-    :param: parameters   the request parameters.
-    :param: credential   the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
-    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
-    */
-    public func PUT(url: String, parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, responseSerializer: ResponseSerializer? = nil,completionHandler: CompletionBlock) {
-        request(url, parameters: parameters, method:.PUT, credential: credential, responseSerializer: responseSerializer, completionHandler: completionHandler)
-    }
-    
-    /**
-    performs an HTTP DELETE request.
-    
-    :param: url         the url of the resource.
-    :param: parameters  the request parameters.
-    :param: credential  the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
-    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
-    */
-    public func DELETE(url: String, parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, responseSerializer: ResponseSerializer? = nil,completionHandler: CompletionBlock) {
-        request(url, parameters: parameters, method:.DELETE, credential: credential, responseSerializer: responseSerializer, completionHandler: completionHandler)
-    }
-    
-    /**
-    performs an HTTP HEAD request.
-    
-    :param: url         the url of the resource.
-    :param: parameters  the request parameters.
-    :param: credential  the credentials to use for basic/digest auth (Note: it is advised that HTTPS should be used by default).
-    :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
-    */
-    public func HEAD(url: String, parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, responseSerializer: ResponseSerializer? = nil,completionHandler: CompletionBlock) {
-        request(url, parameters: parameters, method:.HEAD, credential: credential, responseSerializer: responseSerializer, completionHandler: completionHandler)
     }
     
     /**
