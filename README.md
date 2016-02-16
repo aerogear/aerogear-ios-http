@@ -31,11 +31,11 @@ To perform an HTTP request use the convenient methods found in the Http object. 
 ```swift
 let http = Http(baseURL: "http://server.com")
 
-http.GET("/get", completionHandler: {(response, error) in
+http.request(.GET, path: "/get", completionHandler: {(response, error) in
      // handle response
 })
 
-http.POST("/post",  parameters: ["key": "value"], 
+http.request(.POST, path: "/post",  parameters: ["key": "value"], 
                     completionHandler: {(response, error) in
      // handle response
 })
@@ -53,7 +53,7 @@ let credential = NSURLCredential(user: "john",
                                  password: "pass", 
                                  persistence: .None)
 
-http.GET("/protected/endpoint", credential: credential, 
+http.request(.GET, path: "/protected/endpoint", credential: credential, 
                                 completionHandler: {(response, error) in
    // handle response
 })
@@ -87,7 +87,7 @@ configuration.URLCredentialStorage = credentialStorage
 // assign custom configuration to Http
 var http = Http(baseURL: "http://httpbin.org", sessionConfig: configuration)
 
-http.GET("/protected/endpoint", completionHandler: {(response, error) in
+http.request(.GET, path: "/protected/endpoint", completionHandler: {(response, error) in
    // handle response
 })
 ```

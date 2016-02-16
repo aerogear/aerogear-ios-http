@@ -56,7 +56,7 @@ class HttpTests: XCTestCase {
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("GET http method test");
-        http.GET("/get", completionHandler: {(response, error) in
+        http.request(.GET, path: "/get", completionHandler: {(response, error) in
                 XCTAssertNil(error, "error should be nil")
                 XCTAssertTrue(response!["key"] == "value")
                 getExpectation.fulfill()
@@ -72,7 +72,7 @@ class HttpTests: XCTestCase {
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("POST http method test");
-        http.POST("/post", completionHandler: {(response, error) in
+        http.request(.POST, path: "/post", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue(response!["key"] == "value")
             getExpectation.fulfill()
@@ -88,7 +88,7 @@ class HttpTests: XCTestCase {
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("PUT http method test");
-        http.PUT("/put",  completionHandler: {(response, error) in
+        http.request(.PUT, path: "/put",  completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue(response!["key"] == "value")
             getExpectation.fulfill()
@@ -104,7 +104,7 @@ class HttpTests: XCTestCase {
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("DELETE http method test");
-        http.DELETE("/delete", completionHandler: {(response, error) in
+        http.request(.DELETE, path: "/delete", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue(response!["key"] == "value")
             getExpectation.fulfill()
@@ -122,7 +122,7 @@ class HttpTests: XCTestCase {
         let file = MultiPartData(data: data, name: "lorem", filename: "lorem.txt", mimeType: "plain/text")
         // async test expectation
         let getExpectation = expectationWithDescription("POST http method test");
-        http.POST("/post",  parameters: ["key": "value", "file": file], completionHandler: {(response, error) in
+        http.request(.POST, path: "/post",  parameters: ["key": "value", "file": file], completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             // should contain form data
             let form = (response as! NSDictionary!)["form"] as! NSDictionary!
