@@ -21,23 +21,6 @@
  import OHHTTPStubs
  
  class JSONResponseSerializerTests: XCTestCase {
-    func httpStubResponseWithInputParams(request: NSURLRequest!, status: Int, params:[String: AnyObject]?) throws -> OHHTTPStubsResponse {
-        var data: NSData
-        if ((params) != nil) {
-            try data = NSJSONSerialization.dataWithJSONObject(params!, options:  NSJSONWritingOptions(rawValue: 0))
-        } else {
-            data = NSData()
-        }
-        return OHHTTPStubsResponse(data: data, statusCode: CInt(status), headers: ["Content-Type":"application/json"])
-    }
-    
-    func httpSuccessWithResponse(request: NSURLRequest!) -> OHHTTPStubsResponse {
-        return try! httpStubResponseWithInputParams(request, status: 200, params: ["key" : "value"])
-    }
-    
-    func httpSuccessWithInvalidJson(request: NSURLRequest!) -> OHHTTPStubsResponse {
-        return try! httpStubResponseWithInputParams(request, status: 200, params: nil)
-    }
     
     override func setUp() {
         super.setUp()
@@ -50,9 +33,10 @@
     
     func testHttpDeinitShouldHappenAfterAllTasksAreCompleted() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse: httpSuccessWithResponse)
+        stub(isHost("whatever.com")) { _ in
+            let obj = ["key":"value"]
+            return OHHTTPStubsResponse(JSONObject: obj, statusCode: 200, headers: nil)
+        }
         // async test expectation
         let getExpectation = expectationWithDescription("request with valid JSON data");
         var http: Http?
@@ -70,9 +54,10 @@
     
     func testJSONSerializerWithValidRequestAndCustomResponseSerializerINGETMethod() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse: httpSuccessWithResponse)
+        stub(isHost("whatever.com")) { _ in
+            let obj = ["key":"value"]
+            return OHHTTPStubsResponse(JSONObject: obj, statusCode: 200, headers: nil)
+        }
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("request with valid JSON data")
@@ -95,9 +80,10 @@
     
     func testJSONSerializerWithValidRequestAndCustomValidationClosure() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse: httpSuccessWithResponse)
+        stub(isHost("whatever.com")) { _ in
+            let obj = ["key":"value"]
+            return OHHTTPStubsResponse(JSONObject: obj, statusCode: 200, headers: nil)
+        }
         
         let http = Http(baseURL: "http://whatever.com", sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration(),
             requestSerializer: JsonRequestSerializer(),
@@ -137,9 +123,7 @@
     
     func testJSONSerializerWithInvalidRequestAndCustomValidationClosure() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse: httpSuccessWithInvalidJson)
+        stub(isHost("whatever.com")) {_ in OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)}
         
         let http = Http(baseURL: "http://whatever.com", sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration(),
             requestSerializer: JsonRequestSerializer(),
@@ -179,9 +163,7 @@
     
     func testJSONSerializerWithInvalidRequest() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse: httpSuccessWithInvalidJson)
+        stub(isHost("whatever.com")) {_ in OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)}
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("request with invalid JSON data");
