@@ -47,7 +47,19 @@ class HttpTests: XCTestCase {
         super.tearDown()
         OHHTTPStubs.removeAllStubs()
     }
-
+    
+    func testCalculateURLWithoutSlash() {
+        let http = Http()
+        let finalURL = http.calculateURL("http://whatever.com", url: "/post")
+        XCTAssertEqual(finalURL.absoluteString, "http://whatever.com/post")
+    }
+    
+    func testCalculateURLWithLeadingSlash() {
+        let http = Http()
+        let finalURL = http.calculateURL("http://whatever.com/", url: "/post")
+        XCTAssertEqual(finalURL.absoluteString, "http://whatever.com/post")
+    }
+    
     func testSucessfulGET() {
         // set up http stub
         OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
