@@ -20,24 +20,6 @@ import AeroGearHttp
 import OHHTTPStubs
 
 class HttpTests: XCTestCase {
-
-    func httpStubResponseWithInputParams(request: NSURLRequest!, status: Int, params:[String: AnyObject]?) throws -> OHHTTPStubsResponse {
-        var data: NSData
-        if ((params) != nil) {
-            try data = NSJSONSerialization.dataWithJSONObject(params!, options:  NSJSONWritingOptions(rawValue: 0))
-        } else {
-            data = NSData()
-        }
-        return OHHTTPStubsResponse(data: data, statusCode: CInt(status), headers: ["Content-Type":"application/json"])
-    }
-    
-    func httpSuccessWithResponse(request: NSURLRequest!) -> OHHTTPStubsResponse {
-        return try! httpStubResponseWithInputParams(request, status: 200, params: ["key" : "value"])
-    }
-    
-    func httpMultipartUploadSuccessWithResponse(request: NSURLRequest!) -> OHHTTPStubsResponse {
-        return try! httpStubResponseWithInputParams(request, status: 200, params: ["files" : ["file" : "Lorem ipsum dolor sit amet"], "form" : ["key" : "value"] ])
-    }
     
     override func setUp() {
         super.setUp()
@@ -62,9 +44,10 @@ class HttpTests: XCTestCase {
     
     func testSucessfulGET() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse: httpSuccessWithResponse)
+        stub(isHost("whatever.com")) { _ in
+            let obj = ["key":"value"]
+            return OHHTTPStubsResponse(JSONObject: obj, statusCode: 200, headers: nil)
+        }
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("GET http method test");
@@ -78,9 +61,10 @@ class HttpTests: XCTestCase {
     
     func testSucessfulPOST() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse: httpSuccessWithResponse)
+        stub(isHost("whatever.com")) { _ in
+            let obj = ["key":"value"]
+            return OHHTTPStubsResponse(JSONObject: obj, statusCode: 200, headers: nil)
+        }
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("POST http method test");
@@ -94,9 +78,10 @@ class HttpTests: XCTestCase {
     
     func testSucessfulPUT() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse: httpSuccessWithResponse)
+        stub(isHost("whatever.com")) { _ in
+            let obj = ["key":"value"]
+            return OHHTTPStubsResponse(JSONObject: obj, statusCode: 200, headers: nil)
+        }
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("PUT http method test");
@@ -110,9 +95,10 @@ class HttpTests: XCTestCase {
     
     func testDELETE() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse: httpSuccessWithResponse)
+        stub(isHost("whatever.com")) { _ in
+            let obj = ["key":"value"]
+            return OHHTTPStubsResponse(JSONObject: obj, statusCode: 200, headers: nil)
+        }
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("DELETE http method test");
@@ -126,9 +112,10 @@ class HttpTests: XCTestCase {
 
     func testSucessfulMultipartUploadWithPOST() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse: httpMultipartUploadSuccessWithResponse)
+        stub(isHost("whatever.com")) { _ in
+            let obj = ["files" : ["file" : "Lorem ipsum dolor sit amet"], "form" : ["key" : "value"]]
+            return OHHTTPStubsResponse(JSONObject: obj, statusCode: 200, headers: nil)
+        }
         let http = Http(baseURL: "http://whatever.com")
         let data = "Lorem ipsum dolor sit amet".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         let file = MultiPartData(data: data, name: "lorem", filename: "lorem.txt", mimeType: "plain/text")
@@ -149,9 +136,10 @@ class HttpTests: XCTestCase {
 
     func testSucessfulDownloadWithDefaultDestinationDirectory() {
         // set up http stub
-        OHHTTPStubs.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
-            return true
-            }, withStubResponse: httpSuccessWithResponse)
+        stub(isHost("whatever.com")) { _ in
+            let obj = ["key":"value"]
+            return OHHTTPStubsResponse(JSONObject: obj, statusCode: 200, headers: nil)
+        }
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectationWithDescription("Download");
