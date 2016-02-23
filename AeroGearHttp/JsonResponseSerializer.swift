@@ -27,28 +27,31 @@ public class JsonResponseSerializer : ResponseSerializer {
      
      :returns:  either true or false if the response is valid for this particular serializer.
      */
-    public var validateResponse: (NSURLResponse!, NSData) throws -> Void = { (response: NSURLResponse!, data: NSData) throws in
+    public var validateResponse: (NSURLResponse!, NSData) throws -> Void = { (response: NSURLResponse!, data: NSData) -> Void in
         var error: NSError! = NSError(domain: "AeroGearHttp", code: 0, userInfo: nil)
         let httpResponse = response as! NSHTTPURLResponse
-        
-        if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-            let userInfo = [NSLocalizedDescriptionKey: NSHTTPURLResponse.localizedStringForStatusCode(httpResponse.statusCode),
-                NetworkingOperationFailingURLResponseErrorKey: response]
-            error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
-            throw error
-        }
+        let dataAsJson: [String: AnyObject]?
         
         // validate JSON
         do {
-            try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
+            dataAsJson = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0)) as? [String: AnyObject]
         } catch  _  {
             let userInfo = [NSLocalizedDescriptionKey: "Invalid response received, can't parse JSON" as NSString,
                 NetworkingOperationFailingURLResponseErrorKey: response]
             let customError = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
             throw customError;
         }
+        
+        if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+            var userInfo = [NSLocalizedDescriptionKey: NSHTTPURLResponse.localizedStringForStatusCode(httpResponse.statusCode),
+                NetworkingOperationFailingURLResponseErrorKey: response]
+            if let dataAsJson = dataAsJson {
+                userInfo["CustomData"] = dataAsJson
+            }
+            error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
+            throw error
+        }
     }
-
     
     /**
     Deserialize the response received.
