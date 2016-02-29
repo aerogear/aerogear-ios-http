@@ -58,7 +58,7 @@ public class JsonResponseSerializer : ResponseSerializer {
     
     :returns: the serialized response
     */
-    public func response(data: NSData) -> (AnyObject?) {
+    public var response: (NSData, Int) -> AnyObject? = { (data: NSData, Int) -> AnyObject? in
         do {
             return try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
         } catch _ {
@@ -69,7 +69,16 @@ public class JsonResponseSerializer : ResponseSerializer {
     public init() {
     }
     
+    public init(validateResponse: (NSURLResponse!, NSData) throws -> Void, response: (NSData, Int) -> AnyObject?) {
+        self.validateResponse = validateResponse
+        self.response = response
+    }
+    
     public init(validateResponse: (NSURLResponse!, NSData) throws -> Void) {
         self.validateResponse = validateResponse
+    }
+    
+    public init(response: (NSData, Int) -> AnyObject?) {
+        self.response = response
     }
 }

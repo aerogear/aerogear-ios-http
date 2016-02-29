@@ -26,7 +26,7 @@ public class StringResponseSerializer : ResponseSerializer {
     
     :returns: the serialized response
     */
-    public func response(data: NSData) -> (AnyObject?) {
+    public var response: (NSData, Int) -> AnyObject? = {(data: NSData, status: Int) -> (AnyObject?) in
         return NSString(data: data, encoding:NSUTF8StringEncoding)
     }
     
@@ -55,7 +55,16 @@ public class StringResponseSerializer : ResponseSerializer {
     public init() {
     }
     
+    public init(validateResponse: (NSURLResponse!, NSData) throws -> Void, response: (NSData, Int) -> AnyObject?) {
+        self.validateResponse = validateResponse
+        self.response = response
+    }
+    
     public init(validateResponse: (NSURLResponse!, NSData) throws -> Void) {
         self.validateResponse = validateResponse
+    }
+    
+    public init(response: (NSData, Int) -> AnyObject?) {
+        self.response = response
     }
 }

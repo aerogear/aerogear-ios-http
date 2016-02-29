@@ -121,6 +121,61 @@
         waitForExpectationsWithTimeout(10, handler: nil)
     }
     
+    func testJSONSerializerWithValidRequestAndCustomResponseClosure() {
+        // set up http stub
+        stub(isHost("whatever.com")) { _ in
+            let obj = ["key":"value"]
+            return OHHTTPStubsResponse(JSONObject: obj, statusCode: 200, headers: nil)
+        }
+        
+        let http = Http(baseURL: "http://whatever.com", sessionConfig: NSURLSessionConfiguration.defaultSessionConfiguration(),
+            requestSerializer: JsonRequestSerializer(),
+            responseSerializer: JsonResponseSerializer(validateResponse: { (response: NSURLResponse!, data: NSData) -> Void in
+                var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
+                let httpResponse = response as! NSHTTPURLResponse
+                
+                if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+                    let userInfo = [NSLocalizedDescriptionKey: NSHTTPURLResponse.localizedStringForStatusCode(httpResponse.statusCode),
+                        NetworkingOperationFailingURLResponseErrorKey: response]
+                    error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
+                    throw error
+                }
+                
+                // validate JSON
+                do {
+                    try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
+                } catch  _  {
+                    let userInfo = [NSLocalizedDescriptionKey: "Invalid response received, can't parse JSON" as NSString,
+                        NetworkingOperationFailingURLResponseErrorKey: response]
+                    let customError = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
+                    throw customError;
+                }
+                
+                }, response: { (data: NSData, status: Int) -> AnyObject? in
+                    do {
+                        let jsonResponse = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
+                        let finalResponse = ["status": status, "data": jsonResponse]
+                        return finalResponse
+                    } catch _ {
+                        return nil
+                    }
+
+            }))
+        
+        // async test expectation
+        let getExpectation = expectationWithDescription("request with valid JSON data")
+        http.request(.GET, path: "/get", completionHandler: {(response, error) in
+            XCTAssertNil(error, "error should be nil")
+            let resp = response as! [String: AnyObject]
+            XCTAssertTrue(resp["status"] as! Int == 200)
+            let responseData = resp["data"] as! [String: AnyObject]
+            XCTAssertTrue(responseData["key"] as! String == "value")
+            getExpectation.fulfill()
+        })
+        
+        waitForExpectationsWithTimeout(10, handler: nil)
+    }
+    
     func testJSONSerializerWithInvalidRequestAndCustomValidationClosure() {
         // set up http stub
         stub(isHost("whatever.com")) {_ in OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)}

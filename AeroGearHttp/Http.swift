@@ -463,29 +463,18 @@ public class Http {
                 return
             }
             
-
+            
             let response = task.response as! NSHTTPURLResponse
-            if #available(iOS 8, *) {
-                if  let _ = task as? NSURLSessionDownloadTask {
-                    completionHandler?(response, error)
-                    return
-                }
-            } else {
-                // in iOS7 we need more than just casting, we actually check the method is there ie: it's iOS7+
-                let downloadTask = task as? NSURLSessionDownloadTask
-                if  downloadTask != nil {
-                    if downloadTask!.respondsToSelector(Selector("cancelByProducingResumeData:")) {
-                        completionHandler?(response, error)
-                        return
-                    }
-                }
+            if  let _ = task as? NSURLSessionDownloadTask {
+                completionHandler?(response, error)
+                return
             }
             
             var responseObject: AnyObject? = nil
             do {
                 if let data = data {
                     try self.responseSerializer?.validateResponse(response, data)
-                    responseObject = self.responseSerializer?.response(data)
+                    responseObject = self.responseSerializer?.response(data, response.statusCode)
                     completionHandler?(responseObject, nil)
                 }
             } catch let error as NSError {
