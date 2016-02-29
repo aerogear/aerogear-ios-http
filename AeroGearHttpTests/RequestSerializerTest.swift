@@ -62,7 +62,7 @@ class RequestSerializerTests: XCTestCase {
     func testStringResponseSerializer() {
         let serialiser = StringResponseSerializer()
         
-        let result: String? = serialiser.response("some text received".dataUsingEncoding(NSUTF8StringEncoding)!) as? String
+        let result: String? = serialiser.response("some text received".dataUsingEncoding(NSUTF8StringEncoding)!, 200) as? String
         XCTAssertTrue(result == "some text received")
     }
 }

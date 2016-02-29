@@ -32,7 +32,7 @@ public protocol ResponseSerializer {
 
      :returns: the serialized response
     */
-    func response(data: NSData) -> (AnyObject?)
+    var response: (NSData, Int) -> AnyObject? {get set}
     
     /**
      Validate the response received. This is a cutomizable closure variable.
