@@ -478,7 +478,10 @@ public class Http {
                     completionHandler?(responseObject, nil)
                 }
             } catch let error as NSError {
-                completionHandler?(responseObject, error)
+                var userInfo = error.userInfo
+                userInfo["StatusCode"] = response.statusCode
+                let errorToRethrow = NSError(domain: error.domain, code: error.code, userInfo: userInfo)
+                completionHandler?(responseObject, errorToRethrow)
             }
         }
     }
