@@ -33,13 +33,19 @@ class HttpTests: XCTestCase {
     func testCalculateURLWithoutSlash() {
         let http = Http()
         let finalURL = http.calculateURL("http://whatever.com", url: "/post")
-        XCTAssertEqual(finalURL.absoluteString, "http://whatever.com/post")
+        XCTAssertEqual(finalURL!.absoluteString, "http://whatever.com/post")
     }
     
     func testCalculateURLWithLeadingSlash() {
         let http = Http()
         let finalURL = http.calculateURL("http://whatever.com/", url: "/post")
-        XCTAssertEqual(finalURL.absoluteString, "http://whatever.com/post")
+        XCTAssertEqual(finalURL!.absoluteString, "http://whatever.com/post")
+    }
+    
+    func testCalculateURLWithMalformedURL() {
+        let http = Http()
+        let finalURL = http.calculateURL("replace me", url: "/box/init")
+        XCTAssertNil(finalURL)
     }
     
     func testSucessfulGET() {
