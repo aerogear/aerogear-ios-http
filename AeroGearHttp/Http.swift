@@ -122,7 +122,12 @@ public class Http {
     */
     public func request(method: HttpMethod, path: String, parameters: [String: AnyObject]? = nil, credential: NSURLCredential? = nil, responseSerializer: ResponseSerializer? = nil, completionHandler: CompletionBlock) {
         let block: () -> Void =  {
-            let finalURL = self.calculateURL(self.baseURL, url: path)
+            let finalOptURL = self.calculateURL(self.baseURL, url: path)
+            guard let finalURL = finalOptURL else {
+                let error = NSError(domain: "AeroGearHttp", code: 0, userInfo: [NSLocalizedDescriptionKey: "Malformed URL"])
+                completionHandler(nil, error)
+                return
+            }
             
             var request: NSURLRequest
             var task: NSURLSessionTask?
@@ -176,7 +181,12 @@ public class Http {
     private func fileRequest(url: String, parameters: [String: AnyObject]? = nil,  method: HttpMethod, credential: NSURLCredential? = nil, responseSerializer: ResponseSerializer? = nil, type: FileRequestType, progress: ProgressBlock?, completionHandler: CompletionBlock) {
         
         let block: () -> Void  = {
-            let finalURL = self.calculateURL(self.baseURL, url: url)
+            let finalOptURL = self.calculateURL(self.baseURL, url: url)
+            guard let finalURL = finalOptURL else {
+                let error = NSError(domain: "AeroGearHttp", code: 0, userInfo: [NSLocalizedDescriptionKey: "Malformed URL"])
+                completionHandler(nil, error)
+                return
+            }
             var request: NSURLRequest
             // care for multipart request is multipart data are set
             if (self.hasMultiPartData(parameters)) {
@@ -561,12 +571,12 @@ public class Http {
     }
     
     // MARK: Utility methods
-    public func calculateURL(baseURL: String?,  var url: String) -> NSURL {
+    public func calculateURL(baseURL: String?,  var url: String) -> NSURL? {
         if (baseURL == nil || url.hasPrefix("http")) {
             return NSURL(string: url)!
         }
         
-        let finalURL = NSURL(string: baseURL!)!
+        guard let finalURL = NSURL(string: baseURL!) else {return nil}
         if (url.hasPrefix("/")) {
             url = url.substringFromIndex(url.startIndex.advancedBy(1))
         }
