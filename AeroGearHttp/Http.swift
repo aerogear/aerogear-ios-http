@@ -145,9 +145,6 @@ public class Http {
                         self.request(url, parameters: parameters, method: method, credential: credential, retry: false, completionHandler: completionHandler)
                         return
                     }
-                    else if (error != nil && !retry) {
-                        authModule.revokeLocalAccess()
-                    }
                 }
                 
                 completionHandler(response, error)
