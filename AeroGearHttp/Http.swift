@@ -141,9 +141,12 @@ public class Http {
             let innerCompletitionHandler: CompletionBlock = { (response, error) in
                 if let authModule = self.authzModule {
                     if (error != nil && (error?.code == 400 || error?.code == 401 || error?.code == 403)  && retry) {
-                        authModule.revokeLocalAccess()
+                        authModule.revokeLocalAccessToken()
                         self.request(url, parameters: parameters, method: method, credential: credential, retry: false, completionHandler: completionHandler)
                         return
+                    }
+                    else if (error != nil && !retry) {
+                        authModule.revokeLocalAccess()
                     }
                 }
                 

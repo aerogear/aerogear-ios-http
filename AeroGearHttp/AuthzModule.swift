@@ -62,6 +62,10 @@ public protocol AuthzModule {
     func revokeLocalAccess()
     
     /**
+     Request to revoke only local access token.*/
+    func revokeLocalAccessToken()
+    
+    /**
      Return any authorization fields.
      
      :returns:  a dictionary filled with the authorization fields.
