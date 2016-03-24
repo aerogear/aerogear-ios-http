@@ -61,6 +61,8 @@ public protocol AuthzModule {
      Request to revoke local access.*/
     func revokeLocalAccess()
     
+    func revokeLocalAccess(notify: Bool)
+    
     /**
      Request to revoke only local access token.*/
     func revokeLocalAccessToken()
