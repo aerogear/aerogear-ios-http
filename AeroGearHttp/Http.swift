@@ -562,14 +562,13 @@ public class Http {
     
     // MARK: Utility methods
     public func calculateURL(baseURL: String?,  url: String) -> NSURL {
-        
-        if (baseURL == nil || url.hasPrefix("http")) {
+        var partUrl = url
+        if (baseURL == nil || partUrl.hasPrefix("http")) {
             return NSURL(string: url)!
         }
-        var partUrl = url
         let finalURL = NSURL(string: baseURL!)!
         if (url.hasPrefix("/")) {
-            partUrl = url.substringFromIndex(url.startIndex.advancedBy(1))
+            partUrl = url.substringFromIndex(partUrl.startIndex.advancedBy(1))
         }
         
         return finalURL.URLByAppendingPathComponent(partUrl);
