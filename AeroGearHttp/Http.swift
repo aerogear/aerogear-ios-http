@@ -561,17 +561,18 @@ public class Http {
     }
     
     // MARK: Utility methods
-    public func calculateURL(baseURL: String?,  var url: String) -> NSURL {
+    public func calculateURL(baseURL: String?,  url: String) -> NSURL {
+        
         if (baseURL == nil || url.hasPrefix("http")) {
             return NSURL(string: url)!
         }
-        
+        var partUrl = url
         let finalURL = NSURL(string: baseURL!)!
         if (url.hasPrefix("/")) {
-            url = url.substringFromIndex(url.startIndex.advancedBy(1))
+            partUrl = url.substringFromIndex(url.startIndex.advancedBy(1))
         }
         
-        return finalURL.URLByAppendingPathComponent(url);
+        return finalURL.URLByAppendingPathComponent(partUrl);
     }
     
     public func hasMultiPartData(parameters: [String: AnyObject]?) -> Bool {
