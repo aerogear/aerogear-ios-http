@@ -571,14 +571,15 @@ public class Http {
     }
     
     // MARK: Utility methods
-    public func calculateURL(baseURL: String?,  var url: String) -> NSURL? {
-        if (baseURL == nil || url.hasPrefix("http")) {
-            return NSURL(string: url)!
+    public func calculateURL(baseURL: String?, url: String) -> NSURL? {
+        var partURL = url
+        if (baseURL == nil || partURL.hasPrefix("http")) {
+            return NSURL(string: partURL)!
         }
         
         guard let finalURL = NSURL(string: baseURL!) else {return nil}
-        if (url.hasPrefix("/")) {
-            url = url.substringFromIndex(url.startIndex.advancedBy(1))
+        if (partURL.hasPrefix("/")) {
+            partURL = url.substringFromIndex(partURL.startIndex.advancedBy(1))
         }
         
         return finalURL.URLByAppendingPathComponent(url);
