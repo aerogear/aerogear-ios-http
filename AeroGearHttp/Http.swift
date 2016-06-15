@@ -533,20 +533,10 @@ public class Http {
             
             
             let response = task.response as! NSHTTPURLResponse
-            if #available(iOS 8, *) {
-                if  let _ = task as? NSURLSessionDownloadTask {
-                    completionHandler?(response, error)
-                    return
-                }
-            } else {
-                // in iOS7 we need more than just casting, we actually check the method is there ie: it's iOS7+
-                let downloadTask = task as? NSURLSessionDownloadTask
-                if  downloadTask != nil {
-                    if downloadTask!.respondsToSelector(Selector("cancelByProducingResumeData:")) {
-                        completionHandler?(response, error)
-                        return
-                    }
-                }
+            
+            if  let _ = task as? NSURLSessionDownloadTask {
+                completionHandler?(response, error)
+                return
             }
             
             var responseObject: AnyObject? = nil
@@ -637,7 +627,8 @@ public class Http {
     }
     
     // MARK: Utility methods
-    public func calculateURL(baseURL: String?,  var url: String) -> NSURL {
+    public func calculateURL(baseURL: String?,  url: String) -> NSURL {
+        var url = url
         if (baseURL == nil || url.hasPrefix("http")) {
             return NSURL(string: url)!
         }
