@@ -31,3 +31,19 @@ extension String {
         return encodedURL as String
     }
 }
+
+public func merge(one: [String: String]?, _ two: [String:String]?) -> [String: String]? {
+    var dict: [String: String]?
+    if let one = one {
+        dict = one
+        if let two = two {
+            for (key, value) in two {
+                dict![key] = value
+            }
+        }
+    } else {
+        dict = two
+    }
+    return dict
+}
+

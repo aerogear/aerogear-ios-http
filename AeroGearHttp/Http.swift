@@ -132,13 +132,16 @@ public class Http {
             var request: NSURLRequest
             var task: NSURLSessionTask?
             var delegate: TaskDataDelegate
+            // Merge headers
+            let headers = merge(self.requestSerializer.headers, self.authzModule?.authorizationFields())
+            
             // care for multipart request is multipart data are set
             if (self.hasMultiPartData(parameters)) {
-                request = self.requestSerializer.multipartRequest(finalURL, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
+                request = self.requestSerializer.multipartRequest(finalURL, method: method, parameters: parameters, headers: headers)
                 task = self.session.uploadTaskWithStreamedRequest(request)
                 delegate = TaskUploadDelegate()
             } else {
-                request = self.requestSerializer.request(finalURL, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
+                request = self.requestSerializer.request(finalURL, method: method, parameters: parameters, headers: headers)
                 task = self.session.dataTaskWithRequest(request);
                 delegate = TaskDataDelegate()
             }
@@ -188,11 +191,14 @@ public class Http {
                 return
             }
             var request: NSURLRequest
+            // Merge headers
+            let headers = merge(self.requestSerializer.headers, self.authzModule?.authorizationFields())
+
             // care for multipart request is multipart data are set
             if (self.hasMultiPartData(parameters)) {
-                request = self.requestSerializer.multipartRequest(finalURL, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
+                request = self.requestSerializer.multipartRequest(finalURL, method: method, parameters: parameters, headers: headers)
             } else {
-                request = self.requestSerializer.request(finalURL, method: method, parameters: parameters, headers: self.authzModule?.authorizationFields())
+                request = self.requestSerializer.request(finalURL, method: method, parameters: parameters, headers: headers)
             }
             
             var task: NSURLSessionTask?
