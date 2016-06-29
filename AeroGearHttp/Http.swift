@@ -133,17 +133,7 @@ public class Http {
             var task: NSURLSessionTask?
             var delegate: TaskDataDelegate
             // Merge headers
-            var headers: [String: String]?
-            if let existingHeaders = self.requestSerializer.headers {
-                headers = existingHeaders
-                if let authHeaders = self.authzModule?.authorizationFields() {
-                    for (key, value) in authHeaders {
-                        headers![key] = value
-                    }
-                }
-            } else {
-                headers = self.authzModule?.authorizationFields()
-            }
+            let headers = merge(self.requestSerializer.headers, self.authzModule?.authorizationFields())
             
             // care for multipart request is multipart data are set
             if (self.hasMultiPartData(parameters)) {
@@ -202,17 +192,7 @@ public class Http {
             }
             var request: NSURLRequest
             // Merge headers
-            var headers: [String: String]?
-            if let existingHeaders = self.requestSerializer.headers {
-                headers = existingHeaders
-                if let authHeaders = self.authzModule?.authorizationFields() {
-                    for (key, value) in authHeaders {
-                        headers![key] = value
-                    }
-                }
-            } else {
-                headers = self.authzModule?.authorizationFields()
-            }
+            let headers = merge(self.requestSerializer.headers, self.authzModule?.authorizationFields())
 
             // care for multipart request is multipart data are set
             if (self.hasMultiPartData(parameters)) {
