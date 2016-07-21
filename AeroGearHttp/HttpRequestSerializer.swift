@@ -65,7 +65,7 @@ public class HttpRequestSerializer:  RequestSerializer {
             var newUrl:String
             if (request.URL?.absoluteString != nil && parameters != nil) {
                 let queryString = self.stringFromParameters(parameters!)
-                newUrl = "\(request.URL!.absoluteString)\(paramSeparator)\(queryString)"
+                newUrl = "\(request.URL!.absoluteString!)\(paramSeparator)\(queryString)"
                 request.URL = NSURL(string: newUrl)!
             }
             
