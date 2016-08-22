@@ -1,6 +1,6 @@
 # aerogear-ios-http  [![Build Status](https://travis-ci.org/aerogear/aerogear-ios-http.png)](https://travis-ci.org/aerogear/aerogear-ios-http)
 
-> This module currently build with Xcode 7.2 and supports iOS8, iOS9.
+> This module currently build with Xcode 7.2 / Xcode 8 and supports iOS8, iOS9, iOS10.
 
 Thin layer to take care of your http requests working with NSURLSession. 
 Taking care of: 
@@ -11,7 +11,7 @@ Taking care of:
 * Pluggable object serialization
 * background processing support
 
-100% Swift 2.0.
+100% Swift 2.X.
 
 |                 | Project Info  |
 | --------------- | ------------- |
@@ -112,7 +112,7 @@ pod install
 To add the library in your project, you can either use [CocoaPods](http://cocoapods.org) or manual install in your project. See the respective sections below for instructions:
 
 ### Using [CocoaPods](http://cocoapods.org)
-Support for Swift frameworks is supported from [CocoaPods-0.36 release](http://blog.cocoapods.org/CocoaPods-0.36/) upwards. In your ```Podfile``` add:
+We recommend you use[CocoaPods-1.1.0.beta.1 release](https://github.com/CocoaPods/CocoaPods/releases/tag/1.1.0.beta.1). In your ```Podfile``` add:
 
 ```
 pod 'AeroGearHttp'

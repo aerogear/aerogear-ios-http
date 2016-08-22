@@ -544,7 +544,13 @@ public class Http {
             if (destinationDirectory == nil) {  // use 'default documents' directory if not set
                 // use default documents directory
                 let documentsDirectory  = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as NSURL
-                finalDestination = documentsDirectory.URLByAppendingPathComponent(filename!)
+                #if swift(>=2.3)
+                    // this compiles on Xcode 8 / Swift 2.3 / iOS 10
+                    finalDestination = documentsDirectory.URLByAppendingPathComponent(filename!)!
+                #else
+                    // this compiles on Xcode 7 / Swift 2.2 / iOS 9
+                    finalDestination = documentsDirectory.URLByAppendingPathComponent(filename!)
+                #endif
             } else {
                 // check that the directory exists
                 let path = destinationDirectory?.stringByAppendingPathComponent(filename!)
@@ -577,7 +583,8 @@ public class Http {
     }
     
     // MARK: Utility methods
-    public func calculateURL(baseURL: String?,  var url: String) -> NSURL? {
+    public func calculateURL(baseURL: String?, url: String) -> NSURL? {
+        var url = url
         if (baseURL == nil || url.hasPrefix("http")) {
             return NSURL(string: url)!
         }
