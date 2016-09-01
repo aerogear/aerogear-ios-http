@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "488B6B5B196B19BC000297C9"
                BuildableName = "AeroGearHttp.framework"
-               BlueprintName = "AeroGearHttp"
+               BlueprintName = "AeroGearHttp iOS"
                ReferencedContainer = "container:AeroGearHttp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,7 +47,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "488B6B5B196B19BC000297C9"
             BuildableName = "AeroGearHttp.framework"
-            BlueprintName = "AeroGearHttp"
+            BlueprintName = "AeroGearHttp iOS"
             ReferencedContainer = "container:AeroGearHttp.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -65,7 +65,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "488B6B5B196B19BC000297C9"
             BuildableName = "AeroGearHttp.framework"
-            BlueprintName = "AeroGearHttp"
+            BlueprintName = "AeroGearHttp iOS"
             ReferencedContainer = "container:AeroGearHttp.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
