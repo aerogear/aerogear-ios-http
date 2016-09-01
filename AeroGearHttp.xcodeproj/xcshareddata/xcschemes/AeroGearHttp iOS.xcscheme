@@ -28,7 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "488B6B66196B19BC000297C9"
+               BuildableName = "AeroGearHttpTests.xctest"
+               BlueprintName = "AeroGearHttpTests"
+               ReferencedContainer = "container:AeroGearHttp.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "488B6B5B196B19BC000297C9"
+            BuildableName = "AeroGearHttp.framework"
+            BlueprintName = "AeroGearHttp iOS"
+            ReferencedContainer = "container:AeroGearHttp.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
