@@ -594,7 +594,7 @@ public class Http {
             if (destinationDirectory == nil) {  // use 'default documents' directory if not set
                 // use default documents directory
                 let documentsDirectory  = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as NSURL
-                finalDestination = documentsDirectory.URLByAppendingPathComponent(filename!)
+                finalDestination = documentsDirectory.URLByAppendingPathComponent(filename!)!
             } else {
                 // check that the directory exists
                 let path = destinationDirectory?.stringByAppendingPathComponent(filename!)
@@ -638,7 +638,7 @@ public class Http {
             url = url.substringFromIndex(url.startIndex.advancedBy(0))
         }
         
-        return finalURL.URLByAppendingPathComponent(url);
+        return finalURL.URLByAppendingPathComponent(url)!;
     }
     
     public func hasMultiPartData(parameters: [String: AnyObject]?) -> Bool {
