@@ -4,8 +4,5 @@ xcode_workspace: AeroGearHttp.xcworkspace
 xcode_scheme: AeroGearHttpTests
 xcode_sdk: iphonesimulator
 
-before_install:
-    - gem install cocoapods -v '0.39.0' -N --no-rdoc --no-ri --no-document --quiet
-
 notifications:
   irc: "irc.freenode.org#aerogear"
