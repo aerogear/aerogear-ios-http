@@ -20,23 +20,20 @@ import Foundation
 /**
 An HttpRequest serializer that handles form-encoded URL requess including multipart support.
 */
-public class HttpRequestSerializer:  RequestSerializer {
+open class HttpRequestSerializer:  RequestSerializer {
     /// The url that this request serializer is bound to.
-    public var url: NSURL?
+    open var url: URL?
     /// Any headers that will be appended on the request.
-    public var headers: [String: String]?
-    /// The String encoding to be used.
-    public var stringEncoding: NSNumber
+    open var headers: [String: String]?
     ///  The cache policy.
-    public var cachePolicy: NSURLRequestCachePolicy
+    open var cachePolicy: NSURLRequest.CachePolicy
     /// The timeout interval.
-    public var timeoutInterval: NSTimeInterval
+    open var timeoutInterval: TimeInterval
     
     /// Defualt initializer.
     public init() {
-        self.stringEncoding = NSUTF8StringEncoding
         self.timeoutInterval = 60
-        self.cachePolicy = .UseProtocolCachePolicy
+        self.cachePolicy = .useProtocolCachePolicy
     }
     
     /**
@@ -49,9 +46,9 @@ public class HttpRequestSerializer:  RequestSerializer {
     
     :returns: the URLRequest object.
     */
-    public func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]? = nil) -> NSURLRequest {
-        let request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
-        request.HTTPMethod = method.rawValue
+    open func request(url: URL, method: HttpMethod, parameters: [String: Any]?, headers: [String: String]? = nil) -> URLRequest {
+        let request = NSMutableURLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
+        request.httpMethod = method.rawValue
         
         // apply headers to new request
         if(headers != nil) {
@@ -60,19 +57,13 @@ public class HttpRequestSerializer:  RequestSerializer {
             }
         }
         
-        if method == HttpMethod.GET || method == HttpMethod.HEAD || method == HttpMethod.DELETE {
-            let paramSeparator = request.URL?.query != nil ? "&" : "?"
+        if method == .get || method == .head || method == .delete {
+            let paramSeparator = request.url?.query != nil ? "&" : "?"
             var newUrl:String
-            if (request.URL?.absoluteString != nil && parameters != nil) {
-                let queryString = self.stringFromParameters(parameters!)
-                #if swift(>=2.3)
-                    // this compiles on Xcode 8 / Swift 2.3 / iOS 10
-                    newUrl = "\(request.URL!.absoluteString!)\(paramSeparator)\(queryString)"
-                #else
-                    // this compiles on Xcode 7 / Swift 2.2 / iOS 9
-                    newUrl = "\(request.URL!.absoluteString)\(paramSeparator)\(queryString)"
-                #endif
-                request.URL = NSURL(string: newUrl)!
+            if (request.url?.absoluteString != nil && parameters != nil) {
+                let queryString = self.stringFrom(httpParams: parameters!)
+                newUrl = "\(request.url!.absoluteString)\(paramSeparator)\(queryString)"
+                request.url = URL(string: newUrl)!
             }
             
         } else {
@@ -80,13 +71,13 @@ public class HttpRequestSerializer:  RequestSerializer {
             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
             // set body
             if (parameters != nil) {
-                let body = self.stringFromParameters(parameters!).dataUsingEncoding(NSUTF8StringEncoding)
-                request.setValue("\(body?.length)", forHTTPHeaderField: "Content-Length")
-                request.HTTPBody = body
+                let body = self.stringFrom(httpParams: parameters!).data(using: String.Encoding.utf8)
+                request.setValue("\(body?.count)", forHTTPHeaderField: "Content-Length")
+                request.httpBody = body
             }
         }
         
-        return request
+        return request as URLRequest
     }
     
     /**
@@ -99,9 +90,9 @@ public class HttpRequestSerializer:  RequestSerializer {
     
     :returns: the URLRequest object
     */
-    public func multipartRequest(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]? = nil) -> NSURLRequest {
-        let request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
-        request.HTTPMethod = method.rawValue
+    open func multipartRequest(url: URL, method: HttpMethod, parameters: [String: Any]?, headers: [String: String]? = nil) -> URLRequest {
+        let request = NSMutableURLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
+        request.httpMethod = method.rawValue
         
         // apply headers to new request
         if(headers != nil) {
@@ -112,38 +103,35 @@ public class HttpRequestSerializer:  RequestSerializer {
         
         let boundary = "AG-boundary-\(arc4random())-\(arc4random())"
         let type = "multipart/form-data; boundary=\(boundary)"
-        let body = self.multiPartBodyFromParams(parameters!, boundary: boundary)
+        let body = self.multiPartBodyFrom(httpParams: parameters!, boundary: boundary)
 
         request.setValue(type, forHTTPHeaderField: "Content-Type")
-        request.setValue("\(body.length)", forHTTPHeaderField: "Content-Length")
-        request.HTTPBody = body
+        request.setValue("\(body.count)", forHTTPHeaderField: "Content-Length")
+        request.httpBody = body
         
-        return request
+        return request as URLRequest
     }
     
-    public func stringFromParameters(parameters: [String: AnyObject]) -> String {
-        let parametersArray = serialize((nil, parameters)).map({(tuple) in
+    private func stringFrom(httpParams parameters: [String: Any]) -> String {
+        let parametersArray = serialization(httpParams: (nil, parameters)).map({(tuple) in
             return self.stringValue(tuple)
         })
-        return parametersArray.joinWithSeparator("&")
-//        return "&".join(serialize((nil, parameters)).map({(tuple) in
-//            return self.stringValue(tuple)
-//        }))
+        return parametersArray.joined(separator: "&")
     }
     
-    public func serialize(tuple: (String?, AnyObject)) -> [(String?, AnyObject)] {
-        var collect:[(String?, AnyObject)] = []
-        if let array = tuple.1 as? [AnyObject] {
-            for nestedValue : AnyObject in array {
+    private func serialization(httpParams tuple: (String?, Any)) -> [(String?, Any)] {
+        var collect:[(String?, Any)] = []
+        if let array = tuple.1 as? [Any] {
+            for nestedValue : Any in array {
                 let label: String = tuple.0!
-                let myTuple:(String?, AnyObject) = (label + "[]", nestedValue)
-                collect.appendContentsOf(self.serialize(myTuple))
+                let myTuple:(String?, Any) = (label + "[]", nestedValue)
+                collect.append(contentsOf: self.serialization(httpParams: myTuple))
             }
-        } else if let dict = tuple.1 as? [String: AnyObject] {
+        } else if let dict = tuple.1 as? [String: Any] {
             for (nestedKey, nestedObject) in dict {
                 let newKey = tuple.0 != nil ? "\(tuple.0!)[\(nestedKey)]" : nestedKey
-                let myTuple:(String?, AnyObject) = (newKey, nestedObject)
-                collect.appendContentsOf(self.serialize(myTuple))
+                let myTuple:(String?, Any) = (newKey, nestedObject)
+                collect.append(contentsOf: self.serialization(httpParams: myTuple))
             }
         } else {
             collect.append((tuple.0, tuple.1))
@@ -151,12 +139,12 @@ public class HttpRequestSerializer:  RequestSerializer {
         return collect
     }
     
-    public func stringValue(tuple: (String?, AnyObject)) -> String {
+    private func stringValue(_ tuple: (String?, Any)) -> String {
         var val = ""
         if let str = tuple.1 as? String {
             val = str
-        } else if tuple.1.description != nil {
-            val = tuple.1.description
+        } else if (tuple.1 as AnyObject).description != nil { //TODO revisit Swift3
+            val = (tuple.1 as AnyObject).description
         }
         
         if tuple.0 == nil {
@@ -166,48 +154,48 @@ public class HttpRequestSerializer:  RequestSerializer {
         return "\(tuple.0!.urlEncode())=\(val.urlEncode())"
     }
     
-    public func multiPartBodyFromParams(parameters: [String: AnyObject], boundary: String) -> NSData {
+    private func multiPartBodyFrom(httpParams parameters: [String: Any], boundary: String) -> Data {
         let data = NSMutableData()
         
-        let prefixData = "--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)
-        let seperData = "\r\n".dataUsingEncoding(NSUTF8StringEncoding)
+        let prefixData = "--\(boundary)\r\n".data(using: String.Encoding.utf8)
+        let seperData = "\r\n".data(using: String.Encoding.utf8)
         
         for (key, value) in parameters {
-            var sectionData: NSData?
+            var sectionData: Data?
             var sectionType: String?
             var sectionFilename = ""
             
             if value is MultiPartData {
                 let multiData = value as! MultiPartData
-                sectionData = multiData.data
+                sectionData = multiData.data as Data
                 sectionType = multiData.mimeType
                 sectionFilename = " filename=\"\(multiData.filename)\""
             } else {
-                sectionData = "\(value)".dataUsingEncoding(NSUTF8StringEncoding)
+                sectionData = "\(value)".data(using: String.Encoding.utf8)
             }
             
-            data.appendData(prefixData!)
+            data.append(prefixData!)
             
-            let sectionDisposition = "Content-Disposition: form-data; name=\"\(key)\";\(sectionFilename)\r\n".dataUsingEncoding(NSUTF8StringEncoding)
-            data.appendData(sectionDisposition!)
+            let sectionDisposition = "Content-Disposition: form-data; name=\"\(key)\";\(sectionFilename)\r\n".data(using: String.Encoding.utf8)
+            data.append(sectionDisposition!)
             
             if let type = sectionType {
-                let contentType = "Content-Type: \(type)\r\n".dataUsingEncoding(NSUTF8StringEncoding)
-                data.appendData(contentType!)
+                let contentType = "Content-Type: \(type)\r\n".data(using: String.Encoding.utf8)
+                data.append(contentType!)
             }
             
             // append data
-            data.appendData(seperData!)
-            data.appendData(sectionData!)
-            data.appendData(seperData!)
+            data.append(seperData!)
+            data.append(sectionData!)
+            data.append(seperData!)
         }
         
-        data.appendData("--\(boundary)--\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        data.append("--\(boundary)--\r\n".data(using: String.Encoding.utf8)!)
         
-        return data
+        return data as Data
     }
     
-    public func hasMultiPartData(parameters: [String: AnyObject]?) -> Bool {
+    private func hasMultiPartData(httpParams parameters: [String: Any]?) -> Bool {
         if (parameters == nil) {
             return false
         }

@@ -35,11 +35,11 @@ class RequestSerializerTests: XCTestCase {
     func testGETWithParameters8() {
         let url = "http://api.icndb.com/jokes/12"
         let serialiser = JsonRequestSerializer()
-        let result = serialiser.request(NSURL(string: url)!, method:.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
-        if let urlString:NSString = result.URL!.absoluteString {
-            XCTAssertTrue(urlString.containsString("param1=value1"))
-            XCTAssertTrue(urlString.containsString("numeric=5"))
-            XCTAssertTrue(urlString.containsString("array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four"))
+        let result = serialiser.request(url: URL(string: url)!, method:.get, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
+        if let urlString = result.url?.absoluteString {
+            XCTAssertTrue(urlString.contains("param1=value1"))
+            XCTAssertTrue(urlString.contains("numeric=5"))
+            XCTAssertTrue(urlString.contains("array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four"))
         } else {
             XCTFail("url should not give an empty string")
         }
@@ -48,12 +48,12 @@ class RequestSerializerTests: XCTestCase {
     func testGETWithParameters() {
         let url = "http://api.icndb.com/jokes/12"
         let serialiser = JsonRequestSerializer()
-        let result = serialiser.request(NSURL(string: url)!, method:.GET, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5, "dictionary": ["key_one":"value_one"]])
-        if let urlString = result.URL?.absoluteString  {
-            XCTAssertTrue(NSString(string: urlString).rangeOfString("param1=value1").location != NSNotFound)
-            XCTAssertTrue(NSString(string: urlString).rangeOfString("numeric=5").location != NSNotFound)
-            XCTAssertTrue(NSString(string: urlString).rangeOfString("dictionary%5Bkey_one%5D=value_one").location != NSNotFound)
-            XCTAssertTrue(NSString(string: urlString).rangeOfString("array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four").location != NSNotFound)
+        let result = serialiser.request(url: URL(string: url)!, method:.get, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5, "dictionary": ["key_one":"value_one"]])
+        if let urlString = result.url?.absoluteString  {
+            XCTAssertTrue(NSString(string: urlString).range(of: "param1=value1").location != NSNotFound)
+            XCTAssertTrue(NSString(string: urlString).range(of: "numeric=5").location != NSNotFound)
+            XCTAssertTrue(NSString(string: urlString).range(of: "dictionary%5Bkey_one%5D=value_one").location != NSNotFound)
+            XCTAssertTrue(NSString(string: urlString).range(of: "array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four").location != NSNotFound)
         } else {
             XCTFail("url should not give an empty string")
         }
@@ -62,7 +62,7 @@ class RequestSerializerTests: XCTestCase {
     func testStringResponseSerializer() {
         let serialiser = StringResponseSerializer()
         
-        let result: String? = serialiser.response("some text received".dataUsingEncoding(NSUTF8StringEncoding)!, 200) as? String
+        let result: String? = serialiser.response("some text received".data(using: String.Encoding.utf8)!, 200) as? String
         XCTAssertTrue(result == "some text received")
     }
 }

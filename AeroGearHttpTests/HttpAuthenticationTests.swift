@@ -31,37 +31,37 @@ class HttpAuthenticationTests: XCTestCase {
     
     func testHTTPBasicAuthenticationWithValidCredentials() {
         // async test expectation
-        let getExpectation = expectationWithDescription("HTTPBasicAuthentication with valid credentials");
+        let getExpectation = expectation(description: "HTTPBasicAuthentication with valid credentials");
         
         let user = "john"
         let password = "pass"
-        let credential = NSURLCredential(user: user, password: password, persistence: .None)
+        let credential = URLCredential(user: user, password: password, persistence: .none)
         
         let http = Http(baseURL: "http://httpbin.org")
         
-        http.request(.GET, path: "/basic-auth/\(user)/\(password)", credential: credential, completionHandler: {(response, error) in
+        http.request(.get, path: "/basic-auth/\(user)/\(password)", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             
             let JSON = response as! NSDictionary!
-            XCTAssertTrue(JSON["authenticated"] as! Bool)
+            XCTAssertTrue(JSON?["authenticated"] as! Bool)
             
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(300, handler: nil)
+        waitForExpectations(timeout: 300, handler: nil)
     }
     
     func testHTTPBasicAuthenticationWithInvalidCredentials() {
         // async test expectation
-        let getExpectation = expectationWithDescription("HTTPBasicAuthentication with invalid credentials");
+        let getExpectation = expectation(description: "HTTPBasicAuthentication with invalid credentials");
         
         let user = "john"
         let password = "pass"
-        let credential = NSURLCredential(user: user, password: password, persistence: .None)
+        let credential = URLCredential(user: user, password: password, persistence: .none)
         
         let http = Http(baseURL: "http://httpbin.org")
         
-        http.request(.GET, path: "/basic-auth/\(user)/invalid", credential: credential, completionHandler: {(response, error) in
+        http.request(.get, path: "/basic-auth/\(user)/invalid", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(response, "response should be nil")
             XCTAssertNotNil(error, "error should not be nil")
             XCTAssert(error?.code == -999, "error code should be equal to -999:'cancelled'")
@@ -69,42 +69,42 @@ class HttpAuthenticationTests: XCTestCase {
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(300, handler: nil)
+        waitForExpectations(timeout: 300, handler: nil)
     }
     
     func testHTTPDigestAuthenticationWithValidCredentials() {
         // async test expectation
-        let getExpectation = expectationWithDescription("HTTPDigestAuthentication with valid credentials");
+        let getExpectation = expectation(description: "HTTPDigestAuthentication with valid credentials");
         
         let user = "user"
         let password = "password"
-        let credential = NSURLCredential(user: user, password: password, persistence: .None)
+        let credential = URLCredential(user: user, password: password, persistence: .none)
         
         let http = Http(baseURL: "http://httpbin.org")
         
-        http.request(.GET, path: "/digest-auth/auth/\(user)/\(password)", credential: credential, completionHandler: {(response, error) in
+        http.request(.get, path: "/digest-auth/auth/\(user)/\(password)", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             
             let JSON = response as! NSDictionary!
-            XCTAssertTrue(JSON["authenticated"] as! Bool)
+            XCTAssertTrue(JSON?["authenticated"] as! Bool)
             
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(300, handler: nil)
+        waitForExpectations(timeout: 300, handler: nil)
     }
     
     func testHTTPDigestAuthenticationWithInvalidCredentials() {
         // async test expectation
-        let getExpectation = expectationWithDescription("HTTPDigestAuthentication with invalid credentials");
+        let getExpectation = expectation(description: "HTTPDigestAuthentication with invalid credentials");
         
         let user = "john"
         let password = "pass"
-        let credential = NSURLCredential(user: user, password: password, persistence: .None)
+        let credential = URLCredential(user: user, password: password, persistence: .none)
         
         let http = Http(baseURL: "http://httpbin.org")
         
-        http.request(.GET, path: "/digest-auth/auth/\(user)/invalid", credential: credential, completionHandler: {(response, error) in
+        http.request(.get, path: "/digest-auth/auth/\(user)/invalid", credential: credential, completionHandler: {(response, error) in
             XCTAssertNil(response, "response should be nil")
             XCTAssertNotNil(error, "error should not be nil")
             XCTAssert(error?.code == -999, "error code should be equal to -999:'cancelled'")
@@ -112,7 +112,7 @@ class HttpAuthenticationTests: XCTestCase {
             getExpectation.fulfill()
         })
         
-        waitForExpectationsWithTimeout(300, handler: nil)
+        waitForExpectations(timeout: 300, handler: nil)
     }
     
     /*
