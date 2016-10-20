@@ -20,16 +20,16 @@ import Foundation
 /**
 Represents a multipart object containing a file plus metadata to be processed during upload.
 */
-public class MultiPartData {
+open class MultiPartData {
 
     /// The 'name' to be used on the request.
-    public var name: String
+    open var name: String
     /// The 'filename' to be used on the request.
-    public var filename: String
+    open var filename: String
     /// The 'MIME type' to be used on the request.
-    public var mimeType: String
+    open var mimeType: String
     /// The actual data to be sent.
-    public var data: NSData
+    open var data: Data
     
     /**
     Initialize a multipart object using an NSURL and a corresponding MIME type. 
@@ -39,12 +39,12 @@ public class MultiPartData {
     
     :returns: the newly created multipart data.
     */
-    public init(url: NSURL, mimeType: String) {
-        self.name = url.lastPathComponent!
-        self.filename = url.lastPathComponent!
+    public init(url: URL, mimeType: String) {
+        self.name = url.lastPathComponent
+        self.filename = url.lastPathComponent
         self.mimeType = mimeType;
         
-        self.data = NSData(contentsOfURL: url)!
+        self.data = try! Data(contentsOf: url)
     }
     
     /**
@@ -57,7 +57,7 @@ public class MultiPartData {
     
     :returns: the newly created multipart data.
     */
-    public init(data: NSData, name: String, filename: String, mimeType: String) {
+    public init(data: Data, name: String, filename: String, mimeType: String) {
         self.data = data;
         self.name = name;
         self.filename = filename;

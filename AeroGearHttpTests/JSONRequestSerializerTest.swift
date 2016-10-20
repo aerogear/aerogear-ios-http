@@ -32,7 +32,7 @@ class JSONRequestSerializer: XCTestCase {
     func testHeadersShouldExistOnRequestWhenPUT() {
         let url = "http://api.icndb.com/jokes/12"
         let serialiser = JsonRequestSerializer()
-        let result = serialiser.request(NSURL(string: url)!, method:.PUT, parameters: ["param1": "value1"], headers: ["CUSTOM_HEADER": "a value"])
+        let result = serialiser.request(url: URL(string: url)!, method:.put, parameters: ["param1": "value1"], headers: ["CUSTOM_HEADER": "a value"])
         // header should be contained on the returned request
         let header = result.allHTTPHeaderFields!["CUSTOM_HEADER"]
         
@@ -43,7 +43,7 @@ class JSONRequestSerializer: XCTestCase {
     func testHeadersShouldExistOnRequestWhenPOST() {
         let url = "http://api.icndb.com/jokes/12"
         let serialiser = JsonRequestSerializer()
-        let result = serialiser.request(NSURL(string: url)!, method:.POST, parameters: ["param1": "value1"], headers: ["CUSTOM_HEADER": "a value"])
+        let result = serialiser.request(url: URL(string: url)!, method:.post, parameters: ["param1": "value1"], headers: ["CUSTOM_HEADER": "a value"])
         // header should be contained on the returned request
         let header = result.allHTTPHeaderFields!["CUSTOM_HEADER"]
         

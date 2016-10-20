@@ -20,7 +20,7 @@ import Foundation
 /**
 A request serializer to JSON objects/
 */
-public class JsonRequestSerializer:  HttpRequestSerializer {
+open class JsonRequestSerializer:  HttpRequestSerializer {
     /**
     Build an request using the specified params passed in.
     
@@ -31,27 +31,27 @@ public class JsonRequestSerializer:  HttpRequestSerializer {
     
     :returns: the URLRequest object.
     */
-    public override func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]? = nil) -> NSURLRequest {
-        if method == HttpMethod.GET || method == HttpMethod.HEAD || method == HttpMethod.DELETE {
-            return super.request(url, method: method, parameters: parameters, headers: headers)
+    open override func request(url: URL, method: HttpMethod, parameters: [String: Any]?, headers: [String: String]? = nil) -> URLRequest {
+        if method == .get || method == .head || method == .delete {
+            return super.request(url: url, method: method, parameters: parameters, headers: headers)
         } else {
-            let request = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
-            request.HTTPMethod = method.rawValue
+            var request = URLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
+            request.httpMethod = method.rawValue
 
             // set type
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             // set body
             if (parameters != nil) {
-                var body: NSData?
+                var body: Data?
                 do {
-                    body = try NSJSONSerialization.dataWithJSONObject(parameters!, options: [])
+                    body = try JSONSerialization.data(withJSONObject: parameters!, options: [])
                 } catch _ {
                     body = nil
                 }
                 // set body
                 if (body != nil) {
-                    request.setValue("\(body?.length)", forHTTPHeaderField: "Content-Length")
-                    request.HTTPBody = body
+                    request.setValue("\(body?.count)", forHTTPHeaderField: "Content-Length")
+                    request.httpBody = body
                 }
             }
             

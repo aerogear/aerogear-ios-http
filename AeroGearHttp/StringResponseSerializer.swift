@@ -20,14 +20,14 @@ import Foundation
 /**
 A response deserializer to a generic String object.
 */
-public class StringResponseSerializer : ResponseSerializer {
+open class StringResponseSerializer : ResponseSerializer {
     /**
     Deserialize the response received.
     
     :returns: the serialized response
     */
-    public var response: (NSData, Int) -> AnyObject? = {(data: NSData, status: Int) -> (AnyObject?) in
-        return NSString(data: data, encoding:NSUTF8StringEncoding)
+    open var response: (Data, Int) -> Any? = {(data: Data, status: Int) -> (Any?) in
+        return NSString(data: data, encoding:String.Encoding.utf8.rawValue)
     }
     
     /**
@@ -35,14 +35,14 @@ public class StringResponseSerializer : ResponseSerializer {
     
     :returns:  either true or false if the response is valid for this particular serializer.
     */
-    public var validateResponse: (NSURLResponse!, NSData) throws -> Void = { (response: NSURLResponse!, data: NSData) throws in
+    open var validation: (URLResponse?, Data) throws -> Void = { (response: URLResponse?, data: Data) throws in
         var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
-        let httpResponse = response as! NSHTTPURLResponse
+        let httpResponse = response as! HTTPURLResponse
         
         if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
             let userInfo = [
-                NSLocalizedDescriptionKey: NSHTTPURLResponse.localizedStringForStatusCode(httpResponse.statusCode),
-                NetworkingOperationFailingURLResponseErrorKey: response]
+                NSLocalizedDescriptionKey: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode),
+                NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
 
             if (true) {
                 error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
@@ -50,21 +50,21 @@ public class StringResponseSerializer : ResponseSerializer {
             
             throw error
         }
-    }
+    } 
     
     public init() {
     }
     
-    public init(validateResponse: (NSURLResponse!, NSData) throws -> Void, response: (NSData, Int) -> AnyObject?) {
-        self.validateResponse = validateResponse
+    public init(validation: @escaping (URLResponse?, Data) throws -> Void, response: @escaping (Data, Int) -> AnyObject?) {
+        self.validation = validation
         self.response = response
     }
     
-    public init(validateResponse: (NSURLResponse!, NSData) throws -> Void) {
-        self.validateResponse = validateResponse
+    public init(validation: @escaping (URLResponse?, Data) throws -> Void) {
+        self.validation = validation
     }
     
-    public init(response: (NSData, Int) -> AnyObject?) {
+    public init(response: @escaping (Data, Int) -> AnyObject?) {
         self.response = response
     }
 }
