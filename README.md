@@ -11,7 +11,7 @@ Taking care of:
 * Pluggable object serialization
 * background processing support
 
-100% Swift 2.3.
+100% Swift 3.0.
 
 |                 | Project Info  |
 | --------------- | ------------- |
@@ -29,11 +29,11 @@ To perform an HTTP request use the convenient methods found in the Http object. 
 ```swift
 let http = Http(baseURL: "http://server.com")
 
-http.request(.GET, path: "/get", completionHandler: {(response, error) in
+http.request(.get, path: "/get", completionHandler: {(response, error) in
      // handle response
 })
 
-http.request(.POST, path: "/post",  parameters: ["key": "value"], 
+http.request(.post, path: "/post",  parameters: ["key": "value"], 
                     completionHandler: {(response, error) in
      // handle response
 })
@@ -47,11 +47,11 @@ The library also leverages the build-in foundation support for http/digest authe
 > **NOTE:**  It is advised that HTTPS should be used when performing authentication of this type
 
 ```swift
-let credential = NSURLCredential(user: "john", 
+let credential = URLCredential(user: "john", 
                                  password: "pass", 
-                                 persistence: .None)
+                                 persistence: .none)
 
-http.request(.GET, path: "/protected/endpoint", credential: credential, 
+http.request(.get, path: "/protected/endpoint", credential: credential, 
                                 completionHandler: {(response, error) in
    // handle response
 })
@@ -61,32 +61,30 @@ You can also set a credential per protection space, so it's automatically picked
 
 ```swift
 // create a protection space
-var protectionSpace = NSURLProtectionSpace(host: "httpbin.org", 
-                                    port: 443,
-                                    protocol: NSURLProtectionSpaceHTTPS, 
-                                    realm: "me@kennethreitz.com", 
-                                    authenticationMethod: NSURLAuthenticationMethodHTTPDigest)
-
+let protectionSpace = URLProtectionSpace(host: "httpbin.org",
+                        port: 443,
+                        protocol: NSURLProtectionSpaceHTTP,
+                        realm: "me@kennethreitz.com",
+                        authenticationMethod: NSURLAuthenticationMethodHTTPDigest)
+        
 // setup credential
 // notice that we use '.ForSession' type otherwise credential storage will discard and
 // won't save it when doing 'credentialStorage.setDefaultCredential' later on
-let credential = NSURLCredential(user: user, 
-                                 password: password, 
-                                 persistence: .ForSession)
-
+let credential = URLCredential(user: "user",
+                        password: "password",
+                        persistence: .forSession)
 // assign it to credential storage
-var credentialStorage = NSURLCredentialStorage.sharedCredentialStorage()
-credentialStorage.setDefaultCredential(credential, forProtectionSpace: protectionSpace);
-
+let credentialStorage = URLCredentialStorage.shared
+credentialStorage.setDefaultCredential(credential, for: protectionSpace);
+        
 // set up default configuration and assign credential storage
-var configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-configuration.URLCredentialStorage = credentialStorage
-
+let configuration = URLSessionConfiguration.default
+configuration.urlCredentialStorage = credentialStorage
+        
 // assign custom configuration to Http
-var http = Http(baseURL: "http://httpbin.org", sessionConfig: configuration)
-
-http.request(.GET, path: "/protected/endpoint", completionHandler: {(response, error) in
-   // handle response
+let http = Http(baseURL: "http://httpbin.org", sessionConfig: configuration)
+http.request(.get, path: "/protected/endpoint", completionHandler: {(response, error) in
+    // handle response
 })
 ```
 
@@ -102,7 +100,7 @@ Do you want to try it on your end? Follow next section steps.
 
 2. Get the dependencies
 
-The project uses [OHHTTPStubs](https://github.com/AliSoftware/OHHTTPStubs) framework for stubbing its http network requests and utilizes [cocoapods](http://cocoapods.org) 0.36 release for handling its dependencies. As a pre-requisite, install [cocoapods](http://blog.cocoapods.org/CocoaPods-0.36/) and then install the pod. On the root directory of the project run:
+The project uses [OHHTTPStubs](https://github.com/AliSoftware/OHHTTPStubs) framework for stubbing its http network requests and utilizes [cocoapods](http://cocoapods.org) release for handling its dependencies. As a pre-requisite, install [cocoapods](http://blog.cocoapods.org/CocoaPods-0.36/) and then install the pod. On the root directory of the project run:
 ```bash
 pod install
 ```
@@ -123,23 +121,7 @@ and then:
 ```bash
 pod install
 ```
-
 to install your dependencies
-
-### Manual Installation
-Follow these steps to add the library in your Swift project:
-
-1. Add AeroGearHttp as a [submodule](http://git-scm.com/docs/git-submodule) in your project. Open a terminal and navigate to your project directory. Then enter:
-```bash
-git submodule add https://github.com/aerogear/aerogear-ios-http.git
-```
-2. Open the `aerogear-ios-http` folder, and drag the `AeroGearHttp.xcodeproj` into the file navigator in Xcode.
-3. In Xcode select your application target  and under the "Targets" heading section, ensure that the 'iOS  Deployment Target'  matches the application target of AeroGearHttp.framework (Currently set to 8.0).
-5. Select the  "Build Phases"  heading section,  expand the "Target Dependencies" group and add  `AeroGearHttp.framework`.
-7. Click on the `+` button at the top left of the panel and select "New Copy Files Phase". Rename this new phase to "Copy Frameworks", set the "Destination" to "Frameworks", and add `AeroGearHttp.framework`.
-
-
-If you run into any problems, please [file an issue](http://issues.jboss.org/browse/AEROGEAR) and/or ask our [user mailing list](https://lists.jboss.org/mailman/listinfo/aerogear-users). You can also join our [dev mailing list](https://lists.jboss.org/mailman/listinfo/aerogear-dev).  
 
 ## Documentation
 
