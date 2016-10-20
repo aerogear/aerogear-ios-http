@@ -100,7 +100,7 @@ Do you want to try it on your end? Follow next section steps.
 
 2. Get the dependencies
 
-The project uses [OHHTTPStubs](https://github.com/AliSoftware/OHHTTPStubs) framework for stubbing its http network requests and utilizes [cocoapods](http://cocoapods.org) release for handling its dependencies. As a pre-requisite, install [cocoapods](http://blog.cocoapods.org/CocoaPods-0.36/) and then install the pod. On the root directory of the project run:
+The project uses [OHHTTPStubs](https://github.com/AliSoftware/OHHTTPStubs) framework for stubbing its http network requests and utilizes [CocoaPods](http://cocoapods.org) release for handling its dependencies. As a pre-requisite, install [CocoaPods](https://guides.cocoapods.org/using/getting-started.html) and then install the pod. On the root directory of the project run:
 ```bash
 pod install
 ```
