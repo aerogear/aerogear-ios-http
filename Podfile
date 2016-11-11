@@ -6,5 +6,5 @@ use_frameworks!
 
 
 target 'AeroGearHttpTests' do
-    pod 'OHHTTPStubs', '5.2.0'
+    pod 'OHHTTPStubs', '5.2.2'
 end
