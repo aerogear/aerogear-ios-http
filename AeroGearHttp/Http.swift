@@ -120,7 +120,7 @@ open class Http {
      :param: method the method to be used.
      :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
      */
-    open func request(_ method: HttpMethod, path: String, parameters: [String: Any]? = nil, credential: URLCredential? = nil, responseSerializer: ResponseSerializer? = nil, completionHandler: @escaping CompletionBlock) {
+    open func request(method: HttpMethod, path: String, parameters: [String: Any]? = nil, credential: URLCredential? = nil, responseSerializer: ResponseSerializer? = nil, completionHandler: @escaping CompletionBlock) {
         let block: () -> Void =  {
             let finalOptURL = self.calculateURL(baseURL: self.baseURL, url: path)
             guard let finalURL = finalOptURL else {
@@ -264,7 +264,7 @@ open class Http {
      :param: progress                a block that will be invoked to report progress during download.
      :param: completionHandler       a block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
      */
-    open func download(_ url: String,  destinationDirectory: String? = nil, parameters: [String: Any]? = nil, credential: URLCredential? = nil, method: HttpMethod = .get, progress: ProgressBlock?, completionHandler: @escaping CompletionBlock) {
+    open func download(url: String,  destinationDirectory: String? = nil, parameters: [String: Any]? = nil, credential: URLCredential? = nil, method: HttpMethod = .get, progress: ProgressBlock?, completionHandler: @escaping CompletionBlock) {
         fileRequest(url, parameters: parameters, method: method, credential: credential, type: .download(destinationDirectory), progress: progress, completionHandler: completionHandler)
     }
     
@@ -280,7 +280,7 @@ open class Http {
      :param: progress    a block that will be invoked to report progress during upload.
      :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
      */
-    open func upload(_ url: String,  file: URL, parameters: [String: Any]? = nil, credential: URLCredential? = nil, method: HttpMethod = .post, responseSerializer: ResponseSerializer? = nil, progress: ProgressBlock?, completionHandler: @escaping CompletionBlock) {
+    open func upload(url: String,  file: URL, parameters: [String: Any]? = nil, credential: URLCredential? = nil, method: HttpMethod = .post, responseSerializer: ResponseSerializer? = nil, progress: ProgressBlock?, completionHandler: @escaping CompletionBlock) {
         fileRequest(url, parameters: parameters, method: method, credential: credential, responseSerializer: responseSerializer, type: .upload(.file(file)), progress: progress, completionHandler: completionHandler)
     }
     
@@ -296,7 +296,7 @@ open class Http {
      :param: progress     a block that will be invoked to report progress during upload.
      :param: completionHandler A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
      */
-    open func upload(_ url: String,  data: Data, parameters: [String: Any]? = nil, credential: URLCredential? = nil, method: HttpMethod = .post, responseSerializer: ResponseSerializer? = nil, progress: ProgressBlock?, completionHandler: @escaping CompletionBlock) {
+    open func upload(url: String,  data: Data, parameters: [String: Any]? = nil, credential: URLCredential? = nil, method: HttpMethod = .post, responseSerializer: ResponseSerializer? = nil, progress: ProgressBlock?, completionHandler: @escaping CompletionBlock) {
         fileRequest(url, parameters: parameters, method: method, credential: credential, responseSerializer: responseSerializer, type: .upload(.data(data)), progress: progress, completionHandler: completionHandler)
     }
     
@@ -312,7 +312,7 @@ open class Http {
      - parameter progress:    a block that will be invoked to report progress during upload.
      - parameter completionHandler: A block object to be executed when the request operation finishes successfully. This block has no return value and takes two arguments: The object created from the response data of request and the `NSError` object describing the network or parsing error that occurred.
      */
-    open func upload(_ url: String,  stream: InputStream,  parameters: [String: AnyObject]? = nil, credential: URLCredential? = nil, method: HttpMethod = .post, responseSerializer: ResponseSerializer? = nil, progress: ProgressBlock?, completionHandler: @escaping CompletionBlock) {
+    open func upload(url: String,  stream: InputStream,  parameters: [String: AnyObject]? = nil, credential: URLCredential? = nil, method: HttpMethod = .post, responseSerializer: ResponseSerializer? = nil, progress: ProgressBlock?, completionHandler: @escaping CompletionBlock) {
         fileRequest(url, parameters: parameters, method: method, credential: credential, responseSerializer: responseSerializer, type: .upload(.stream(stream)), progress: progress, completionHandler: completionHandler)
     }
     

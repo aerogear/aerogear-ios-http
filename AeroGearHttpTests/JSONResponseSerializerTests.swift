@@ -42,7 +42,7 @@
         var http: Http?
         http = Http(baseURL: "http://whatever.com")
         
-        http?.request(.get, path: "/get", completionHandler: {(response, error) in
+        http?.request(method: .get, path: "/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue((response as! Dictionary<String, String>)["key"] == "value")
             getExpectation.fulfill()
@@ -68,7 +68,7 @@
         })
         
         // call GET with cutom Serializer
-        http.request(.get, path: "/get", responseSerializer: jsonSerializerAlwaysFails, completionHandler: {(response, error) in
+        http.request(method: .get, path: "/get", responseSerializer: jsonSerializerAlwaysFails, completionHandler: {(response, error) in
             XCTAssertNotNil(error, "error should not be nil")
             XCTAssertEqual(error!.code, 444)
             XCTAssertTrue(error!.userInfo.description.contains("Foo"))
@@ -112,7 +112,7 @@
         
         // async test expectation
         let getExpectation = expectation(description: "request with valid JSON data")
-        http.request(.get, path: "/get", completionHandler: {(response, error) in
+        http.request(method: .get, path: "/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue((response as! Dictionary<String, String>)["key"] == "value")
             getExpectation.fulfill()
@@ -164,7 +164,7 @@
         
         // async test expectation
         let getExpectation = expectation(description: "request with valid JSON data")
-        http.request(.get, path: "/get", completionHandler: {(response, error) in
+        http.request(method: .get, path: "/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             let resp = response as! [String: AnyObject]
             XCTAssertTrue(resp["status"] as! Int == 200)
@@ -206,7 +206,7 @@
         // async test expectation
         let getExpectation = expectation(description: "request with invalid JSON data");
         // request html data although json serializer is setup
-        http.request(.get, path: "/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
+        http.request(method: .get, path: "/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
             XCTAssertNil(response, "response is nil")
             XCTAssertNotNil(error, "error should be not nil")
             XCTAssertEqual(error!.code, NSURLErrorBadServerResponse)
@@ -223,7 +223,7 @@
         // async test expectation
         let getExpectation = expectation(description: "request with invalid JSON data");
         // request html data although json serializer is setup
-        http.request(.get, path: "/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
+        http.request(method: .get, path: "/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
             XCTAssertNil(response, "response is nil")
             XCTAssertNotNil(error, "error should be not nil")
             XCTAssertEqual(error!.code, NSURLErrorBadServerResponse)

@@ -66,7 +66,7 @@ class HttpTests: XCTestCase {
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectation(description: "GET http method test");
-        http.request(.get, path: "/get", completionHandler: {(response, error) in
+        http.request(method: .get, path: "/get", completionHandler: {(response, error) in
                 XCTAssertNil(error, "error should be nil")
                 XCTAssertTrue((response as! Dictionary<String, String>)["key"] == "value")
                 getExpectation.fulfill()
@@ -83,7 +83,7 @@ class HttpTests: XCTestCase {
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectation(description: "POST http method test");
-        http.request(.post, path: "/post", completionHandler: {(response, error) in
+        http.request(method: .post, path: "/post", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue((response as! Dictionary<String, String>)["key"] == "value")
             getExpectation.fulfill()
@@ -100,7 +100,7 @@ class HttpTests: XCTestCase {
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectation(description: "PUT http method test");
-        http.request(.put, path: "/put",  completionHandler: {(response, error) in
+        http.request(method: .put, path: "/put",  completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue((response as! Dictionary<String, String>)["key"] == "value")
             getExpectation.fulfill()
@@ -117,7 +117,7 @@ class HttpTests: XCTestCase {
         let http = Http(baseURL: "http://whatever.com")
         // async test expectation
         let getExpectation = expectation(description: "DELETE http method test");
-        http.request(.delete, path: "/delete", completionHandler: {(response, error) in
+        http.request(method: .delete, path: "/delete", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue((response as! Dictionary<String, String>)["key"] == "value")
             getExpectation.fulfill()
@@ -137,7 +137,7 @@ class HttpTests: XCTestCase {
         // async test expectation
         let getExpectation = expectation(description: "POST http method test");
         let parameters = ["key": "value", "file": file] as [String : Any]
-        http.request(.post, path: "/post",  parameters: parameters, completionHandler: {(response, error) in
+        http.request(method: .post, path: "/post",  parameters: parameters, completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             // should contain form data
             let form = (response as! NSDictionary!)["form"] as! NSDictionary!
@@ -165,7 +165,7 @@ class HttpTests: XCTestCase {
             try fileManager.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
         } catch _ {
         }
-        http.download("something",
+        http.download(url: "something",
             progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)  in
             }, completionHandler: { (response, error) in
                 XCTAssertNil(error, "error should be nil")
@@ -184,7 +184,7 @@ class HttpTests: XCTestCase {
         let multiPartData = MultiPartData(data: "contents of a file".data(using: String.Encoding.utf8, allowLossyConversion: false)!, name: "name", filename: "filename.jpg", mimeType: "image/jpg")
         let parameters = ["file": multiPartData]
         
-        http.upload("/post", stream: InputStream(data: "contents of a file".data(using: String.Encoding.utf8, allowLossyConversion: false)!), parameters: parameters,
+        http.upload(url: "/post", stream: InputStream(data: "contents of a file".data(using: String.Encoding.utf8, allowLossyConversion: false)!), parameters: parameters,
             progress: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)  in
                 print("bytesWritten: \(bytesWritten), totalBytesWritten: \(totalBytesWritten), totalBytesExpectedToWrite: \(totalBytesExpectedToWrite)")
             }, completionHandler: { (response, error) in
