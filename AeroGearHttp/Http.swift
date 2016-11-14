@@ -156,7 +156,7 @@ open class Http {
         
         // cater for authz and pre-authorize prior to performing request
         if (self.authzModule != nil) {
-            self.authzModule?.requestAccess({ (response, error ) in
+            self.authzModule?.requestAccess(completionHandler: { (response, error ) in
                 // if there was an error during authz, no need to continue
                 if (error != nil) {
                     completionHandler(nil, error)
@@ -239,7 +239,7 @@ open class Http {
         
         // cater for authz and pre-authorize prior to performing request
         if (self.authzModule != nil) {
-            self.authzModule?.requestAccess({ (response, error ) in
+            self.authzModule?.requestAccess(completionHandler: { (response, error ) in
                 // if there was an error during authz, no need to continue
                 if (error != nil) {
                     completionHandler(nil, error)

@@ -27,35 +27,35 @@ public protocol AuthzModule {
     
     :param: completionHandler A block object to be executed when the request operation finishes.
     */
-    func requestAccess(_ completionHandler: (AnyObject?, NSError?) -> Void)
+    func requestAccess(completionHandler: @escaping (AnyObject?, NSError?) -> Void)
 
     /**
     Request an authorization code.
     
     :param: completionHandler A block object to be executed when the request operation finishes.
     */
-    func requestAuthorizationCode(_ completionHandler: (AnyObject?, NSError?) -> Void)
+    func requestAuthorizationCode(completionHandler: @escaping (AnyObject?, NSError?) -> Void)
 
     /**
     Exchange an authorization code for an access token.
     
     :param: completionHandler A block object to be executed when the request operation finishes.
     */
-    func exchangeAuthorizationCodeForAccessToken(_ code: String, completionHandler: (AnyObject?, NSError?) -> Void)
+    func exchangeAuthorizationCodeForAccessToken(code: String, completionHandler: @escaping (AnyObject?, NSError?) -> Void)
     
     /**
     Request to refresh an access token.
     
     :param: completionHandler A block object to be executed when the request operation finishes.
     */
-    func refreshAccessToken(_ completionHandler: (AnyObject?, NSError?) -> Void)
+    func refreshAccessToken(completionHandler: @escaping (AnyObject?, NSError?) -> Void)
     
     /**
     Request to revoke access.
     
     :param: completionHandler A block object to be executed when the request operation finishes.
     */
-    func revokeAccess(_ completionHandler: (AnyObject?, NSError?) -> Void)
+    func revokeAccess(completionHandler: @escaping (AnyObject?, NSError?) -> Void)
     
     /**
     Return any authorization fields.
