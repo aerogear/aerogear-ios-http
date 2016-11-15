@@ -61,7 +61,7 @@ enum UploadType {
 /**
  Error domain.
  **/
-public let HttpErrorDomain = "HttpDomain"
+public let HttpErrorDomain: String = "HttpDomain"
 /**
  Request error.
  **/

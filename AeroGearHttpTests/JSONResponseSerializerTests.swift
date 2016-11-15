@@ -88,12 +88,12 @@
         let http = Http(baseURL: "http://whatever.com", sessionConfig: URLSessionConfiguration.default,
             requestSerializer: JsonRequestSerializer(),
             responseSerializer: JsonResponseSerializer(validation: { (response: URLResponse?, data: Data) -> Void in
-                var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
+                var error: NSError! = NSError(domain: HttpErrorDomain, code: 0, userInfo: nil)
                 let httpResponse = response as! HTTPURLResponse
                 
                 if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
                     let userInfo = [NSLocalizedDescriptionKey: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode),
-                        NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
+                        NetworkingOperationFailingURLResponseErrorKey: response ?? ""] as [String : Any]
                     error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
                     throw error
                 }
@@ -103,7 +103,7 @@
                     try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
                 } catch  _  {
                     let userInfo = [NSLocalizedDescriptionKey: "Invalid response received, can't parse JSON" as NSString,
-                        NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
+                        NetworkingOperationFailingURLResponseErrorKey: response ?? ""] as [String : Any]
                     let customError = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
                     throw customError;
                 }
@@ -136,7 +136,7 @@
                 
                 if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
                     let userInfo = [NSLocalizedDescriptionKey: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode),
-                        NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
+                        NetworkingOperationFailingURLResponseErrorKey: response ?? ""] as [String : Any]
                     error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
                     throw error
                 }
@@ -146,7 +146,7 @@
                     try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
                 } catch  _  {
                     let userInfo = [NSLocalizedDescriptionKey: "Invalid response received, can't parse JSON" as NSString,
-                        NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
+                        NetworkingOperationFailingURLResponseErrorKey: response ?? ""] as [String : Any]
                     let customError = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
                     throw customError;
                 }
@@ -196,7 +196,7 @@
                     try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
                 } catch  _  {
                     let userInfo = [NSLocalizedDescriptionKey: "Don't care" as NSString,
-                        NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
+                        NetworkingOperationFailingURLResponseErrorKey: response ?? ""] as [String : Any]
                     let customError = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
                     throw customError;
                 }

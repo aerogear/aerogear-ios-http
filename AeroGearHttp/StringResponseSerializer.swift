@@ -36,18 +36,14 @@ open class StringResponseSerializer : ResponseSerializer {
     :returns:  either true or false if the response is valid for this particular serializer.
     */
     open var validation: (URLResponse?, Data) throws -> Void = { (response: URLResponse?, data: Data) throws in
-        var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
+        var error: NSError! = NSError(domain: HttpErrorDomain, code: 0, userInfo: nil)
         let httpResponse = response as! HTTPURLResponse
         
         if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
             let userInfo = [
                 NSLocalizedDescriptionKey: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode),
-                NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
-
-            if (true) {
-                error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
-            }
-            
+                NetworkingOperationFailingURLResponseErrorKey: response ?? "HttpErrorDomain"] as [String : Any]
+            error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
             throw error
         }
     } 

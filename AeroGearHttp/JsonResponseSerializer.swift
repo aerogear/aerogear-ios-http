@@ -28,7 +28,7 @@ open class JsonResponseSerializer : ResponseSerializer {
      :returns:  either true or false if the response is valid for this particular serializer.
      */
     open var validation: (URLResponse?, Data) throws -> Void = { (response: URLResponse?, data: Data) -> Void in
-        var error: NSError! = NSError(domain: "AeroGearHttp", code: 0, userInfo: nil)
+        var error: NSError! = NSError(domain: HttpErrorDomain, code: 0, userInfo: nil)
         let httpResponse = response as! HTTPURLResponse
         let dataAsJson: [String: Any]?
         
@@ -37,17 +37,16 @@ open class JsonResponseSerializer : ResponseSerializer {
             dataAsJson = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0)) as? [String: Any]
         } catch  _  {
             let userInfo = [NSLocalizedDescriptionKey: "Invalid response received, can't parse JSON" as NSString,
-                NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
+                NetworkingOperationFailingURLResponseErrorKey: response ?? "HttpErrorDomain"] as [String : Any]
             let customError = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
             throw customError;
         }
         
         if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
             var userInfo = [NSLocalizedDescriptionKey: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode),
-                NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
+                NetworkingOperationFailingURLResponseErrorKey: response ??  "HttpErrorDomain"] as [String : Any]
             if let dataAsJson = dataAsJson {
-                userInfo["CustomData"] = dataAsJson
-            }
+                userInfo["CustomData"] = dataAsJson           }
             error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
             throw error
         }
