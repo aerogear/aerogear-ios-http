@@ -578,7 +578,7 @@ open class Http {
     }
     
     // MARK: Utility methods
-    func calculateURL(baseURL: String?, url: String) -> URL? {
+    open func calculateURL(baseURL: String?, url: String) -> URL? {
         var url = url
         if (baseURL == nil || url.hasPrefix("http")) {
             return URL(string: url)!
