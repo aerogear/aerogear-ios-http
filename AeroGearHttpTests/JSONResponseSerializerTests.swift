@@ -42,7 +42,7 @@
         var http: Http?
         http = Http(baseURL: "http://whatever.com")
         
-        http?.request(.get, path: "/get", completionHandler: {(response, error) in
+        http?.request(method: .get, path: "/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue((response as! Dictionary<String, String>)["key"] == "value")
             getExpectation.fulfill()
@@ -68,7 +68,7 @@
         })
         
         // call GET with cutom Serializer
-        http.request(.get, path: "/get", responseSerializer: jsonSerializerAlwaysFails, completionHandler: {(response, error) in
+        http.request(method: .get, path: "/get", responseSerializer: jsonSerializerAlwaysFails, completionHandler: {(response, error) in
             XCTAssertNotNil(error, "error should not be nil")
             XCTAssertEqual(error!.code, 444)
             XCTAssertTrue(error!.userInfo.description.contains("Foo"))
@@ -88,12 +88,12 @@
         let http = Http(baseURL: "http://whatever.com", sessionConfig: URLSessionConfiguration.default,
             requestSerializer: JsonRequestSerializer(),
             responseSerializer: JsonResponseSerializer(validation: { (response: URLResponse?, data: Data) -> Void in
-                var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
+                var error: NSError! = NSError(domain: HttpErrorDomain, code: 0, userInfo: nil)
                 let httpResponse = response as! HTTPURLResponse
                 
                 if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
                     let userInfo = [NSLocalizedDescriptionKey: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode),
-                        NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
+                        NetworkingOperationFailingURLResponseErrorKey: response ?? ""] as [String : Any]
                     error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
                     throw error
                 }
@@ -103,7 +103,7 @@
                     try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
                 } catch  _  {
                     let userInfo = [NSLocalizedDescriptionKey: "Invalid response received, can't parse JSON" as NSString,
-                        NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
+                        NetworkingOperationFailingURLResponseErrorKey: response ?? ""] as [String : Any]
                     let customError = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
                     throw customError;
                 }
@@ -112,7 +112,7 @@
         
         // async test expectation
         let getExpectation = expectation(description: "request with valid JSON data")
-        http.request(.get, path: "/get", completionHandler: {(response, error) in
+        http.request(method: .get, path: "/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             XCTAssertTrue((response as! Dictionary<String, String>)["key"] == "value")
             getExpectation.fulfill()
@@ -136,7 +136,7 @@
                 
                 if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
                     let userInfo = [NSLocalizedDescriptionKey: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode),
-                        NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
+                        NetworkingOperationFailingURLResponseErrorKey: response ?? ""] as [String : Any]
                     error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
                     throw error
                 }
@@ -146,7 +146,7 @@
                     try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
                 } catch  _  {
                     let userInfo = [NSLocalizedDescriptionKey: "Invalid response received, can't parse JSON" as NSString,
-                        NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
+                        NetworkingOperationFailingURLResponseErrorKey: response ?? ""] as [String : Any]
                     let customError = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
                     throw customError;
                 }
@@ -164,7 +164,7 @@
         
         // async test expectation
         let getExpectation = expectation(description: "request with valid JSON data")
-        http.request(.get, path: "/get", completionHandler: {(response, error) in
+        http.request(method: .get, path: "/get", completionHandler: {(response, error) in
             XCTAssertNil(error, "error should be nil")
             let resp = response as! [String: AnyObject]
             XCTAssertTrue(resp["status"] as! Int == 200)
@@ -196,7 +196,7 @@
                     try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
                 } catch  _  {
                     let userInfo = [NSLocalizedDescriptionKey: "Don't care" as NSString,
-                        NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
+                        NetworkingOperationFailingURLResponseErrorKey: response ?? ""] as [String : Any]
                     let customError = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
                     throw customError;
                 }
@@ -206,7 +206,7 @@
         // async test expectation
         let getExpectation = expectation(description: "request with invalid JSON data");
         // request html data although json serializer is setup
-        http.request(.get, path: "/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
+        http.request(method: .get, path: "/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
             XCTAssertNil(response, "response is nil")
             XCTAssertNotNil(error, "error should be not nil")
             XCTAssertEqual(error!.code, NSURLErrorBadServerResponse)
@@ -223,7 +223,7 @@
         // async test expectation
         let getExpectation = expectation(description: "request with invalid JSON data");
         // request html data although json serializer is setup
-        http.request(.get, path: "/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
+        http.request(method: .get, path: "/html",  parameters: ["key": "value"], completionHandler: {(response, error) in
             XCTAssertNil(response, "response is nil")
             XCTAssertNotNil(error, "error should be not nil")
             XCTAssertEqual(error!.code, NSURLErrorBadServerResponse)

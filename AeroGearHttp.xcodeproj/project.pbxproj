@@ -566,7 +566,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D846FE9C035DEFD73DA31F8C /* Pods-AeroGearHttpTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CLANG_ENABLE_MODULES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -587,7 +587,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9F1E441EC283CBBA8D06979E /* Pods-AeroGearHttpTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = AeroGearHttpTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
