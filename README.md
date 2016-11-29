@@ -29,11 +29,11 @@ To perform an HTTP request use the convenient methods found in the Http object. 
 ```swift
 let http = Http(baseURL: "http://server.com")
 
-http.request(.get, path: "/get", completionHandler: {(response, error) in
+http.request(method: .get, path: "/get", completionHandler: {(response, error) in
      // handle response
 })
 
-http.request(.post, path: "/post",  parameters: ["key": "value"], 
+http.request(method: .post, path: "/post",  parameters: ["key": "value"],
                     completionHandler: {(response, error) in
      // handle response
 })
@@ -48,10 +48,10 @@ The library also leverages the build-in foundation support for http/digest authe
 
 ```swift
 let credential = URLCredential(user: "john", 
-                                 password: "pass", 
+                                 password: "pass",
                                  persistence: .none)
 
-http.request(.get, path: "/protected/endpoint", credential: credential, 
+http.request(method: .get, path: "/protected/endpoint", credential: credential,
                                 completionHandler: {(response, error) in
    // handle response
 })
@@ -83,7 +83,7 @@ configuration.urlCredentialStorage = credentialStorage
         
 // assign custom configuration to Http
 let http = Http(baseURL: "http://httpbin.org", sessionConfig: configuration)
-http.request(.get, path: "/protected/endpoint", completionHandler: {(response, error) in
+http.request(method: .get, path: "/protected/endpoint", completionHandler: {(response, error) in
     // handle response
 })
 ```
@@ -110,7 +110,9 @@ pod install
 To add the library in your project, you can either use [CocoaPods](http://cocoapods.org) or manual install in your project. See the respective sections below for instructions:
 
 ### Using [CocoaPods](http://cocoapods.org)
-We recommend you use[CocoaPods-1.1.0.beta.1 release](https://github.com/CocoaPods/CocoaPods/releases/tag/1.1.0.beta.1). In your ```Podfile``` add:
+We recommend you use[CocoaPods-1.1.1 release](https://github.com/CocoaPods/CocoaPods/releases/tag/1.1.1) or greater.
+
+In your ```Podfile``` add:
 
 ```
 pod 'AeroGearHttp'
