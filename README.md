@@ -2,11 +2,11 @@
 
 > This module currently build with Xcode 8 and supports iOS8, iOS9, iOS10.
 
-Thin layer to take care of your http requests working with NSURLSession. 
-Taking care of: 
+Thin layer to take care of your http requests working with NSURLSession.
+Taking care of:
 
 * Json serializer
-* Multipart upload 
+* Multipart upload
 * HTTP Basic/Digest authentication support
 * Pluggable object serialization
 * background processing support
@@ -47,7 +47,7 @@ The library also leverages the build-in foundation support for http/digest authe
 > **NOTE:**  It is advised that HTTPS should be used when performing authentication of this type
 
 ```swift
-let credential = URLCredential(user: "john", 
+let credential = URLCredential(user: "john",
                                  password: "pass",
                                  persistence: .none)
 
@@ -66,7 +66,7 @@ let protectionSpace = URLProtectionSpace(host: "httpbin.org",
                         protocol: NSURLProtectionSpaceHTTP,
                         realm: "me@kennethreitz.com",
                         authenticationMethod: NSURLAuthenticationMethodHTTPDigest)
-        
+
 // setup credential
 // notice that we use '.ForSession' type otherwise credential storage will discard and
 // won't save it when doing 'credentialStorage.setDefaultCredential' later on
@@ -76,11 +76,11 @@ let credential = URLCredential(user: "user",
 // assign it to credential storage
 let credentialStorage = URLCredentialStorage.shared
 credentialStorage.setDefaultCredential(credential, for: protectionSpace);
-        
+
 // set up default configuration and assign credential storage
 let configuration = URLSessionConfiguration.default
 configuration.urlCredentialStorage = credentialStorage
-        
+
 // assign custom configuration to Http
 let http = Http(baseURL: "http://httpbin.org", sessionConfig: configuration)
 http.request(method: .get, path: "/protected/endpoint", completionHandler: {(response, error) in
@@ -90,7 +90,7 @@ http.request(method: .get, path: "/protected/endpoint", completionHandler: {(res
 
 ### OAuth2 Protocol Support
 
-To support the OAuth2 protocol, we have created a separate library [aerogear-ios-oauth2](https://github.com/aerogear/aerogear-ios-oauth2) that can be easily integrated, in order to provide  out-of-the-box support for communicated with OAuth2 protected endpoints. Please have a look at the "Http and OAuth2Module" section on our [documentation page](http://aerogear.org/docs/guides/aerogear-ios-2.X/Authorization/) for more information. 
+To support the OAuth2 protocol, we have created a separate library [aerogear-ios-oauth2](https://github.com/aerogear/aerogear-ios-oauth2) that can be easily integrated, in order to provide  out-of-the-box support for communicated with OAuth2 protected endpoints. Please have a look at the "Http and OAuth2Module" section on our [documentation page](http://aerogear.org/docs/guides/aerogear-ios-2.X/Authorization/) for more information.
 
 Do you want to try it on your end? Follow next section steps.
 
@@ -106,11 +106,11 @@ pod install
 ```
 3. open AeroGearHttp.xcworkspace
 
-## Adding the library to your project 
+## Adding the library to your project
 To add the library in your project, you can either use [CocoaPods](http://cocoapods.org) or manual install in your project. See the respective sections below for instructions:
 
 ### Using [CocoaPods](http://cocoapods.org)
-We recommend you use[CocoaPods-1.1.1 release](https://github.com/CocoaPods/CocoaPods/releases/tag/1.1.1) or greater.
+We recommend you use[CocoaPods-1.2.1 release](https://github.com/CocoaPods/CocoaPods/releases/tag/1.2.1) or greater.
 
 In your ```Podfile``` add:
 
