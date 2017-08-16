@@ -31,20 +31,6 @@ class RequestSerializerTests: XCTestCase {
         super.tearDown()
     }
     
-    @available(iOS 8, *)
-    func testGETWithParameters8() {
-        let url = "http://api.icndb.com/jokes/12"
-        let serialiser = JsonRequestSerializer()
-        let result = serialiser.request(url: URL(string: url)!, method:.get, parameters: ["param1": "value1", "array": ["one", "two", "three", "four"], "numeric": 5])
-        if let urlString = result.url?.absoluteString {
-            XCTAssertTrue(urlString.contains("param1=value1"))
-            XCTAssertTrue(urlString.contains("numeric=5"))
-            XCTAssertTrue(urlString.contains("array%5B%5D=one&array%5B%5D=two&array%5B%5D=three&array%5B%5D=four"))
-        } else {
-            XCTFail("url should not give an empty string")
-        }
-    }
-    
     func testGETWithParameters() {
         let url = "http://api.icndb.com/jokes/12"
         let serialiser = JsonRequestSerializer()

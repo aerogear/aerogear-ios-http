@@ -50,7 +50,7 @@ open class JsonRequestSerializer:  HttpRequestSerializer {
                 }
                 // set body
                 if (body != nil) {
-                    request.setValue("\(body?.count)", forHTTPHeaderField: "Content-Length")
+                    request.setValue("\(String(describing: body?.count))", forHTTPHeaderField: "Content-Length")
                     request.httpBody = body
                 }
             }

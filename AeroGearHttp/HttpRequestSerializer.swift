@@ -72,7 +72,7 @@ open class HttpRequestSerializer:  RequestSerializer {
             // set body
             if (parameters != nil) {
                 let body = self.stringFrom(httpParams: parameters!).data(using: String.Encoding.utf8)
-                request.setValue("\(body?.count)", forHTTPHeaderField: "Content-Length")
+                request.setValue("\(String(describing: body?.count))", forHTTPHeaderField: "Content-Length")
                 request.httpBody = body
             }
         }
