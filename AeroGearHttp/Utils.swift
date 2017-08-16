@@ -23,9 +23,8 @@ Handy extensions and utilities.
 extension String {
     
     public func urlEncode() -> String {
-        let allowedCharacters = CharacterSet(charactersIn: "!@#$%&*'();:=+,/?[]")
-        let str = self as NSString
-        return str.addingPercentEncoding(withAllowedCharacters: allowedCharacters)!
+        let str = self
+        return str.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
     }
 }
 
