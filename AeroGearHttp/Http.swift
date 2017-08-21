@@ -586,7 +586,7 @@ open class Http {
         
         guard let finalURL = URL(string: baseURL!) else {return nil}
         if (url.hasPrefix("/")) {
-            url = url.substring(from: url.characters.index(url.startIndex, offsetBy: 1))
+            url = String(url.dropFirst())
         }
         
         return finalURL.appendingPathComponent(url);
