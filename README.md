@@ -13,7 +13,7 @@ Thin layer to take care of your http requests working with NSURLSession.
 | --------------- | -------------------------------------------- |
 | License:        | Apache License, Version 2.0                  |
 | Build:          | CocoaPods                                    |
-| Languague:      | Swift                                        |
+| Languague:      | Swift 4                                      |
 | Documentation:  | http://aerogear.org/ios/                     |
 | Issue tracker:  | https://issues.jboss.org/browse/AGIOS        |
 | Mailing lists:  | [aerogear-users](http://aerogear-users.1116366.n5.nabble.com/) ([subscribe](https://lists.jboss.org/mailman/listinfo/aerogear-users))                            |
@@ -21,7 +21,7 @@ Thin layer to take care of your http requests working with NSURLSession.
 
 - [Features](#features)
 - [Installation](#installation)
-  - [Cocoapods](#cocoapods)
+  - [CocoaPods](#cocoapods)
 - [Usage](#usage)
   - [Request](#request)
   - [Authentication](#authentication)
@@ -42,9 +42,9 @@ Thin layer to take care of your http requests working with NSURLSession.
 
 ## Installation
 
-### Cocoapods
+### CocoaPods
 
-In your ```Podfile``` add:
+In your `Podfile` add:
 
 ```bash
 pod 'AeroGearHttp'
@@ -85,7 +85,7 @@ The library also leverages the build-in foundation support for http/digest authe
 > **NOTE:**  It is advised that HTTPS should be used when performing authentication of this type
 
 ```swift
-let credential = URLCredential(user: "john", 
+let credential = URLCredential(user: "john",
                                  password: "pass",
                                  persistence: .none)
 
@@ -95,7 +95,7 @@ http.request(method: .get, path: "/protected/endpoint", credential: credential,
 })
 ```
 
-You can also set a credential per protection space, so it's automatically picked up once http challenge is requested by the server, thus omitting the need to pass the credential on each request. In this case, you must initialize the ```Http``` object with a custom session configuration object, that has its credentials storage initialized with your credentials:
+You can also set a credential per protection space, so it's automatically picked up once http challenge is requested by the server, thus omitting the need to pass the credential on each request. In this case, you must initialize the `Http` object with a custom session configuration object, that has its credentials storage initialized with your credentials:
 
 ```swift
 // create a protection space
@@ -104,7 +104,7 @@ let protectionSpace = URLProtectionSpace(host: "httpbin.org",
                         protocol: NSURLProtectionSpaceHTTP,
                         realm: "me@kennethreitz.com",
                         authenticationMethod: NSURLAuthenticationMethodHTTPDigest)
-        
+
 // setup credential
 // notice that we use '.ForSession' type otherwise credential storage will discard and
 // won't save it when doing 'credentialStorage.setDefaultCredential' later on
@@ -114,11 +114,11 @@ let credential = URLCredential(user: "user",
 // assign it to credential storage
 let credentialStorage = URLCredentialStorage.shared
 credentialStorage.setDefaultCredential(credential, for: protectionSpace);
-        
+
 // set up default configuration and assign credential storage
 let configuration = URLSessionConfiguration.default
 configuration.urlCredentialStorage = credentialStorage
-        
+
 // assign custom configuration to Http
 let http = Http(baseURL: "http://httpbin.org", sessionConfig: configuration)
 http.request(method: .get, path: "/protected/endpoint", completionHandler: {(response, error) in
@@ -128,7 +128,7 @@ http.request(method: .get, path: "/protected/endpoint", completionHandler: {(res
 
 ### OAuth2 Protocol Support
 
-To support the OAuth2 protocol, we have created a separate library [aerogear-ios-oauth2](https://github.com/aerogear/aerogear-ios-oauth2) that can be easily integrated, in order to provide  out-of-the-box support for communicated with OAuth2 protected endpoints. Please have a look at the "Http and OAuth2Module" section on our [documentation page](http://aerogear.org/docs/guides/aerogear-ios-2.X/Authorization/) for more information. 
+To support the OAuth2 protocol, we have created a separate library [aerogear-ios-oauth2](https://github.com/aerogear/aerogear-ios-oauth2) that can be easily integrated, in order to provide  out-of-the-box support for communicating with OAuth2 protected endpoints. Please have a look at the "Http and OAuth2Module" section on our [documentation page](http://aerogear.org/docs/guides/aerogear-ios-2.X/Authorization/) for more information.
 
 ## Documentation
 
