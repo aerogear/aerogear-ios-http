@@ -1,9 +1,38 @@
-# aerogear-ios-http  [![Build Status](https://travis-ci.org/aerogear/aerogear-ios-http.png)](https://travis-ci.org/aerogear/aerogear-ios-http)
+# AeroGear iOS HTTP
 
-> This module currently build with Xcode 9 and supports iOS9, iOS10, iOS11.
+![Maintenance](https://img.shields.io/maintenance/yes/2017.svg)
+[![circle-ci](https://img.shields.io/circleci/project/github/aerogear/aerogear-ios-http/master.svg)](https://circleci.com/gh/aerogear/aerogear-ios-http)
+[![License](https://img.shields.io/badge/-Apache%202.0-blue.svg)](https://opensource.org/s/Apache-2.0)
+[![GitHub release](https://img.shields.io/github/release/aerogear/aerogear-ios-http.svg)](https://github.com/aerogear/aerogear-ios-http/releases)
+[![CocoaPods](https://img.shields.io/cocoapods/v/AeroGearHttp.svg)](https://cocoapods.org/pods/AeroGearHttp)
+[![Platform](https://img.shields.io/cocoapods/p/AeroGearHttp.svg)](https://cocoapods.org/pods/AeroGearHttp)
 
 Thin layer to take care of your http requests working with NSURLSession.
-Taking care of:
+
+|                 | Project Info                                 |
+| --------------- | -------------------------------------------- |
+| License:        | Apache License, Version 2.0                  |
+| Build:          | CocoaPods                                    |
+| Languague:      | Swift                                        |
+| Documentation:  | http://aerogear.org/ios/                     |
+| Issue tracker:  | https://issues.jboss.org/browse/AGIOS        |
+| Mailing lists:  | [aerogear-users](http://aerogear-users.1116366.n5.nabble.com/) ([subscribe](https://lists.jboss.org/mailman/listinfo/aerogear-users))                            |
+|                 | [aerogear-dev](http://aerogear-dev.1069024.n5.nabble.com/) ([subscribe](https://lists.jboss.org/mailman/listinfo/aerogear-dev))                              |
+
+- [Features](#features)
+- [Installation](#installation)
+  - [Cocoapods](#cocoapods)
+- [Usage](#usage)
+  - [Request](#request)
+  - [Authentication](#authentication)
+  - [OAuth2 Protocol Support](#oauth2-protocol-support)
+- [Documentation](#documentation)
+- [Demo apps](#demo-apps)
+- [Development](#development)
+- [Questions?](#questions)
+- [Found a bug?](#found-a-bug)
+
+## Features
 
 * Json serializer
 * Multipart upload
@@ -11,18 +40,27 @@ Taking care of:
 * Pluggable object serialization
 * background processing support
 
-100% Swift 4.0.
+## Installation
 
-|                 | Project Info  |
-| --------------- | ------------- |
-| License:        | Apache License, Version 2.0  |
-| Build:          | CocoaPods  |
-| Documentation:  | http://aerogear.org/ios/  |
-| Issue tracker:  | https://issues.jboss.org/browse/AGIOS  |
-| Mailing lists:  | [aerogear-users](http://aerogear-users.1116366.n5.nabble.com/) ([subscribe](https://lists.jboss.org/mailman/listinfo/aerogear-users))  |
-|                 | [aerogear-dev](http://aerogear-dev.1069024.n5.nabble.com/) ([subscribe](https://lists.jboss.org/mailman/listinfo/aerogear-dev))  |
+### Cocoapods
 
-## Example Usage
+In your ```Podfile``` add:
+
+```bash
+pod 'AeroGearHttp'
+```
+
+and then:
+
+```bash
+pod install
+```
+
+to install your dependencies
+
+## Usage
+
+### Request
 
 To perform an HTTP request use the convenient methods found in the Http object. Here is an example usage:
 
@@ -47,7 +85,7 @@ The library also leverages the build-in foundation support for http/digest authe
 > **NOTE:**  It is advised that HTTPS should be used when performing authentication of this type
 
 ```swift
-let credential = URLCredential(user: "john",
+let credential = URLCredential(user: "john", 
                                  password: "pass",
                                  persistence: .none)
 
@@ -66,7 +104,7 @@ let protectionSpace = URLProtectionSpace(host: "httpbin.org",
                         protocol: NSURLProtectionSpaceHTTP,
                         realm: "me@kennethreitz.com",
                         authenticationMethod: NSURLAuthenticationMethodHTTPDigest)
-
+        
 // setup credential
 // notice that we use '.ForSession' type otherwise credential storage will discard and
 // won't save it when doing 'credentialStorage.setDefaultCredential' later on
@@ -76,11 +114,11 @@ let credential = URLCredential(user: "user",
 // assign it to credential storage
 let credentialStorage = URLCredentialStorage.shared
 credentialStorage.setDefaultCredential(credential, for: protectionSpace);
-
+        
 // set up default configuration and assign credential storage
 let configuration = URLSessionConfiguration.default
 configuration.urlCredentialStorage = credentialStorage
-
+        
 // assign custom configuration to Http
 let http = Http(baseURL: "http://httpbin.org", sessionConfig: configuration)
 http.request(method: .get, path: "/protected/endpoint", completionHandler: {(response, error) in
@@ -90,44 +128,19 @@ http.request(method: .get, path: "/protected/endpoint", completionHandler: {(res
 
 ### OAuth2 Protocol Support
 
-To support the OAuth2 protocol, we have created a separate library [aerogear-ios-oauth2](https://github.com/aerogear/aerogear-ios-oauth2) that can be easily integrated, in order to provide  out-of-the-box support for communicated with OAuth2 protected endpoints. Please have a look at the "Http and OAuth2Module" section on our [documentation page](http://aerogear.org/docs/guides/aerogear-ios-2.X/Authorization/) for more information.
-
-Do you want to try it on your end? Follow next section steps.
-
-### Build, test and play with aerogear-ios-http
-
-1. Clone this project
-
-2. Get the dependencies
-
-The project uses [OHHTTPStubs](https://github.com/AliSoftware/OHHTTPStubs) framework for stubbing its http network requests and utilizes [CocoaPods](http://cocoapods.org) release for handling its dependencies. As a pre-requisite, install [CocoaPods](https://guides.cocoapods.org/using/getting-started.html) and then install the pod. On the root directory of the project run:
-```bash
-pod install
-```
-3. open AeroGearHttp.xcworkspace
-
-## Adding the library to your project
-To add the library in your project, you can either use [CocoaPods](http://cocoapods.org) or manual install in your project. See the respective sections below for instructions:
-
-### Using [CocoaPods](http://cocoapods.org)
-We recommend you use[CocoaPods-1.2.1 release](https://github.com/CocoaPods/CocoaPods/releases/tag/1.2.1) or greater.
-
-In your ```Podfile``` add:
-
-```
-pod 'AeroGearHttp'
-```
-
-and then:
-
-```bash
-pod install
-```
-to install your dependencies
+To support the OAuth2 protocol, we have created a separate library [aerogear-ios-oauth2](https://github.com/aerogear/aerogear-ios-oauth2) that can be easily integrated, in order to provide  out-of-the-box support for communicated with OAuth2 protected endpoints. Please have a look at the "Http and OAuth2Module" section on our [documentation page](http://aerogear.org/docs/guides/aerogear-ios-2.X/Authorization/) for more information. 
 
 ## Documentation
 
-For more details about the current release, please consult [our documentation](http://aerogear.org/ios/).
+For more details about that please consult [our documentation](http://aerogear.org/ios/).
+
+## Demo apps
+
+Take a look in our demo apps:
+
+* [ChuckNorrisJokes](https://github.com/aerogear/aerogear-ios-cookbook/tree/master/ChuckNorrisJokes)
+* [Weather](https://github.com/aerogear/aerogear-ios-cookbook/tree/master/Weather)
+* [Shoot and Share](https://github.com/aerogear/aerogear-ios-cookbook/tree/master/Shoot)
 
 ## Development
 
