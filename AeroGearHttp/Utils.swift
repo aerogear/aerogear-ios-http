@@ -23,12 +23,8 @@ Handy extensions and utilities.
 extension String {
     
     public func urlEncode() -> String {
-        let encodedURL = CFURLCreateStringByAddingPercentEscapes(nil,
-            self as NSString,
-            nil,
-            "!@#$%&*'();:=+,/?[]" as CFString!,
-            CFStringBuiltInEncodings.UTF8.rawValue)
-        return encodedURL as! String
+        let str = self
+        return str.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
     }
 }
 
